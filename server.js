@@ -38,20 +38,14 @@ app.get('/facilitator', function(req, res){
   res.sendFile(__dirname + '/client/facilitator.html');
 });
 
-app.get('/gameboard', function(req, res){
-  res.sendFile(__dirname + '/phaser_test/gameboard.html');
+app.get('/client/client_scripts/init_gameboard.js', function(req, res){
+  res.sendFile(__dirname + '/client/client_scripts/init_gameboard.js');
 });
-app.get('/phaser_test/init_gameboard.js', function(req, res){
-  res.sendFile(__dirname + '/phaser_test/init_gameboard.js');
+app.get('/client/assets/gameboard.png', function(req, res){
+  res.sendFile(__dirname + '/client/assets/gameboard.png');
 });
-app.get('/phaser_test/phaser.min.js', function(req, res){
-  res.sendFile(__dirname + '/phaser_test/phaser.min.js');
-});
-app.get('/phaser_test/assets/gameboard.png', function(req, res){
-  res.sendFile(__dirname + '/phaser_test/assets/gameboard.png');
-});
-app.get('/phaser_test/assets/team_icon.png', function(req, res){
-  res.sendFile(__dirname + '/phaser_test/assets/team_icon.png');
+app.get('/client/assets/team_icon.png', function(req, res){
+  res.sendFile(__dirname + '/client/assets/team_icon.png');
 })
 
 
