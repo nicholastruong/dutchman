@@ -1,3 +1,4 @@
+var express = require('express');
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -36,6 +37,23 @@ app.get('/', function(req, res){
 app.get('/facilitator', function(req, res){
   res.sendFile(__dirname + '/client/facilitator.html');
 });
+
+app.get('/gameboard', function(req, res){
+  res.sendFile(__dirname + '/phaser_test/gameboard.html');
+});
+app.get('/phaser_test/init_gameboard.js', function(req, res){
+  res.sendFile(__dirname + '/phaser_test/init_gameboard.js');
+});
+app.get('/phaser_test/phaser.min.js', function(req, res){
+  res.sendFile(__dirname + '/phaser_test/phaser.min.js');
+});
+app.get('/phaser_test/assets/gameboard.png', function(req, res){
+  res.sendFile(__dirname + '/phaser_test/assets/gameboard.png');
+});
+app.get('/phaser_test/assets/team_icon.png', function(req, res){
+  res.sendFile(__dirname + '/phaser_test/assets/team_icon.png');
+})
+
 
 io.on('connection', function(socket){
   console.log('a user connected');
@@ -78,3 +96,4 @@ io.on('connection', function(socket){
   });
 
 });
+
