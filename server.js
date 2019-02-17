@@ -30,6 +30,8 @@ http.listen(3000, function(){
 });
 
 
+app.use(express.static(__dirname + '/client')); // need to do this to give server access to all files in a folder
+
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/client/player.html');
 });
@@ -37,16 +39,6 @@ app.get('/', function(req, res){
 app.get('/facilitator', function(req, res){
   res.sendFile(__dirname + '/client/facilitator.html');
 });
-
-app.get('/client/client_scripts/init_gameboard.js', function(req, res){
-  res.sendFile(__dirname + '/client/client_scripts/init_gameboard.js');
-});
-app.get('/client/assets/gameboard.png', function(req, res){
-  res.sendFile(__dirname + '/client/assets/gameboard.png');
-});
-app.get('/client/assets/team_icon.png', function(req, res){
-  res.sendFile(__dirname + '/client/assets/team_icon.png');
-})
 
 
 io.on('connection', function(socket){

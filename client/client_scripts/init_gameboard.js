@@ -32,8 +32,8 @@ var desty = boardSize / 2;
 
 function preload(){
    console.log("preload called");
-   this.load.image("background", "/client/assets/gameboard.png");
-   this.load.image("team_icon", "/client/assets/team_icon.png");
+   this.load.image("background", "/assets/gameboard.png");
+   this.load.image("team_icon", "/assets/team_icon.png");
 }
 
 function create(){
@@ -44,9 +44,10 @@ function create(){
 }
 
 function update(){
-   if (game.input.activePointer.isDown){
+   if (game.input.activePointer.isDown && game.input.mousePointer.x >= 0 && game.input.mousePointer.x < boardSize && game.input.mousePointer.y >= 0 && game.input.mousePointer.y < boardSize) {
+      
       destx = game.input.mousePointer.x;
-      desty = game.input.mousePointer.y;
+      desty = game.input.mousePointer.y;  
       // console.log(destx + ", " + desty + " and car is at " + car.x + ", " + car.y);
 
       this.physics.moveTo(car, destx, desty, 200);
