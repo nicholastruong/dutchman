@@ -1,12 +1,11 @@
 $(document).ready(function(){
-   console.log("documentReady called");
-
-   boardSize = 800;
+   boardWidth = 800;
+   boardHeight = 795;
 
    var config = {
       type: Phaser.AUTO,
-      width: boardSize,
-      height: boardSize,
+      width: boardWidth,
+      height: boardHeight - 1,
       parent: 'board',
       physics: {
          default: 'arcade',
@@ -24,14 +23,15 @@ $(document).ready(function(){
 
 // list of global variables
 var game;
-var boardSize;
+var boardWidth, boardHeight;
 var car;
 var boardspaces;
 var connections;
 var curr_space;
 
-var destx = boardSize / 2; 
-var desty = boardSize / 2;
+var destx = boardWidth / 2; 
+var desty = boardboardHeightSize / 2;
+
 
 
 function preload() {
@@ -104,7 +104,7 @@ function create() {
     662, 188,  631, 190,  627, 155,  598, 179,  582, 148,  566, 176,  542, 148,  539, 180,  504, 166,  512, 199]
    ];
 
-   background = this.add.image(boardSize / 2, boardSize / 2, "background");
+   background = this.add.image(boardWidth / 2, boardHeight / 2, "background");
 
    curr_space = 0;
    boardspaces = [];
