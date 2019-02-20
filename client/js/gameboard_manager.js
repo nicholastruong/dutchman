@@ -1,12 +1,18 @@
 $(document).ready(function(){
-   boardWidth = 800;
-   boardHeight = 795;
+   boardWidth = (950 / 1680 * window.innerWidth);
+   boardHeight = (941 / 1680 * window.innerWidth);
+
+   console.log(window.innerWidth);
 
    var config = {
       type: Phaser.AUTO,
       width: boardWidth,
       height: boardHeight - 1,
       parent: 'board',
+      scale: {
+         mode: Phaser.Scale.FIT,
+         autoCenter: Phaser.Scale.CENTER_BOTH
+      },
       physics: {
          default: 'arcade',
          arcade: { debug: false }
@@ -21,6 +27,7 @@ $(document).ready(function(){
     game = new Phaser.Game(config);
 });
 
+
 // list of global variables
 var game;
 var boardWidth, boardHeight;
@@ -30,7 +37,7 @@ var connections;
 var curr_space;
 
 var destx = boardWidth / 2; 
-var desty = boardboardHeightSize / 2;
+var desty = boardHeight / 2;
 
 
 
@@ -69,7 +76,7 @@ function create() {
     [19, 8, 9, 11]
    ];
 
-   // define board spaces
+   // define board spaces relative to size of original image
    var spaces = [ // should move this to external text file
     [20, 586,  20, 783,  218, 783,  218, 596,  209, 586], // apache junction
 
@@ -103,8 +110,20 @@ function create() {
     604, 365,  624, 330,  655, 345,  659, 308,  692, 304,  671, 272,  698, 250,  671, 236,  685, 216,  656, 214,
     662, 188,  631, 190,  627, 155,  598, 179,  582, 148,  566, 176,  542, 148,  539, 180,  504, 166,  512, 199]
    ];
+   for (i = 0; i < spaces.length; i++) {
+      for (j = 0; j < spaces[i].length; j++) {
+         if (j % 2 == 0) {
+            spaces[i][j] = spaces[i][j] * boardWidth / 800;
+         }
+         else {
+            spaces[i][j] = spaces[i][j] * boardHeight / 795;
+         }
+      }
+   }
 
-   background = this.add.image(boardWidth / 2, boardHeight / 2, "background");
+   background = this.add.sprite(boardWidth / 2, boardHeight / 2, "background");
+   background.displayWidth = boardWidth;
+   background.scaleY = background.scaleX;
 
    curr_space = 0;
    boardspaces = [];
@@ -131,7 +150,8 @@ function create() {
       }   
    }
 
-   car = this.physics.add.image(120, 680, "team_icon");
+   car = this.physics.add.image(spaces[0][0] + (spaces[0][4] - spaces[0][0])/2, 
+      spaces[0][1] + (spaces[0][3] - spaces[0][1])/2, "team_icon");
 }
 
 
