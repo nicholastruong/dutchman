@@ -2,52 +2,45 @@
 <html>
   <head>
     <title>Facilitator</title>
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      h2 { width: 100%; text-align:center;}
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
-    </style>
-  </head>
-  <body>
-    <h1>facilitator</h1>
-    <h2 id="day">Day 1</h2>
-    <h2 id="weather">Weather: Sunny</h2>
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
-    <h2> <button style="" onclick="nextDay()">Next Day</button> </h2>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
-      $(function () {
-        var socket = io();
-        $('form').submit(function(e){
-          e.preventDefault(); // prevents page reloading
-          socket.emit('chat message', $('#m').val());
-          $('#m').val('');
-          return false;
-        });
-        socket.on('player ready', function(){
-          $('#messages').append($('<li>').text("Player is ready for the next day"));
-        });
-        socket.on('update day', function(d){
-          console.log(d);
-          $('#day').text("Day: " + d['day']);
-          $('#weather').text("Weather: " + d['weather']);
-        });
-      });
-      function nextDay() {
-        var socket = io();
-        socket.emit('next day');
-      }
-    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.js"></script>
+    <script type="text/javascript" src="/js/gameboard_manager.js"></script>
+    <script type="text/javascript" src="/js/facilitatorController.js"></script>
+
+    <link rel="stylesheet" href="styles.css">
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-2">
+          <h2 id="team_name" style="font-size:6vh; font-family:EdmundsFont;">Facilitator</h2>
+        </div>
+        
+        <div class="col-sm-7">
+          <div id="board"></div>
+          
+          <h2 id="ready"> <button style="" onclick="nextDay()">Start Next Day</button> </h2>
+
+          <ul id="messages"></ul>
+          <form action="">
+            <input id="m" autocomplete="off" /><button>Send</button>
+          </form>
+        </div>
+        
+        <div class="col-sm-3">
+          <h2 id="day">Day 1</h2>
+
+          <h2 id="weather">Weather: Sunny</h2>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
 

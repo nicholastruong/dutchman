@@ -8,7 +8,7 @@ $(function () {
   var socket = io();
 
   socket.on('chat message', function(msg) {
-    $('#messages').append($('<li>').text("test"));
+    $('#messages').append($('<li>').text(msg));
   });
 
   socket.on('update day', function(d) {
