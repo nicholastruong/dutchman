@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS games;
 CREATE TABLE games (
 	game_id int NOT NULL AUTO_INCREMENT,
 	room_name varchar(32) NOT NULL,
-	facilitator_id int NOT NULL,
+	facilitator_id int NOT NULL, #TODO: make this foreign key
 	day int NOT NULL DEFAULT(1),
 	PRIMARY KEY(game_id)
 );
