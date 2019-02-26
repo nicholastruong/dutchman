@@ -1,7 +1,13 @@
+var fs = require("fs");
+var path = require("path");
+var mysql = require("mysql");
+
 var express = require('express');
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
+//TODO (melanie) add game.js
 
 var facilitatorID;
 var openSockets = [];
@@ -83,3 +89,36 @@ io.on('connection', function(socket){
 
 });
 
+
+var trigger = module.exports.trigger = {}
+// Load events
+const outgoingEventsPath = "./events/outgoing";
+const incomingEventsPath = "./events/incoming";
+function loadEvents(path, isOutgoing) {
+    fs.readdir(path, function(err, files) {
+        if (err) {
+            console.error("Error loading events: " + err.stack);
+        } else {
+            for (var i in files) {
+                let file = path + "/" + files[i];
+                if (fs.statSync(file).isDirectory()) {
+                    loadEvents(file, isOutgoing);
+                } 
+                else if (file.endsWith(".js")) {
+                    if (isOutgoing) {
+                        let outgoingEventModule = require(file(module.exports, config));
+                        trigger[outgoingEventModule.id] = outgoingEventModule.func;
+                    }
+                    else {
+                        io.setMaxListeners(io.getMaxListeners() + 1);
+                        io.on("connection", function(socket) {
+                            require(file)(socket, module.exports, game, config);
+                        });
+                    }
+                }
+            }
+        }
+    });
+}
+loadEvents(outgoingEventsPath, true);
+loadEvents(incomingEventsPath, false);
