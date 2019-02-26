@@ -29,6 +29,30 @@
         margin-bottom: 50px;
       }
 
+      #resourceblock {
+        width: 100%;
+        height: 55vh;
+        background-color: rgba(155, 97, 43, 1);
+        text-align: left;
+        color: black;
+        font-size: 3vh;
+      }
+
+
+      @font-face {
+        font-family: EdmundsFont;
+        src: url(assets/edmunds.ttf);
+      }
+
+      #resourcetitle {
+        text-align: center;
+        color: black;
+        font-size: 5vh;
+        padding-top: 5px;
+        font-family: EdmundsFont;
+      }
+
+
       #board {
         margin: auto;
         /*width: 820px;*/
@@ -41,7 +65,35 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-2">
-          <h2 id="team_name">Team 1</h2>
+          <h2 id="team_name" style="font-size:6vh; font-family:EdmundsFont;">Team 1</h2>
+            <div id="resourceblock">
+            <div id="resourcetitle"> Resources </div>
+            <p>
+              <img src="assets/suppliesimage.png" style="padding-left:10px;" width="15%" height="8%">
+              <span id="supplies" style="padding:5px "> 0 Supplies </span>
+            </p>
+            <p>
+              <img src="assets/fuelimage.png" style="padding-left:10px;" width="15%" height="8%">
+              <span id="fuel" style="padding:5px "> 0 Fuel </span>
+            </p>
+            <p>
+              <img src="assets/tentimage.png" style="padding-left:10px;" width="15%" height="8%">  
+              <span id="tents" style="padding:5px "> 0 Tents </span>
+            </p>
+            <p>
+              <img src="assets/batteryimage.png" style="padding-left:10px;" width="15%" height="8%">
+              <span id="battries" style="padding:5px "> 0 Batteries </span>
+            </p>
+            <p>
+              <img src="assets/tireimage.png" style="padding-left:10px;" width="15%" height="8%">
+              <span id="sparetires" style="padding:5px "> 0 Spare Tires </span>
+            </p>
+            <p>
+              <img src="assets/cashimage.png" style="padding-left:10px;" width="15%" height="8%">
+              <span id="cash" style="padding:5px "> $0 Cash </span>
+            </p>
+
+          </div>
         </div>
         
         <div class="col-sm-7">
