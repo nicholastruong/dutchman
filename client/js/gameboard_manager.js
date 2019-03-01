@@ -9,6 +9,7 @@ $(document).ready(function(){
       width: boardWidth,
       height: boardHeight - 1,
       parent: 'board',
+      backgroundColor: 0xedce70,
       scale: {
          mode: Phaser.Scale.FIT,
          autoCenter: Phaser.Scale.CENTER_BOTH
@@ -21,7 +22,7 @@ $(document).ready(function(){
          preload: preload,
          create: create,
          update: update
-      }
+      },
    };
 
     game = new Phaser.Game(config);

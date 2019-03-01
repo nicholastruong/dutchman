@@ -4,6 +4,8 @@ $(document).ready(function(){
    $('#ready').click(ready());
 });
 
+weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic freeze": ["arctic freeze", "cold"]}
+
 $(function () {
   var socket = io();
 
@@ -14,7 +16,8 @@ $(function () {
   socket.on('update day', function(d) {
     console.log(d);
     $('#day').text("Day: " + d['day']);
-    $('#weather').text("Weather: " + d['weather']);
+    $('#weathertext').text(weather[d['weather']][0]);
+    $('#weatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
   });
 });
 
