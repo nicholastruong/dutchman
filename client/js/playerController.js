@@ -48,6 +48,11 @@ PlayerController.prototype = {
     readyButton.addEventListener('click', function(){
       socket.emit('ready');
     });
+
+    var instructionButton = document.getElementById("instructionblock");
+    instructionButton.addEventListener('click', function(){
+      alert("Instructions for players");
+    });
   }
 
   

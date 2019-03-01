@@ -43,6 +43,11 @@ FacilitatorController.prototype = {
     nextDayButton.addEventListener('click', function(){
       socket.emit('facilitator next day');
     });
+
+    var instructionButton = document.getElementById("instructionblock");
+    instructionButton.addEventListener('click', function(){
+      alert("Instructions for facilitator");
+    });
   }
 
   
