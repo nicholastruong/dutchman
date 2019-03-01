@@ -12,6 +12,11 @@
     <script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.js"></script>
     <script type="text/javascript" src="/js/gameboard_manager.js"></script>
     <script type="text/javascript" src="/js/playerController.js"></script>
+    <script>
+      window.onload = function() {
+        window.controller = new PlayerController();
+      }
+    </script>
 
     <link rel="stylesheet" href="styles.css">
   </head>
@@ -54,7 +59,7 @@
         <div class="col-sm-7">
           <div id="board"></div>
           
-          <h2 id="ready"> <button style="" onclick="ready()">Ready for Next Day</button> </h2>
+          <h2 id="ready"> <button style="">Ready for Next Day</button> </h2>
         </div>
         
         <div class="col-sm-3" id="right">

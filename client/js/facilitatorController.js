@@ -1,29 +1,49 @@
-weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic freeze": ["arctic freeze", "cold"]}
+var FacilitatorController = function() 
+{
+  let scope = this;
 
-$(function () {
-  var socket = io();
+  //open socket
+  let socket = scope.socket = io();
+  console.log(socket);
 
-  $('form').submit(function(e){
-    e.preventDefault(); // prevents page reloading
-    socket.emit('chat message', $('#m').val());
-    $('#messages').append($('<li>').text($('#m').val()));
-    $('#m').val('');
-    return false;
-  });
-  
-  socket.on('player ready', function(){
-    $('#messages').append($('<li>').text("Player is ready for the next day"));
-  });
-  
-  socket.on('update day', function(d){
-    console.log(d);
-    $('#day').text("Day: " + d['day']);
-    $('#weathertext').text(weather[d['weather']][0]);
-    $('#weatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
-  });
-});
-
-function nextDay() {
-  var socket = io();
-  socket.emit('next day');
+  scope._RegisterSocketHandlers();
+  scope._RegisterOutgoing();
 }
+
+FacilitatorController.prototype = {
+  /**
+   * Register handlers for incoming events sent by the server.
+   */
+  _RegisterSocketHandlers: function()
+  {
+    let scope = this;
+    let socket = this.socket;
+    
+    socket.on('player ready', function(){
+      $('#messages').append($('<li>').text("Player is ready for the next day"));
+      console.log("player is ready");
+    });
+    
+      
+  },
+
+  _RegisterOutgoing: function() 
+  {
+    let scope = this;
+    let socket = this.socket;
+
+    $('form').submit(function(e){
+      e.preventDefault(); // prevents page reloading
+      socket.emit('chat message', $('#m').val());
+      $('#m').val('');
+      return false;
+    });
+
+    var nextDayButton = document.getElementById("ready");
+    nextDayButton.addEventListener('click', function(){
+      socket.emit('facilitator next day');
+    });
+  }
+
+  
+};
