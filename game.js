@@ -17,6 +17,11 @@
  		 */
  		rooms: {},
 
+ 		test: function(){
+ 			let scope = this;
+ 			console.log(++scope.rooms[0].day);
+ 		},
+
  		load: function(roomID, callback) {
  			let scope = this;
 
@@ -24,16 +29,18 @@
  			//TODO: query db
  			scope.rooms[id] = {};
  			let room = scope.rooms[id];
+ 			
 
  			//this is hardcoded
  			room.id = 0;
  			room.day = 0;
-
+ 			console.log(scope.rooms[0].day);
  			if (callback) callback();
  		},
 
  		loadAll: function(callback) {
  			let scope = this;
+
 
  			//TODO: fix. for now just call this once.	
  			scope.load(0, masterCallback());
