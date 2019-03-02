@@ -47,3 +47,56 @@ h2 { width: 100%;}
 	padding-top: 5px;
 	font-family: EdmundsFont;
 }
+
+/*TRADING WINDOW*/
+.close {
+    color: #fff; 
+    opacity: 1;
+}
+
+#modalButton {
+	background-color: rgba(155, 97, 43, 1);
+}
+
+#tradeTitle {
+	text-align: center;
+	color: black;
+	font-size: 6vh;
+	padding-top: 5px;
+	font-family: EdmundsFont;
+}
+
+#tradeContainer {
+	padding-top: 5px;
+	text-align: center;
+	position: relative;
+	
+  	width:100%;
+    background-color: #edce70;
+}
+
+.modal-yellow .modal-backdrop {
+	background-color: #edce70;
+  }
+
+.modal-body{
+	background-color: #edce70;
+	overflow-x: auto;
+}
+
+.modal-content  {
+    border:rgba(155, 97, 43, 1) 4px solid;
+}
+
+.modal-header{
+	background-color: rgba(155, 97, 43, 1);
+}
+.modal-open {
+    padding-right: 0px !important;
+}
+
+.modal-lg {
+	width: 80%;
+	margin: auto;
+	padding-top: 5%;
+  }

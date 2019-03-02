@@ -1,71 +1,235 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Player Page</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<head>
+  <title>Player Page</title>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 
-    <script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.js"></script>
-    <script type="text/javascript" src="/js/gameboard_manager.js"></script>
-    <script type="text/javascript" src="/js/playerController.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  
-  <body>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-2">
-          <h2 id="team_name" style="font-size:6vh; font-family:EdmundsFont;">Team 1</h2>
-            <div id="resourceblock">
-            <div id="resourcetitle"> Resources </div>
-            <p>
-              <img src="assets/suppliesimage.png" style="padding-left:10px;" width="15%" height="8%">
-              <span id="supplies" style="padding:5px "> 0 Supplies </span>
-            </p>
-            <p>
-              <img src="assets/fuelimage.png" style="padding-left:10px;" width="15%" height="8%">
-              <span id="fuel" style="padding:5px "> 0 Fuel </span>
-            </p>
-            <p>
-              <img src="assets/tentimage.png" style="padding-left:10px;" width="15%" height="8%">  
-              <span id="tents" style="padding:5px "> 0 Tents </span>
-            </p>
-            <p>
-              <img src="assets/batteryimage.png" style="padding-left:10px;" width="15%" height="8%">
-              <span id="battries" style="padding:5px "> 0 Batteries </span>
-            </p>
-            <p>
-              <img src="assets/tireimage.png" style="padding-left:10px;" width="15%" height="8%">
-              <span id="sparetires" style="padding:5px "> 0 Spare Tires </span>
-            </p>
-            <p>
-              <img src="assets/cashimage.png" style="padding-left:10px;" width="15%" height="8%">
-              <span id="cash" style="padding:5px "> $0 Cash </span>
-            </p>
+  <script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.js"></script>
+  <script type="text/javascript" src="/js/gameboard_manager.js"></script>
+  <script type="text/javascript" src="/js/playerController.js"></script>
 
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+
+      <!--left of gameboard-->
+      <div class="col-sm-2">
+        <h2 id="team_name" style="font-size:6vh; font-family:EdmundsFont;">Team 1</h2>
+        <div id="resourceblock">
+          <div id="resourcetitle"> Resources </div>
+          <p>
+            <img src="assets/suppliesimage.png" style="padding-left:10px;" width="15%" height="8%">
+            <span id="supplies" style="padding:5px "> 0 Supplies </span>
+          </p>
+          <p>
+            <img src="assets/fuelimage.png" style="padding-left:10px;" width="15%" height="8%">
+            <span id="fuel" style="padding:5px "> 0 Fuel </span>
+          </p>
+          <p>
+            <img src="assets/tentimage.png" style="padding-left:10px;" width="15%" height="8%">
+            <span id="tents" style="padding:5px "> 0 Tents </span>
+          </p>
+          <p>
+            <img src="assets/batteryimage.png" style="padding-left:10px;" width="15%" height="8%">
+            <span id="battries" style="padding:5px "> 0 Batteries </span>
+          </p>
+          <p>
+            <img src="assets/tireimage.png" style="padding-left:10px;" width="15%" height="8%">
+            <span id="sparetires" style="padding:5px "> 0 Spare Tires </span>
+          </p>
+          <p>
+            <img src="assets/cashimage.png" style="padding-left:10px;" width="15%" height="8%">
+            <span id="cash" style="padding:5px "> $0 Cash </span>
+          </p>
+        </div>
+        
+        <button class="btn btn-primary" style="" onclick="showTeamTradeModal()">Team Trade</button>
+        
+        <!--TEAM TRADE MODAL-->
+        
+                  <div class="modal modal-yellow" id="teamTradeModal" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <div id="tradeTitle">Team Trading</div>
+              </div>
+              <div id="tradeContainer" class="container">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-5 col-md-offset-1">
+                          <div id="resourcetitle">Trading</div>
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Resource</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                                <th scope="col">Current Amount</th>
+                                <th scope="col">Amount Trading</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <th scope="row">Fuel</th>
+                                <td><button type="button" class="btn btn-light">+</button></td>
+                                <td><button type="button" class="btn btn-light">-</button></td>
+                                <td>7</td>
+                                <td>2</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="col-xs-5 col-md-offset-1">
+                            <div id="resourcetitle">Requesting</div>
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th scope="col">Resource</th>
+                                  <th scope="col"></th>
+                                  <th scope="col"></th>
+                                  <th scope="col">Amount Requesting</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <th scope="row">Fuel</th>
+                                  <td><button type="button" class="btn btn-light">+</button></td>
+                                  <td><button type="button" class="btn btn-light">-</button></td>
+                                  <td>2</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" id="modalButton" class="btn btn-primary">Send Request</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      </br>
+      
         
-        <div class="col-sm-7">
-          <div id="board"></div>
-    
-          <ul id="messages"></ul>
-          
-          <h2 id="ready"> <button style="" onclick="ready()">Ready for Next Day</button> </h2>
-        </div>
-        
-        <div class="col-sm-3">
-          <h2 id="day">Day 1</h2>
+        <button class="btn btn-primary" style="" onClick="showProvTradeModal()">Provisioner Trade</button>
 
-          <h2 id="weather">Weather: Sunny</h2>
-        </div>
-      </div>
+        <!--PROVISIONER TRADE MODAL-->
+        
+        <div class="modal modal-yellow" id="provTradeModal" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <div id="tradeTitle">Provisioner's Trading Post</div>
+              </div>
+              <div id="tradeContainer" class="container">
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-xs-5 col-md-offset-1">
+                      <div id="resourcetitle">Sell at Post</div>
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Resource</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col">Current Amount</th>
+                            <th scope="col">Amount Trading</th>
+                            <th scope="col">Value</th>
+                            <th scope="col">Value Trading</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">Fuel</th>
+                            <td><button type="button" class="btn btn-light">+</button></td>
+                            <td><button type="button" class="btn btn-light">-</button></td>
+                            <td>7</td>
+                            <td>2</td>
+                            <td>$10</td>
+                            <td>$20</td>
+                          </tr>
+                          <tr>
+                            <th scope="row"></th>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Total $ Trading</td>
+                            <td>$20</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-xs-5 col-md-offset-1">
+                      <div id="resourcetitle"> Buy from Post </div>
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Resource</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col">Amount Buying</th>
+                            <th scope="col">Value</th>
+                            <th scope="col">Total Value</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">Fuel</th>
+                            <td><button type="button" class="btn btn-light">+</button></td>
+                            <td><button type="button" class="btn btn-light">-</button></td>
+                            <td></td>
+                            <td>$10</td>
+                            <td>$20</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  
+                    <button class="btn btn-primary" id="modalButton" onclick="finishProvTrade()">Finish Trade</button>
+                  
+                </div>
+              </div>
     </div>
-  </body>
-</html>
+  </div>
+  </div>
 
+  </div>
+
+  <div class="col-sm-7">
+    <div id="board"></div>
+
+    <ul id="messages"></ul>
+
+    <h2 id="ready"> <button style="" onclick="ready()">Ready for Next Day</button> </h2>
+  </div>
+
+  <div class="col-sm-3">
+    <h2 id="day">Day 1</h2>
+
+    <h2 id="weather">Weather: Sunny</h2>
+  </div>
+  </div>
+  </div>
+</body>
+
+</html>

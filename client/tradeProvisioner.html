@@ -1,0 +1,117 @@
+<!--Trade with provisioner-->
+<!doctype html>
+<html>
+<head>
+        <title>Provisioner Trading</title>
+    
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    
+        <script type="text/javascript" src="/js/trade_manager.js"></script>
+        <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="tradeContainer" class="container">
+        <div class="row">
+            <div id="resourcetitle">Provisioner's Trading Post</div>
+        </row>
+        <div class="row">
+          <div class="col-xs-5">
+                <div id="resourcetitle"> My Resources </div>
+                <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Resource</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col">Current #</th>
+                            <th scope="col">Trade #</th>
+                            <th scope="col">Value</th>
+                            <th scope="col">Value Trading</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">Fuel</th>
+                            <td>+</td>
+                            <td>-</td>
+                            <td>7</td>
+                            <td>$10</td>
+                            <td>$20</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Supplies</th>
+                            
+                            <td>+</td>
+                            <td>-</td>
+                            <td>5</td>
+                            <td>$20</td>
+                            <td>$0</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Tent</th>
+                            
+                            <td>+</td>
+                            <td>-</td>
+                            <td>3</td>
+                            <td>$5</td>
+                            <td>$0</td>
+                          </tr>
+                        </tbody>
+                      </table>
+          </div>
+          <div class="col-xs-5 col-md-offset-2">
+            <div id="resourcetitle"> Buy from Post </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                        <th scope="col">Resource</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col">#</th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Trade Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <th scope="row">Fuel</th>
+                        <td>+</td>
+                        <td>-</td>
+                        <td></td>
+                        <td>$10</td>
+                        <td>$20</td>
+                        </tr>
+                        <tr>
+                        <th scope="row">Supplies</th>
+                        <td>+</td>
+                        <td>-</td>
+                        <td></td>
+                        <td>$20</td>
+                        <td>$40</td>
+                        </tr>
+                        <tr>
+                        <th scope="row">Tent</th>
+                        <td>+</td>
+                        <td>-</td>
+                        <td></td>
+                        <td>$5</td>
+                        <td>$20</td>
+                        </tr>
+                    </tbody>
+                    </table>
+          </div>
+          </div>
+        </div>
+        <div class="row">
+                <button class="btn btn-primary" style="" onclick="finishProvTrade()">Finish Trade</button>
+        </div>
+    </div>
+    
+</div>
+</body>
+</html>
+

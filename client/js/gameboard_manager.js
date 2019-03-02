@@ -23,7 +23,7 @@ $(document).ready(function(){
          update: update
       }
    };
-
+   onModal=false;
     game = new Phaser.Game(config);
 });
 
@@ -36,6 +36,7 @@ var boardspaces;
 var connections;
 var curr_space;
 
+var onModal;
 var destx = boardWidth / 2; 
 var desty = boardHeight / 2;
 
@@ -156,7 +157,9 @@ function create() {
 
 
 function attachClickListener(physics, graphic, index) {
+   
    graphic.on('pointerdown', function(pointer) {
+      if (!onModal){
       if (validMove(index)) {
          console.log("index is now " + index);
 
@@ -168,11 +171,11 @@ function attachClickListener(physics, graphic, index) {
       else {
          alert("Sorry this is not a valid move");
       }
+   }
    });
 
    graphic.on('pointerout', function () { graphic.clear(); });
 }
-
 
 function attachPolygonListeners(scene, graphic, polygon, index) {
    graphic.on('pointerover', function () {
