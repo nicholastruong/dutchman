@@ -9,25 +9,28 @@
  module.exports = function(config) {
  	return {
  		/**
- 		 * @property rooms An array of the game state of each room, indexed by their integer room IDs.
+ 		 * @property games An array of the game state of each room, indexed by their integer room IDs.
  		 *
- 		 * @property room.id The room ID
- 		 * @property room.day The current day
- 		 * @property room.facilitatorID The user ID of the facilitator
+ 		 * @property game.id The room ID
+ 		 * @property game.day The current day
+ 		 * @property game.facilitatorID The user ID of the facilitator
  		 */
- 		rooms: {},
+ 		games: {},
+ 		/*test: function() {
+ 			console.log("hello my friend" + games[0].day);
+ 		},*/
 
  		load: function(roomID, callback) {
  			let scope = this;
 
  			let id = roomID;
  			//TODO: query db
- 			scope.rooms[id] = {};
- 			let room = scope.rooms[id];
+ 			scope.games[id] = {};
+ 			let game = scope.games[id];
 
  			//this is hardcoded
- 			room.id = 0;
- 			room.day = 0;
+ 			game.id = 0;
+ 			game.day = 1;
 
  			if (callback) callback();
  		},
