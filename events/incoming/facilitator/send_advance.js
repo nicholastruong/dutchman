@@ -5,6 +5,4 @@ module.exports = function(socket, server, game, config){
 		console.log(game.test());
 		server.trigger['server send updateDay']();
 	});
-
-
 }
