@@ -35,7 +35,6 @@ var boardWidth, boardHeight;
 var car;
 var boardspaces;
 var connections;
-var curr_space;
 
 var destx = boardWidth / 2; 
 var desty = boardHeight / 2;
@@ -126,7 +125,6 @@ function create() {
    background.displayWidth = boardWidth;
    background.scaleY = background.scaleX;
 
-   curr_space = 0;
    boardspaces = [];
 
    for (i = 0; i < spaces.length; i++) {
@@ -157,20 +155,6 @@ function create() {
 
 
 function attachClickListener(physics, graphic, index) {
-   graphic.on('pointerdown', function(pointer) {
-      if (validMove(index)) {
-         console.log("index is now " + index);
-
-         curr_space = index;
-         destx = pointer.x;
-         desty = pointer.y;
-         physics.moveTo(car, destx, desty, 200);
-      }
-      else {
-         alert("Sorry this is not a valid move");
-      }
-   });
-
    graphic.on('pointerout', function () { graphic.clear(); });
 }
 
@@ -228,13 +212,5 @@ function update() {
       // console.log("car reached destination");
       car.body.stop();
    }
-}
-
-function validMove(i) { // checks if space i is adjacent to the current space
-   if (i == curr_space || connections[curr_space].includes(i)) {
-      return true;
-   }
-
-   return false;
 }
 

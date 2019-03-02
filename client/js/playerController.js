@@ -27,7 +27,7 @@ PlayerController.prototype = {
 
     socket.on('chat message', function(msg) {
       console.log("hi");
-    $('#messages').append($('<li>').text("test"));
+      $('#messages').append($('<li>').text("test"));
     });
 
     socket.on('server send updateDay', function(d) {
@@ -35,6 +35,8 @@ PlayerController.prototype = {
        $('#day').text("Day: " + d['day']);
        $('#weathertext').text(weather[d['weather']][0]);
        $('#weatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
+
+       enableMove = true;
     });
 
   },
@@ -46,7 +48,10 @@ PlayerController.prototype = {
 
     var readyButton = document.getElementById("ready");
     readyButton.addEventListener('click', function(){
-      socket.emit('ready');
+      console.log("currently in space " + curr_space);
+      socket.emit('ready', 
+         {currentSpace: curr_space}
+      );
     });
 
     var instructionButton = document.getElementById("instructionblock");

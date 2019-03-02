@@ -10,6 +10,8 @@ var FacilitatorController = function()
   scope._RegisterOutgoing();
 }
 
+weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic freeze": ["arctic freeze", "cold"]}
+
 FacilitatorController.prototype = {
   /**
    * Register handlers for incoming events sent by the server.
@@ -19,12 +21,18 @@ FacilitatorController.prototype = {
     let scope = this;
     let socket = this.socket;
     
-    socket.on('player ready', function(){
+    socket.on('player ready', function(d){
+      console.log(d['currentSpace']);
       $('#messages').append($('<li>').text("Player is ready for the next day"));
       console.log("player is ready");
     });
-    
-      
+
+    socket.on('server send updateDay', function(d) {
+       console.log(d);
+       $('#day').text("Day: " + d['day']);
+       $('#weathertext').text(weather[d['weather']][0]);
+       $('#weatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
+    }); 
   },
 
   _RegisterOutgoing: function() 
