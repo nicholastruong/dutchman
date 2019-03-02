@@ -30,7 +30,7 @@ PlayerController.prototype = {
     $('#messages').append($('<li>').text("test"));
     });
 
-    socket.on('update day', function(d) {
+    socket.on('server send updateDay', function(d) {
        console.log(d);
        $('#day').text("Day: " + d['day']);
        $('#weathertext').text(weather[d['weather']][0]);

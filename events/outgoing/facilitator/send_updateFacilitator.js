@@ -1,5 +1,3 @@
-
-    
 /* tells facilitator that a player is ready */
 
 const eventId = "server send updateFacilitator";
