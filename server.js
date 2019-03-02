@@ -9,6 +9,8 @@ const path = require("path");
 var facilitatorID;
 var openSockets = {};
 
+const config = require("./config.js")
+const game = require("./game.js")(config);
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
@@ -39,6 +41,12 @@ io.on("connection", function(socket) {
 		console.log(openSockets[facilitatorID]);
 	}
 	
+});
+
+//load game state
+//TODO: load mysql
+game.loadAll(function() {
+  console.log("Loaded game states...");
 });
 
 
