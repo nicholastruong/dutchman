@@ -31,11 +31,3 @@ function showProvTradeModal(){
   $('#provTradeModal').modal('show');
   onModal = true;
 }
-
-function teamTrade(){
-  window.location.href = "/tradeTeam.html";
-}
-
-function provTrade(){
-  window.location.href = "/tradeProvisioner.html";
-}
