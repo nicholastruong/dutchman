@@ -20,6 +20,11 @@
  			console.log("hello my friend" + games[0].day);
  		},*/
 
+ 		test: function(){
+ 			let scope = this;
+ 			console.log(++scope.rooms[0].day);
+ 		},
+
  		load: function(roomID, callback) {
  			let scope = this;
 
@@ -37,6 +42,7 @@
 
  		loadAll: function(callback) {
  			let scope = this;
+
 
  			//TODO: fix. for now just call this once.	
  			scope.load(0, masterCallback());

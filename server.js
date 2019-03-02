@@ -10,7 +10,7 @@ var facilitatorID;
 var openSockets = {};
 
 const config = require("./config.js")
-const game = require("./game.js")(config);
+var game = require("./game.js")(config);
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
@@ -105,7 +105,7 @@ function loadEvents(path, outgoing)
 						io.setMaxListeners(io.getMaxListeners() + 1);
 
 						io.on("connection", function(socket) {
-							require(file)(socket, module.exports);
+							require(file)(socket, module.exports, game);
 						});
 					}
 				}
@@ -113,6 +113,7 @@ function loadEvents(path, outgoing)
 		}
 	});
 }
+
 
 loadEvents(outgoingEventsPath, true);
 loadEvents(incomingEventsPath, false);
