@@ -27,6 +27,7 @@ FacilitatorController.prototype = {
       console.log("player is ready");
     });
 
+
     socket.on('server send updateDay', function(d) {
        console.log(d);
        $('#day').text("Day: " + d['day']);
@@ -42,8 +43,10 @@ FacilitatorController.prototype = {
 
     $('form').submit(function(e){
       e.preventDefault(); // prevents page reloading
-      socket.emit('chat message', $('#m').val());
+      socket.emit('facilitator send broadcast', $('#m').val());
+      $('#messages').append($('<li>').text($('#m').val()));  
       $('#m').val('');
+          
       return false;
     });
 
