@@ -62,6 +62,14 @@ h2 {
 	font-family: EdmundsFont;
 }
 
+#leftColButton {
+	background-color: rgba(155, 97, 43, 1);
+	border: none;
+	min-width: 237px; 
+	margin-top: 10px;
+	font-size: 20px;
+}
+
 /*TRADING WINDOW*/
 .close {
     color: #fff; 
@@ -70,6 +78,7 @@ h2 {
 
 #modalButton {
 	background-color: rgba(155, 97, 43, 1);
+	border: none
 }
 
 #tradeTitle {
