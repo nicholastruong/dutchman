@@ -64,12 +64,3 @@ function ready() {
   var socket = io();
   socket.emit('ready');
 }
-function showTeamTradeModal(){
-  $('#teamTradeModal').modal('show');
-  onModal = true;
-}
-
-function showProvTradeModal(){
-  $('#provTradeModal').modal('show');
-  onModal = true;
-}
