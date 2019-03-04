@@ -25,9 +25,9 @@ PlayerController.prototype = {
     let scope = this;
     let socket = this.socket;
 
-    socket.on('chat message', function(msg) {
-      console.log("hi");
-      $('#messages').append($('<li>').text("test"));
+
+    socket.on('facilitator broadcast', function(msg) {
+      $('#messages').append($('<li>').text(msg));
     });
 
     socket.on('server send updateDay', function(d) {

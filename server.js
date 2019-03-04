@@ -66,7 +66,6 @@ module.exports.emit = function(isFacilitator, eventID, data, callback)
 
 	//temporary broadcast if not facilitator
 	else {
-		console.log(data);
 		io.emit(eventID, data);
 	}
 }
