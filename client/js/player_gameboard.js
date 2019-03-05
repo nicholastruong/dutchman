@@ -164,6 +164,7 @@ function create() {
 function attachClickListener(physics, graphic, index) {
    
    graphic.on('pointerdown', function(pointer) {
+      console.log(onModal);
       if (enableMove && !onModal) {
          if (validMove(index)) {
             console.log("index is now " + index);
@@ -185,49 +186,55 @@ function attachClickListener(physics, graphic, index) {
 
 function attachPolygonListeners(scene, graphic, polygon, index) {
    graphic.on('pointerover', function () {
-      console.log("pointerover on index " + index);
+      if (!onModal) {
+        console.log("pointerover on index " + index);
 
-      graphic.fillStyle(0xffffff, 0.5);
-      graphic.fillPoints(polygon.points, true);  
+        graphic.fillStyle(0xffffff, 0.5);
+        graphic.fillPoints(polygon.points, true);  
+      }
    });
 }
 
 function attachCornerListeners(scene, graphic, square, circle, index) {
    graphic.on('pointerover', function () {
-      coeffs = [];
+      if (!onModal) {
+        coeffs = [];
 
-      if (index == 4) { 
-         coeffs = [1.626, 0.35, 0.2, 1.626]; 
-      }
-      else if (index == 9) { 
-         coeffs = [-0.2, 1.626, -1.626, 0.35]; 
-      }
-      else if (index == 12) { 
-         coeffs = [-1.626, -0.35, -0.2, -1.626]; 
-      }
-      
-      path = scene.add.path(square[0], square[1]);
-      for (j = 2; j < square.length-1; j += 2) {
-         path.lineTo(square[j], square[j+1]);
-      }
-      path.cubicBezierTo(
-         square[0], square[1],
-         circle[0] + circle[2] * coeffs[0], circle[1] + circle[2] * coeffs[1],
-         circle[0] + circle[2] * coeffs[2], circle[1] + circle[2] * coeffs[3]
-      )
+        if (index == 4) { 
+           coeffs = [1.626, 0.35, 0.2, 1.626]; 
+        }
+        else if (index == 9) { 
+           coeffs = [-0.2, 1.626, -1.626, 0.35]; 
+        }
+        else if (index == 12) { 
+           coeffs = [-1.626, -0.35, -0.2, -1.626]; 
+        }
+        
+        path = scene.add.path(square[0], square[1]);
+        for (j = 2; j < square.length-1; j += 2) {
+           path.lineTo(square[j], square[j+1]);
+        }
+        path.cubicBezierTo(
+           square[0], square[1],
+           circle[0] + circle[2] * coeffs[0], circle[1] + circle[2] * coeffs[1],
+           circle[0] + circle[2] * coeffs[2], circle[1] + circle[2] * coeffs[3]
+        )
 
-      path.closePath();
+        path.closePath();
 
-      graphic.fillStyle(0xffffff, 0.5);
-      graphic.fillPoints(path.getPoints(), true);
-   })
+        graphic.fillStyle(0xffffff, 0.5);
+        graphic.fillPoints(path.getPoints(), true);
+      }
+   });
 }
 
 function attachCircleListeners(graphic, circle, index) {
    graphic.on('pointerover', function () {
-      graphic.fillStyle(0xffffff, 0.5);
-      graphic.fillCircleShape(circle);
-   })
+      if (!onModal) {
+        graphic.fillStyle(0xffffff, 0.5);
+        graphic.fillCircleShape(circle);
+      }
+   });
 }
 
 

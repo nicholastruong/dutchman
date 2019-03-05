@@ -12,6 +12,21 @@ var PlayerController = function()
 
 $(document).ready(function(){
    console.log("documentReady called");
+
+   $('#teamTradeModal')
+      .on('show.bs.modal', function (e) {
+         onModal = true;
+      })
+      .on('hidden.bs.modal', function (e) {
+         onModal = false;
+      });
+   $('#provTradeModal')
+      .on('show.bs.modal', function (e) {
+         onModal = true;
+      })
+      .on('hidden.bs.modal', function (e) {
+         onModal = false;
+      });
 });
 
 weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic freeze": ["arctic freeze", "cold"]}

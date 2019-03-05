@@ -1,7 +1,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body { 
-	font: 13px Helvetica, Arial; 
+	font: 20px Helvetica, Arial; 
 	height: 100%;
 	background-color: #edce70;
 }
@@ -36,6 +36,8 @@ h2 {
 	margin-top: 5vh;
 	background-color: rgba(155, 97, 43, 1);
 	padding-top: 0.5vh;
+	font-size:3.5vw; 
+	font-family:EdmundsFont;
 }
 
 #resourceblock {
@@ -44,8 +46,25 @@ h2 {
 	background-color: rgba(155, 97, 43, 1);
 	text-align: left;
 	color: black;
-	font-size: 3vhw;
 	margin-top: 2vh;
+}
+
+#resourcetitle {
+	text-align: center;
+	color: black;
+	font-size: 3vw;
+	padding-top: 5px;
+	margin-bottom: 1vh;
+	font-family: EdmundsFont;
+}
+
+#leftColButton {
+	background-color: rgba(155, 97, 43, 1);
+	border: none;
+	width: 100%; 
+	margin-top: 2vh;
+	font-size: 1.5vw;
+	text-align: left;
 }
 
 
@@ -54,21 +73,6 @@ h2 {
 	src: url(assets/edmunds.ttf);
 }
 
-#resourcetitle {
-	text-align: center;
-	color: black;
-	font-size: 3vw;
-	padding-top: 5px;
-	font-family: EdmundsFont;
-}
-
-#leftColButton {
-	background-color: rgba(155, 97, 43, 1);
-	border: none;
-	min-width: 237px; 
-	margin-top: 10px;
-	font-size: 20px;
-}
 
 /*TRADING WINDOW*/
 .close {
@@ -79,6 +83,7 @@ h2 {
 #modalButton {
 	background-color: rgba(155, 97, 43, 1);
 	border: none
+	width: 3vw;
 }
 
 #tradeTitle {
@@ -191,8 +196,11 @@ h2 {
 	background: #eee; 
 }*/
 
+
+
 .resourcetag {
 	font-size: 1.2vw;
+	height: 2.5vw
 }
 
 .rightcol {
