@@ -23,6 +23,14 @@ h2 {
 	margin-bottom: 50px;
 }
 
+#readybutton {
+	background-color: #492300;
+	font-family: EdmundsFont;
+	height: 4vw;
+	width: 40%;
+	color: white;
+}
+
 #board {
 	margin: auto;
 	/*width: 820px;*/
@@ -42,10 +50,11 @@ h2 {
 
 #resourceblock {
 	width: 100%;
-	height: 30vw;
+	height: 25vw;
 	background-color: rgba(155, 97, 43, 1);
 	text-align: left;
 	color: black;
+	font-size: 3vh;
 	margin-top: 2vh;
 }
 
@@ -54,17 +63,17 @@ h2 {
 	color: black;
 	font-size: 3vw;
 	padding-top: 5px;
-	margin-bottom: 1vh;
+	padding-bottom: 3px;
 	font-family: EdmundsFont;
 }
 
 #leftColButton {
-	background-color: rgba(155, 97, 43, 1);
+	background-color: #492300;
 	border: none;
 	width: 100%; 
-	margin-top: 2vh;
-	font-size: 1.5vw;
-	text-align: left;
+	margin-top: 10px;
+	font-family:EdmundsFont; 
+	font-size: 3vh;
 }
 
 
@@ -198,10 +207,10 @@ h2 {
 
 
 
-.resourcetag {
+/*.resourcetag {
 	font-size: 1.2vw;
 	height: 2.5vw
-}
+}*/
 
 .rightcol {
 	width: 80%;
