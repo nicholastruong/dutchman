@@ -51,6 +51,11 @@ PlayerController.prototype = {
        $('#weathertext').text(weather[d['weather']][0]);
        $('#weatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
 
+       var resources = d['resources'];
+       //hardcoded fuel for now
+
+       $('#fuel').text(resources['fuel'] + " Fuel");
+
        enableMove = true;
     });
 

@@ -38,8 +38,9 @@ io.on("connection", function(socket) {
 	//hacky way of getting facilitator rn
 	if (socket.handshake.headers.referer !== "http://localhost:3000/"){
 		facilitatorID = socket["id"];
-		console.log(openSockets[facilitatorID]);
 	}
+
+	game.updateSockets(0, socket, facilitatorID);
 	
 });
 
@@ -51,19 +52,14 @@ game.loadAll(function() {
 
 
 // Export an event emitting infrastructure
-module.exports.emit = function(isFacilitator, eventID, data, callback)
+module.exports.emit = function(socketID, eventID, data, callback, isBroadcast)
 {
-	console.log(facilitatorID);
-	if (isFacilitator){
-		let socket = openSockets[facilitatorID];
+	console.log(socketID);
+	if (socketID){
+		let socket = openSockets[socketID];
 		socket.emit(eventID, data, callback);
 	}
-	/*
-	if (socket)
-	{
-		socket.emit(eventID, data, callback);
-	}*/
-
+	
 	//temporary broadcast if not facilitator
 	else {
 		io.emit(eventID, data);
@@ -91,11 +87,9 @@ function loadEvents(path, outgoing)
 				else if (file.endsWith(".js"))
 				{ // it is a JS file
 
-					console.log(outgoing);
 					if (outgoing)
 					{
 
-						console.log(file);
 						let outgoingEventModule = require(file)(module.exports);
 						trigger[outgoingEventModule.id] = outgoingEventModule.func;
 					}
@@ -104,7 +98,7 @@ function loadEvents(path, outgoing)
 						io.setMaxListeners(io.getMaxListeners() + 1);
 
 						io.on("connection", function(socket) {
-							require(file)(socket, module.exports, game);
+							require(file)(socket, module.exports, game, config);
 						});
 					}
 				}

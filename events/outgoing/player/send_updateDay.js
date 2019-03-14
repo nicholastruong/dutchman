@@ -25,13 +25,15 @@ module.exports = function(server, config)
 {
 	return {
 		id: eventID,
-		func: function() {
-			isFacilitator = false;
-			server.emit(false, eventID, 
+		func: function(socketID, resources) {
+			server.emit(socketID, eventID, 
 				{
 					day: ++day,
-  					weather: weather[day] 
-  				}
+  					weather: weather[day],
+  					resources: resources 
+  				},
+  				null,
+  				false
   			);
 		}
 	};

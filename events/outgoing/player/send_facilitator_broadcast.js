@@ -5,7 +5,7 @@ module.exports = function(server, config)
 		id: eventID,
 		func: function(msg) {
 			isFacilitator = false;
-			server.emit(false, eventID, msg);
+			server.emit(null, eventID, msg, null, true);
 		}
 	};
 }

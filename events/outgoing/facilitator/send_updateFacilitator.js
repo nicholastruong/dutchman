@@ -6,9 +6,8 @@ module.exports = function(server, config) {
 	return {
 		id: eventId,
 		func: function() {
-			debugger;
-			isFacilitator = true;
-			server.emit(isFacilitator, "player ready", {});
+			debugger;	
+			server.emit(null, "player ready", {}, null, true);
 		}
 	};
 	

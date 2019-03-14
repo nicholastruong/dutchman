@@ -4,7 +4,6 @@ var FacilitatorController = function()
 
   //open socket
   let socket = scope.socket = io();
-  console.log(socket);
 
   scope._RegisterSocketHandlers();
   scope._RegisterOutgoing();
