@@ -1,7 +1,7 @@
 //sends updates to of next day to all the clients
 
 //TODO: CHANGE HARDCODED WEATHER
-var day = 1;
+
 var weather = {
 	1: 'sunny',
 	2: 'sunny',
@@ -25,10 +25,11 @@ module.exports = function(server, config)
 {
 	return {
 		id: eventID,
-		func: function(socketID, resources) {
+		func: function(socketID, resources, day) {
+			console.log(socketID);
 			server.emit(socketID, eventID, 
 				{
-					day: ++day,
+					day: day,
   					weather: weather[day],
   					resources: resources 
   				},
