@@ -29,7 +29,7 @@ $(document).ready(function(){
       });
 });
 
-weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic freeze": ["arctic freeze", "cold"]}
+weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]}
 
 PlayerController.prototype = {
   /**

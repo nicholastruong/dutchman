@@ -26,6 +26,7 @@ h2 {
 #readybutton {
 	background-color: #492300;
 	font-family: EdmundsFont;
+	font-size: 2vw;
 	height: 4vw;
 	width: 40%;
 	color: white;
@@ -54,7 +55,7 @@ h2 {
 	background-color: rgba(155, 97, 43, 1);
 	text-align: left;
 	color: black;
-	font-size: 3vh;
+	font-size: 1vw;
 	margin-top: 2vh;
 }
 
@@ -73,7 +74,7 @@ h2 {
 	width: 100%; 
 	margin-top: 10px;
 	font-family:EdmundsFont; 
-	font-size: 3vh;
+	font-size: 1.5vw;
 }
 
 
