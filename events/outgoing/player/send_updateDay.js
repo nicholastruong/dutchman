@@ -8,7 +8,7 @@ var weather = {
 	3: 'rainy',
 	4: 'sunny',
 	5: 'rainy',
-	6: 'arctic freeze',
+	6: 'arctic blast',
 	7: 'sunny',
 	8: 'rainy',
 	9: 'sunny',
