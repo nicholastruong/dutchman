@@ -23,8 +23,6 @@ module.exports = function(socket, server, game, config) {
 				}
 			}
 
-			console.log(updatedResources);
-
 			server.emit(facilitatorID, "updated player status", updatedResources, null, true);
 
 

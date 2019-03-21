@@ -19,6 +19,13 @@ FacilitatorController.prototype = {
   {
     let scope = this;
     let socket = this.socket;
+
+    socket.on('new player connection', function(d){
+      console.log('New player connected');
+      $('#messages').append($('<li>').text(d["socketID"] + "has connected."));
+
+      console.log(d); 
+    });
     
     socket.on('player ready', function(d){
       console.log(d['currentSpace']);

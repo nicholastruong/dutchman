@@ -41,6 +41,10 @@ io.on("connection", function(socket) {
 	}
 
 	game.updateSockets(0, socket, facilitatorID);
+
+	if (facilitatorID !== socket["id"]){
+		trigger['new player connection'](game, socket["id"]);
+	}
 	
 });
 
