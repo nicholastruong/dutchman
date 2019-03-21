@@ -8,6 +8,10 @@
  const path2 = new Set([15, 16, 17, 18, 19, 20, 9]);
  const path3 = new Set([11, 12, 13, 14]);
 
+ //TODO: CHANGE HARDCODED WEATHER
+
+
+
  //TODO: 
  module.exports = function(config) {
  	return {
@@ -22,6 +26,24 @@
  		/*test: function() {
  			console.log("hello my friend" + games[0].day);
  		},*/
+
+ 		weather: {
+			1: 'sunny',
+			2: 'sunny',
+			3: 'rainy',
+			4: 'sunny',
+			5: 'rainy',
+			6: 'arctic blast',
+			7: 'sunny',
+			8: 'rainy',
+			9: 'sunny',
+			10: 'rainy',
+			11: 'sunny',
+			12: 'sunny',
+			13: 'rainy',
+			14: 'sunny',
+			15: 'rainy'
+		},
 
  		test: function(){
  			let scope = this;
@@ -64,22 +86,42 @@
  			game.players[socketID]['currentLocation'] = location;
  			
  		},
-
- 		updateResources: function(gameID, socketID) {
+ 		
+ 		updateResources: function(gameID, socketID, day) {
  			let scope = this;
  			let game = scope.games[gameID];
 
+ 			var currentWeather = scope.weather[day];
+
  			var resources = game.players[socketID]['resources'];
  			var currentLocation = game.players[socketID]['currentLocation'];
- 			for (r in resources) {
- 				if (path1.has(currentLocation)){
- 					resources[r] -= 1;
- 				}
- 				else if (path2.has(currentLocation)) {
- 					resources[r] -= 5;
+
+ 			//if in mine, use either one cave or shelter
+ 			if(currentLocation === 20) {
+ 				if(resources['cave'] > 0) {
+ 					resources['cave'] -= 1;
  				}
  				else {
- 					resources[r] -= 10;
+ 					resources['shelter'] -= 1;
+ 				}
+ 			}
+
+ 			if (currentWeather === "arctic blast") {
+ 				resources['fuel'] -= 2;
+ 				resources['supplies'] -= 4;
+ 			}
+ 			else if (currentWeather === "sunny") {
+ 				resources['fuel'] -= 1;
+ 				resources['supplies'] -= 1;
+ 			}
+ 			//If the weather is rainy and wet, a team that is in the mud will expend 1 fuel and 2 supplies. A team that is on hard ground will only use 1 fuel and 1 supply. 
+ 			else if (currentWeather === "rainy") {
+ 				resources['fuel'] -= 1;
+ 				if(path2.has(currentLocation)) {
+ 					resources['supplies'] -= 2;
+ 				}
+ 				else {
+ 					resources['supplies'] -= 1;
  				}
  			}
  			
@@ -98,12 +140,21 @@
  			*/
  			
  			let id = socket['id'];
+
+ 			//initial values of resources
  			game.players[id] = 
  				{
  					socket: socket,
  					currentLocation: 0,
  					resources : {
- 						fuel: 100
+ 						supplies: 100,
+ 						fuel: 100,
+ 						tents: 20,
+ 						batteries: 20,
+ 						tires: 20,
+ 						cash: 20,
+ 						caves: 0,
+ 						turbo: 0
  					}
  				};	
  					

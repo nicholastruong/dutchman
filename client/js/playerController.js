@@ -52,9 +52,14 @@ PlayerController.prototype = {
        $('#weatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
 
        var resources = d['resources'];
-       //hardcoded fuel for now
 
        $('#fuel').text(resources['fuel'] + " Fuel");
+       $('#supplies').text(resources['supplies'] + " Supplies");
+       $('#tires').text(resources['tires'] + " Spare Tires");
+       $('#cash').text("$" + resources['cash'] + " Cash");
+       $('#caves').text(resources['caves'] + " Caves");
+       $('#turbo').text(resources['turbo'] + " Turbo Boost");
+       $('#tents').text(resources['tents'] + " Tents");
 
        enableMove = true;
     });
