@@ -97,12 +97,13 @@
  			var currentLocation = game.players[socketID]['currentLocation'];
 
  			//if in mine, use either one cave or shelter
+
  			if(currentLocation === 20) {
- 				if(resources['cave'] > 0) {
- 					resources['cave'] -= 1;
+ 				if(resources['caves'] > 0) {
+ 					resources['caves'] -= 1;
  				}
  				else {
- 					resources['shelter'] -= 1;
+ 					resources['tents'] -= 1;
  				}
  			}
 
