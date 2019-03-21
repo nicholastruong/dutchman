@@ -33,6 +33,11 @@ FacilitatorController.prototype = {
        $('#weathertext').text(weather[d['weather']][0]);
        $('#weatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
     }); 
+
+    socket.on('updated player status', function(d) {
+      console.log("updated player status");
+      console.log(d);
+    });
   },
 
   _RegisterOutgoing: function() 

@@ -134,11 +134,11 @@
  			let scope = this;
  			let game = scope.games[gameID];
  			//TODO: don't let facilitator have resources, location, etc.
- 			/*
+ 			
  			if (facilitatorID) {
  				game.facilitatorID = facilitatorID;
  			}
- 			*/
+ 			
  			
  			let id = socket['id'];
 

@@ -19,6 +19,9 @@ module.exports = function(socket, server, game, config){
 			server.trigger['server send updateDay'](socketID, newResources, weather, day);
 
 		}
+
+		//send all updated player status to facilitator
+		server.trigger['server update player states'](socket, server, game);
 		
 		
 	});
