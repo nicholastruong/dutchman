@@ -161,7 +161,7 @@ function attachClickListener(physics, graphic, index) {
 
 function attachPolygonListeners(scene, graphic, polygon, index) {
    graphic.on('pointerover', function () {
-      console.log("pointerover on index " + index);
+      // console.log("pointerover on index " + index);
 
       graphic.fillStyle(0xffffff, 0.5);
       graphic.fillPoints(polygon.points, true);  

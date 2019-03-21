@@ -27,9 +27,20 @@ $(document).ready(function(){
       .on('hidden.bs.modal', function (e) {
          onModal = false;
       });
+
+   teamname = prompt("Enter a team name of less than 10 characters long:", "Team Awesome");
+   if (teamname == null || teamname == "") {
+      teamname = "Team null";
+   } 
+   if (teamname.length > 10) {
+      teamname = teamname.substring(0, 10)
+   }
+   $('#team_name').text(teamname)
+
 });
 
 weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]}
+var teamname = ""
 
 PlayerController.prototype = {
   /**
@@ -62,6 +73,7 @@ PlayerController.prototype = {
        $('#tents').text(resources['tents'] + " Tents");
 
        enableMove = true;
+       $('#readybutton').prop('disabled', false);
     });
 
   },
@@ -74,6 +86,7 @@ PlayerController.prototype = {
     var readyButton = document.getElementById("ready");
     readyButton.addEventListener('click', function(){
       console.log("currently in space " + curr_space);
+      $('#readybutton').prop('disabled', true)
       socket.emit('ready', 
          {currentSpace: curr_space}
       );
@@ -84,8 +97,4 @@ PlayerController.prototype = {
       alert("Instructions for players");
     });
   }
-}
-function ready() {
-  var socket = io();
-  socket.emit('ready');
 }
