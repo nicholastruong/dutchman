@@ -51,7 +51,6 @@ PlayerController.prototype = {
     let scope = this;
     let socket = this.socket;
 
-
     socket.on('facilitator broadcast', function(msg) {
       $('#messages').append($('<li>').text(msg));
     });
@@ -63,6 +62,7 @@ PlayerController.prototype = {
        $('#weatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
 
        var resources = d['resources'];
+
 
        $('#fuel').text(resources['fuel'] + " Fuel");
        $('#supplies').text(resources['supplies'] + " Supplies");

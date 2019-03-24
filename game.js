@@ -80,6 +80,17 @@
  			}
  		},
 
+
+ 		removeSocket: function(gameID, socketID) {
+ 			let scope = this;
+ 			let game = scope.games[gameID];
+ 			console.log('DELETING');
+ 			console.log(game.players);
+ 			delete game.players[socketID];
+ 			console.log(game.players);
+ 			console.log('DELETED');
+ 		},
+
  		setNextLocation: function(gameID, location, socketID) {
  			let scope = this;
  			let game = scope.games[gameID];

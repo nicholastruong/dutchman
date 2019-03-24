@@ -22,7 +22,7 @@ FacilitatorController.prototype = {
 
     socket.on('new player connection', function(d){
       console.log('New player connected');
-      $('#messages').append($('<li>').text(d["socketID"] + "has connected."));
+      $('#messages').append($('<li>').text(d["socketID"] + " has connected :)"));
 
       console.log(d); 
     });
