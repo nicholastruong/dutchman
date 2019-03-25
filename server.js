@@ -31,8 +31,9 @@ app.get('/facilitator', function(req, res){
 var openSockets = module.exports.openSockets = [];
 
 io.on("connection", function(socket) {
-	console.log(socket.handshake.headers.referer);
-	console.log(socket["id"]);
+	//console.log(socket.handshake.headers.referer);
+	console.log("new connection !");
+	console.log("socket ID: " + socket["id"]);
 	openSockets[socket["id"]] = socket;
 
 	//hacky way of getting facilitator rn
@@ -44,8 +45,7 @@ io.on("connection", function(socket) {
 
 	if (facilitatorID !== socket["id"]){
 		trigger['new player connection'](game, socket["id"]);
-	}
-	
+	}	
 });
 
 //load game state

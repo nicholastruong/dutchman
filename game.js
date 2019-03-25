@@ -140,6 +140,25 @@
 
  		},
 
+ 		commitTrade: function (gameID, trade) {
+ 			let scope = this;
+ 			let game = scope.games[gameID];
+
+ 			let proposer = game.players[trade.proposerID]['resources'];
+ 			let target = game.players[trade.targetID]['resources'];
+
+ 			for (resource in trade.offered_resources) {
+ 				proposer[resource] -= trade.offered_resources[resource];
+ 				target[resource] += trade.offered_resources[resource];
+ 			}
+
+ 			for (resource in trade.requested_resources) {
+ 				proposer[resource] += trade.requested_resources[resource];
+ 				target[resource] -= trade.requested_resources[resource];
+ 			}
+ 			//TODO: is it moddifying?
+ 		},
+
  		//updates socket for a given room on changed connection
  		updateSockets: function (gameID, socket, facilitatorID) {
  			let scope = this;
