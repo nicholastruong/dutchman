@@ -55,7 +55,7 @@ h2 {
 	background-color: rgba(155, 97, 43, 1);
 	text-align: left;
 	color: black;
-	font-size: 1vw;
+	font-size: 3vh;
 	margin-top: 2vh;
 }
 
@@ -208,10 +208,27 @@ h2 {
 
 
 
-/*.resourcetag {
-	font-size: 1.2vw;
-	height: 2.5vw
-}*/
+.resourcetag {
+	/*font-size: 1.2vw;
+	height: 2.5vw */
+}
+
+.resourcetag .resourcetext {
+	visibility: hidden;
+	width: 200px;
+  	background-color: #492300;
+  	color: #fff;
+  	border-radius: 6px;
+  	padding: 5px 0;
+
+  	/* Position the tooltip */
+  	position: absolute;
+  	z-index: 1;
+}
+
+.resourcetag:hover .resourcetext {
+	visibility: visible;
+}
 
 .rightcol {
 	width: 80%;
@@ -223,4 +240,27 @@ h2 {
 	background-color: #492300;
 }
 
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  color: white;
+}
 
+th {
+  font-size: 3vh;
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 3px;
+}
+
+td {
+  font-size: 2vh;
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 3px;
+}
+
+table:nth-child(even) {
+	background-color: #492300;
+}
