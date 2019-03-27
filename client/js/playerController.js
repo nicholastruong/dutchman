@@ -88,7 +88,10 @@ PlayerController.prototype = {
       console.log("currently in space " + curr_space);
       $('#readybutton').prop('disabled', true)
       socket.emit('ready', 
-         {currentSpace: curr_space}
+         {
+            currentSpace: curr_space,
+            currentCoords: [car.x, car.y]
+         }
       );
     });
 

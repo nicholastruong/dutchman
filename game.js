@@ -80,11 +80,11 @@
  			}
  		},
 
- 		setNextLocation: function(gameID, location, socketID) {
+ 		setNextLocation: function(gameID, location, coords, socketID) {
  			let scope = this;
  			let game = scope.games[gameID];
  			game.players[socketID]['currentLocation'] = location;
- 			
+ 			game.players[socketID]['currentCoords'] = coords;
  		},
  		
  		updateResources: function(gameID, socketID, day) {

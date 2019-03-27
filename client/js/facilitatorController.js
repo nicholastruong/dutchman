@@ -22,13 +22,13 @@ FacilitatorController.prototype = {
 
     socket.on('new player connection', function(d){
       console.log('New player connected');
-      $('#messages').append($('<li>').text(d["socketID"] + "has connected."));
+      $('#messages').append($('<li>').text(d["socketID"] + " has connected."));
 
       console.log(d); 
+      addNewBoardIcon(d["socketID"])
     });
     
     socket.on('player ready', function(d){
-      console.log(d['currentSpace']);
       $('#messages').append($('<li>').text("Player is ready for the next day"));
       console.log("player is ready");
     });
@@ -44,6 +44,10 @@ FacilitatorController.prototype = {
     socket.on('updated player status', function(d) {
       console.log("updated player status");
       console.log(d);
+
+      for (player in d) {
+        updateDestinations(player, d[player]['coords'])
+      }
     });
   },
 

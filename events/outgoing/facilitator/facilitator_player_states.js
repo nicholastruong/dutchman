@@ -18,6 +18,7 @@ module.exports = function(socket, server, game, config) {
 				if (p !== facilitatorID){
 					updatedResources[p] = {
 						location : players[p]['currentLocation'],
+						coords : players[p]['currentCoords'],
 						resources : players[p]['resources']
 					}
 				}

@@ -32,12 +32,16 @@ $(document).ready(function(){
 // list of global variables
 var game;
 var boardWidth, boardHeight;
-var car;
+var startSpace;
+var cars = {};
+var dests = {};
 var boardspaces;
 var connections;
 
-var destx = boardWidth / 2; 
-var desty = boardHeight / 2;
+var global_physics;
+
+// var destx = boardWidth / 2; 
+// var desty = boardHeight / 2;
 
 
 
@@ -149,8 +153,9 @@ function create() {
       }   
    }
 
-   car = this.physics.add.image(spaces[0][0] + (spaces[0][4] - spaces[0][0])/2, 
-      spaces[0][1] + (spaces[0][3] - spaces[0][1])/2, "team_icon");
+   startSpace = [spaces[0][0] + (spaces[0][4] - spaces[0][0])/2, spaces[0][1] + (spaces[0][3] - spaces[0][1])/2]
+   global_physics = this.physics;
+   // car = this.physics.add.image(startSpace[0], startSpace[1], "team_icon");
 }
 
 
@@ -208,9 +213,28 @@ function attachCircleListeners(graphic, circle, index) {
 
 
 function update() {
-   if (Phaser.Math.Distance.Between(car.x, car.y, destx, desty) < 10) {
-      // console.log("car reached destination");
-      car.body.stop();
-   }
+  for (var id in cars) {
+    if (dests[id] != null) {
+      if (Phaser.Math.Distance.Between(cars[id].x, cars[id].y, dests[id][0], dests[id][1]) < 10) {
+        // console.log("car reached destination");
+        cars[id].body.stop();
+      }
+    }
+  };
+}
+
+
+function addNewBoardIcon(socketID) {
+  newCar = global_physics.add.image(startSpace[0], startSpace[1], "team_icon");
+  cars[socketID] = newCar
+}
+
+function updateDestinations(socketID, coords) {
+  // console.log("updating " + socketID + " to coordinates " + coords);
+
+  if (coords != undefined) {
+    dests[socketID] = coords;
+    global_physics.moveTo(cars[socketID], dests[socketID][0], dests[socketID][1], 200);
+  }
 }
 
