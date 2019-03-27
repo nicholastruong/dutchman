@@ -9,10 +9,8 @@ module.exports = function(socket, server, game, config){
 		currentGame['day'] += 1;
 		//for each player, update resource count in game state
 		//query game state for resources and send to each socket
-		
+
 		var weather = game.weather[currentGame['day']];
-		console.log("asdf");
-		console.log(weather);
 		for (socketID in players) {
 			
 			var newResources = players[socketID]['resources'];
