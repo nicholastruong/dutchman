@@ -251,12 +251,10 @@ function addNewBoardIcon(socketID) {
 }
 
 function updateDestinations(socketID, location, coords) {
-  console.log("updating " + socketID + " to location " + location);
+  // console.log("updating " + socketID + " to location " + location);
   if (coords != undefined) {
     locations[socketID] = location;
     dests[socketID] = coords;
-    console.log(locations);
-    console.log(dests);
     global_physics.moveTo(cars[socketID], dests[socketID][0], dests[socketID][1], 200);
   }
 }
