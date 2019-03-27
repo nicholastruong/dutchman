@@ -23,7 +23,7 @@ FacilitatorController.prototype = {
 
     socket.on('new player connection', function(d){
       console.log('New player connected');
-      $('#messages').append($('<li>').text(d["socketID"] + " has connected :)"));
+      $('#messages').append($('<li>').text("Team " + teamcount + " has connected :)"));
 
       var resources = d['resources'];
 
@@ -35,7 +35,7 @@ FacilitatorController.prototype = {
        var row = table.insertRow(0);
        var cell1 = row.insertCell(0);
        cell1.innerHTML = "Team " + teamcount;
-       cell1.setAttribute("style","font-size:3vh; font-weight: bold; background-color: #492300;");
+       cell1.setAttribute("style","font-size:1.75vw; font-weight: bold; background-color: #492300;");
        var srow = table.insertRow(1);
        var slabel = srow.insertCell(0);
        slabel.innerHTML = "Supplies";
@@ -85,7 +85,9 @@ FacilitatorController.prototype = {
        tbunits.setAttribute("id", "turbo" + teamcount);
        tbunits.innerHTML = resources['turbo'];
        teamcount++;
+
       console.log(d); 
+
       addNewBoardIcon(d["socketID"])
     });
     
@@ -107,7 +109,7 @@ FacilitatorController.prototype = {
       console.log(d);
 
       for (player in d) {
-        updateDestinations(player, d[player]['coords'])
+        updateDestinations(player, d[player]['location'], d[player]['coords'])
       }
     });
   },
@@ -139,3 +141,4 @@ FacilitatorController.prototype = {
 
   
 };
+

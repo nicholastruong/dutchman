@@ -55,7 +55,7 @@ h2 {
 	background-color: rgba(155, 97, 43, 1);
 	text-align: left;
 	color: black;
-	font-size: 3vh;
+	font-size: 1.25vw;
 	margin-top: 2vh;
 }
 
@@ -248,14 +248,14 @@ table {
 }
 
 th {
-  font-size: 3vh;
+  font-size: 2vw;
   border: 1px solid #dddddd;
   text-align: left;
   padding: 3px;
 }
 
 td {
-  font-size: 2vh;
+  font-size: 1vw;
   border: 1px solid #dddddd;
   text-align: left;
   padding: 3px;

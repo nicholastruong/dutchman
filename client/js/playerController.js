@@ -110,14 +110,32 @@ PlayerController.prototype = {
 
     var readyButton = document.getElementById("ready");
     readyButton.addEventListener('click', function(){
-      console.log("currently in space " + curr_space);
-      $('#readybutton').prop('disabled', true)
-      socket.emit('ready', 
-         {
-            currentSpace: curr_space,
-            currentCoords: [car.x, car.y]
+      var reallyReady = false;
+      if (!enableMove) {
+         reallyReady = true;
+      }
+      else {
+         if (curr_space == 0 && confirm("Are you sure you want to stay in Apache Junction for another day?")) {
+            reallyReady = true;
          }
-      );
+         if (curr_space == 20 && confirm("Are you sure you want to stay in the Lost Dutchman Goldmine?")) {
+            reallyReady = true;
+         }
+         if (curr_space != 0 && curr_space != 20 && confirm("Are you sure you want to stay in the same space?")) {
+            reallyReady = true;
+         }
+      }
+
+      if (reallyReady) {
+         $('#readybutton').prop('disabled', true)
+         enableMove = false;
+         socket.emit('ready', 
+            {
+               currentSpace: curr_space,
+               currentCoords: [car.x, car.y]
+            }
+         ); 
+      }
     });
 
     var instructionButton = document.getElementById("instructionblock");

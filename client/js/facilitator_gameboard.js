@@ -35,10 +35,14 @@ var boardWidth, boardHeight;
 var startSpace;
 var cars = {};
 var dests = {};
+var locations = {};
 var boardspaces;
 var connections;
 
 var global_physics;
+
+var colors = ["black", "blue", "green", "orange", "pink", "red"];
+var colorSelector = 0;
 
 // var destx = boardWidth / 2; 
 // var desty = boardHeight / 2;
@@ -46,9 +50,13 @@ var global_physics;
 
 
 function preload() {
-   console.log("preload called");
-   this.load.image("background", "/assets/gameboard.png");
-   this.load.image("team_icon", "/assets/team_icon.png");
+  console.log("preload called");
+  console.log(colors);
+  this.load.image("background", "/assets/gameboard.png");
+  // this.load.image("car", "/assets/cars/orange.png");
+  for (i = 0; i < colors.length; i++) {
+    this.load.image(colors[i], "/assets/cars/" + colors[i] + ".png");
+  }
 }
 
 
@@ -133,7 +141,7 @@ function create() {
 
    for (i = 0; i < spaces.length; i++) {
       graphic = this.add.graphics();
-      attachClickListener(this.physics, graphic, i);
+      attachClickListener(this.physics, graphic, i, locations);
 
       if (spaces[i].length == 3) {
          new_circle = new Phaser.Geom.Circle(spaces[i][0], spaces[i][1], spaces[i][2]);
@@ -159,7 +167,18 @@ function create() {
 }
 
 
-function attachClickListener(physics, graphic, index) {
+function attachClickListener(physics, graphic, index, locations) {
+   graphic.on('pointerdown', function(pointer) {
+      var players = "The following players are in this space:\n";
+      for (id in locations) {
+         if (locations[id] == index) {
+            players += id + "\n";
+         }
+      }
+
+      alert(players);
+   });
+
    graphic.on('pointerout', function () { graphic.clear(); });
 }
 
@@ -225,15 +244,19 @@ function update() {
 
 
 function addNewBoardIcon(socketID) {
-  newCar = global_physics.add.image(startSpace[0], startSpace[1], "team_icon");
+  newCar = global_physics.add.image(startSpace[0], startSpace[1], colors[colorSelector++]);
+  colorSelector = (colorSelector) % colors.length;
   cars[socketID] = newCar
+  locations[socketID] = 0;
 }
 
-function updateDestinations(socketID, coords) {
-  // console.log("updating " + socketID + " to coordinates " + coords);
-
+function updateDestinations(socketID, location, coords) {
+  console.log("updating " + socketID + " to location " + location);
   if (coords != undefined) {
+    locations[socketID] = location;
     dests[socketID] = coords;
+    console.log(locations);
+    console.log(dests);
     global_physics.moveTo(cars[socketID], dests[socketID][0], dests[socketID][1], 200);
   }
 }

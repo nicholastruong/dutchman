@@ -48,7 +48,7 @@ var desty = boardHeight / 2;
 function preload() {
    console.log("preload called");
    this.load.image("background", "/assets/gameboard.png");
-   this.load.image("team_icon", "/assets/team_icon.png");
+   this.load.image("car", "/assets/cars/black.png");
 }
 
 
@@ -157,14 +157,14 @@ function create() {
    }
 
    car = this.physics.add.image(spaces[0][0] + (spaces[0][4] - spaces[0][0])/2, 
-      spaces[0][1] + (spaces[0][3] - spaces[0][1])/2, "team_icon");
+      spaces[0][1] + (spaces[0][3] - spaces[0][1])/2, "car");
 }
 
 
 function attachClickListener(physics, graphic, index) {
    
    graphic.on('pointerdown', function(pointer) {
-      console.log(onModal);
+      // console.log(onModal);
       if (enableMove && !onModal) {
          if (validMove(index)) {
             console.log("index is now " + index);
