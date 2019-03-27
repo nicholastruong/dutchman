@@ -11,6 +11,8 @@ var FacilitatorController = function()
 
 weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]}
 
+var playerNames = {};
+
 FacilitatorController.prototype = {
   /**
    * Register handlers for incoming events sent by the server.
@@ -23,7 +25,9 @@ FacilitatorController.prototype = {
 
     socket.on('new player connection', function(d){
       console.log('New player connected');
-      $('#messages').append($('<li>').text("Team " + teamcount + " has connected :)"));
+      name = "Team " + teamcount;
+      playerNames[d["socketID"]] = name;
+      $('#messages').append($('<li>').text(name + " has connected :)"));
 
       var resources = d['resources'];
 
@@ -34,7 +38,7 @@ FacilitatorController.prototype = {
        var table = document.getElementById("teamtable");
        var row = table.insertRow(0);
        var cell1 = row.insertCell(0);
-       cell1.innerHTML = "Team " + teamcount;
+       cell1.innerHTML = name;
        cell1.setAttribute("style","font-size:1.75vw; font-weight: bold; background-color: #492300;");
        var srow = table.insertRow(1);
        var slabel = srow.insertCell(0);
@@ -88,7 +92,7 @@ FacilitatorController.prototype = {
 
       console.log(d); 
 
-      addNewBoardIcon(d["socketID"])
+      addNewBoardIcon(name)
     });
     
     socket.on('player ready', function(d){
@@ -109,7 +113,7 @@ FacilitatorController.prototype = {
       console.log(d);
 
       for (player in d) {
-        updateDestinations(player, d[player]['location'], d[player]['coords'])
+        updateDestinations(playerNames[player], d[player]['location'], d[player]['coords'])
       }
     });
   },
