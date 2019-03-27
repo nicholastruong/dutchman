@@ -4,6 +4,7 @@ var PlayerController = function()
 
   //open socket
   let socket = scope.socket = io();
+  console.log("hey look at my socket");
   console.log(socket);
 
   scope._RegisterSocketHandlers();
@@ -37,6 +38,8 @@ $(document).ready(function(){
    }
    $('#team_name').text(teamname)
 
+
+
 });
 
 weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]}
@@ -51,6 +54,26 @@ PlayerController.prototype = {
     let scope = this;
     let socket = this.socket;
 
+    /*
+    // INFO: THIS IS TEMP CODE for testing trading backend (melanie)
+    socket.on('connect', function(){
+      var id = socket.io.engine.id
+      let trade = {
+        proposerID: id,
+        targetID: id,
+        offered_resources: {'fuel': 10},
+        requested_resources: {'supplies': 10}
+      };
+      console.log(trade);
+      socket.emit('player send tradeOffer', {trade: trade});
+    });
+
+    socket.on('server send giveTradeOffer', function(trade) {
+      console.log("hey someone sent us a trade, that's kinda cool");
+      console.log(trade);
+      socket.emit('player send tradeResponse', {trade: trade, accepted: true});
+    }); */
+
 
     socket.on('facilitator broadcast', function(msg) {
       $('#messages').append($('<li>').text(msg));
@@ -64,6 +87,7 @@ PlayerController.prototype = {
 
        var resources = d['resources'];
 
+
        $('#fuel').text(resources['fuel'] + " Fuel");
        $('#supplies').text(resources['supplies'] + " Supplies");
        $('#tires').text(resources['tires'] + " Spare Tires");
@@ -74,6 +98,7 @@ PlayerController.prototype = {
 
        enableMove = true;
        $('#readybutton').prop('disabled', false);
+
     });
 
   },
