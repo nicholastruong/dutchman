@@ -96,6 +96,7 @@ FacilitatorController.prototype = {
     });
     
     socket.on('player ready', function(d){
+      console.log(d);
       $('#messages').append($('<li>').text("Player is ready for the next day"));
       console.log("player is ready");
     });
