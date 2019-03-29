@@ -11,16 +11,18 @@ connections = [ // should move this to external text file
 [7, 9, 20],
 [8, 10, 11, 20],
 [9], // top-right trading post
-[9, 12, 20],
-[11, 13, 14], // Tom Canyon Ford
-[12], // bottom-right trading post
-[12, 1],
+[9, 12, 20, 22],
+[11, 13, 14], // Tom Canyon Ford - 12
+[12, 21, 22], // bottom-right trading post - 13
+[12, 1, 21], // - 14
 [1, 16], // start of plateau trail
 [15, 17],
 [16, 18],
 [17, 19],
 [18, 20],
-[19, 8, 9, 11] // Dutchman goldmine
+[19, 8, 9, 11], // Dutchman goldmine
+[14, 13, 22],
+[13, 11, 21]
 ];
 // console.log(connections);
 
@@ -48,7 +50,7 @@ var spaces = [ // should move this to external text file
 [720, 712, 75], // bottom-right trading post
 [302, 615,  302, 770,  540, 770,  540, 615], // low country trail
 
-[201, 502,  301, 502,  302, 594,  365, 531,  267, 435], // plateau trail
+[201, 502,  301, 502,  300, 594,  365, 531,  267, 435], // plateau trail
 [267, 435,  365, 531,  417, 479,  318, 382],
 [318, 382,  417, 479,  468, 426,  371, 329],
 [371, 329,  468, 426,  521, 374,  423, 276],
@@ -56,7 +58,9 @@ var spaces = [ // should move this to external text file
 
 [514, 205,  477, 202,  500, 232,  467, 243,  494, 266,  477, 279,  500, 293,  494, 318,  525, 320,  526, 347,  553, 337,  554, 340,  568, 358,  590, 338, // gold mine
 604, 365,  624, 330,  655, 345,  659, 308,  692, 304,  671, 272,  698, 250,  671, 236,  685, 216,  656, 214,
-662, 188,  631, 190,  627, 155,  598, 179,  582, 148,  566, 176,  542, 148,  539, 180,  504, 166,  512, 199] // Dutchman gold mine
+662, 188,  631, 190,  627, 155,  598, 179,  582, 148,  566, 176,  542, 148,  539, 180,  504, 166,  512, 199], // Dutchman gold mine
+[540, 566,  542, 768,  673, 766,  661, 753,  660, 749,  652, 737,  647, 720,  647, 703,  652, 687,  640, 665,  628, 648,  604, 616,  577, 590,  540, 566], // Tom Canyon Ford left side
+[540, 550,  580, 560,  632, 585,  656, 592,  720, 635,  734, 637,  756, 644,  774, 658,  773, 530,  540, 532] // Tom Canyon Ford right side
 ];
 
 var icon_spot = [
@@ -72,7 +76,7 @@ var icon_spot = [
 [660, 160], 
 [720, 88], // top-right trading post
 [668, 440], // right-most space
-[626, 606], // Tom Canyon Ford
+[628, 608], // Tom Canyon Ford
 [720, 712], // bottom-right trading post
 [421, 692], // low country trail
 [310, 495], // plateau trail
@@ -80,8 +84,17 @@ var icon_spot = [
 [396, 405],
 [446, 352],
 [476, 302],
-[580, 255]
+[580, 255],
+[588, 690], // Tom Canyon Ford left side
+[722, 572] // Tom Canyon Ford right side
 ];
+
+// [588, 690], [722, 572]
+
+// [540, 566,  542, 768,  673, 766,  661, 753,  660, 749,  652, 737,  647, 720,  647, 703,  652, 687,  640, 665,  628, 648,  604, 616,  577, 590,  540, 566],
+// [540, 550,  580, 560,  632, 585,  656, 592,  720, 635,  734, 637,  756, 644,  774, 658,  773, 530,  540, 532]
+
+
 
 function normalize(boardwidth, boardheight) {
     for (i = 0; i < spaces.length; i++) {

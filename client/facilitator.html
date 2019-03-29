@@ -30,22 +30,34 @@
 
           <div id="resourcetitle" style="font-size:2vw; margin-top:2vh;"> Team Resources </div>
 
-          <div id="resourceblock" style="max-height: 75vw; height: 85vh; overflow: auto; margin-top: 0vh; background-color: rgba(147, 89, 43, 1);"></div>
+          <div id="resourceblock" style="max-height: 75vw; height: 45vw; overflow: auto; margin-top: 0vh; background-color: rgba(147, 89, 43, 1);"></div>
         </div>
         
         <div class="col-sm-7">
           <div id="board"></div>
           
           <h2 id="ready"> <button id="readybutton" style="">Start Next Day</button> </h2>
+          <p id="copyright">Copyright Performance Management Company 1993-2019</p>
         </div>
         
         <div class="col-sm-3" id="right">
           <div id="weatherblock" class="rightcol">
             <h2 id="day" style="font-size:2.5vw; font-family:EdmundsFont; color: white;">Day 1</h2>
 
-            <div id="weather">
-              <img id="weatherimg" src="assets/sunny.png" height="20%" width="20%">
-              <p id="weathertext">sunny and cool</p>
+            <div class="weather">
+              <h2 id="lowcountry" class="weatherlabel" style="font-size:1.5vw; font-family:EdmundsFont; color: white; margin-bottom: 7.5px;">
+                Low country
+              </h2>
+              <img id="lowweatherimg" class="weatherimg" src="assets/sunny.png" height="20%" width="20%">
+              <p id="lowweathertext" class="weathertext">sunny and cool</p>
+            </div>
+
+            <div class="weather">
+              <h2 id="highcountry" class="weatherlabel" style="font-size:1.5vw; font-family:EdmundsFont; color: white; margin-bottom: 10px;">
+                High country
+              </h2>
+              <img id="highweatherimg" class="weatherimg" src="assets/sunny.png" height="20%" width="20%">
+              <p id="highweathertext" class="weathertext">sunny and cool</p>
             </div>
           </div>
 

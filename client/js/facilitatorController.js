@@ -105,8 +105,12 @@ FacilitatorController.prototype = {
     socket.on('server send updateDay', function(d) {
        console.log(d);
        $('#day').text("Day: " + d['day']);
-       $('#weathertext').text(weather[d['weather']][0]);
-       $('#weatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
+
+       $('#lowweathertext').text(weather[d['weather']][0]); 
+       $('#lowweatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
+       
+       $('#highweathertext').text(weather[d['weather']][0]);
+       $('#highweatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
     }); 
 
     socket.on('updated player status', function(d) {

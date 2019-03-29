@@ -38,8 +38,6 @@ $(document).ready(function(){
    }
    $('#team_name').text(teamname)
 
-
-
 });
 
 weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]}

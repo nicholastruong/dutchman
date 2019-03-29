@@ -35,9 +35,11 @@ var boardWidth, boardHeight;
 var car;
 var connections;
 var curr_space;
+var shape_graphics = [];
 
 var onModal;
 var enableMove;
+var muddy;
 
 var destx = boardWidth / 2; 
 var desty = boardHeight / 2;
@@ -84,9 +86,12 @@ function create() {
             attachPolygonListeners(this, graphic, new_polygon, i);
          }
       }   
+
+      shape_graphics.push(graphic);
    }
 
    car = this.physics.add.image(icon_spot[0][0], icon_spot[0][1], "car");
+   makeMuddy(false);
 }
 
 
@@ -99,12 +104,10 @@ function attachClickListener(physics, graphic, index) {
             console.log("index is now " + index);
 
             curr_space = index;
-            // destx = pointer.x;
-            // desty = pointer.y;
             destx = icon_spot[index][0];
             desty = icon_spot[index][1];
             physics.moveTo(car, destx, desty, 200);
-            enableMove = false;
+            // enableMove = false;
          }
          else {
             alert("Sorry this is not a valid move");
@@ -182,5 +185,18 @@ function validMove(i) { // checks if space i is adjacent to the current space
    }
 
    return false;
+}
+
+function makeMuddy(isMuddy) {
+   if (isMuddy) {
+      shape_graphics[12].visible = false;
+      shape_graphics[21].visible = true;
+      shape_graphics[22].visible = true;
+   }
+   if (!isMuddy) {
+      shape_graphics[12].visible = true;
+      shape_graphics[21].visible = false;
+      shape_graphics[22].visible = false;
+   }
 }
 

@@ -144,16 +144,18 @@ h2 {
 	/*position: relative;*/
 }
 
-#weather {
+.weather {
 	margin-top: 2vh;
 }
 
-#weatherimg {
+
+
+.weatherimg {
 	padding-left:5px; 
 	vertical-align: middle;
 }
 
-#weathertext {
+.weathertext {
 	display: inline-block; 
 	font-size:2vw; 
 	padding-left: 0.6vw; 
@@ -263,4 +265,12 @@ td {
 
 table:nth-child(even) {
 	background-color: #492300;
+}
+
+#copyright {
+	margin-top: 1vw;
+	margin-left: 5px;
+	font-size: 0.75vw;
+	color: white;
+	text-align: center;
 }
