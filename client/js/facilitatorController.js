@@ -102,15 +102,17 @@ FacilitatorController.prototype = {
     });
 
 
-    socket.on('server send updateDay', function(d) {
+    socket.on('facilitator weather report', function(d) {
        console.log(d);
        $('#day').text("Day: " + d['day']);
 
-       $('#lowweathertext').text(weather[d['weather']][0]); 
+       $('#lowweathertext').text(d['weather']['low']); 
        $('#lowweatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
        
-       $('#highweathertext').text(weather[d['weather']][0]);
+       $('#highweathertext').text(d['weather']['high']);
        $('#highweatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
+
+       //to find if it's flooded: d['weather']['canyon']
     }); 
 
     socket.on('updated player status', function(d) {

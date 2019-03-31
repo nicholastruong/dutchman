@@ -80,9 +80,9 @@ PlayerController.prototype = {
     socket.on('server send updateDay', function(d) {
        console.log(d);
        $('#day').text("Day: " + d['day']);
-       $('#weathertext').text(weather[d['weather']][0]);
+       $('#weathertext').text(d['weather'][0]);
        $('#weatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
-
+       //to find if canyon is flooded: d['weather'][1]
        var resources = d['resources'];
 
 

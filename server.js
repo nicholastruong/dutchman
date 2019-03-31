@@ -6,7 +6,6 @@ var io = require('socket.io')(http);
 const fs = require("fs");
 const path = require("path");
 
-var facilitatorID;
 var openSockets = {};
 
 const config = require("./config.js")
@@ -35,15 +34,15 @@ io.on("connection", function(socket) {
 	console.log("new connection !");
 	console.log("socket ID: " + socket["id"]);
 	openSockets[socket["id"]] = socket;
-
+	var isFacilitator = false; 
 	//hacky way of getting facilitator rn
 	if (socket.handshake.headers.referer !== "http://localhost:3000/"){
-		facilitatorID = socket["id"];
+		isFacilitator = true;
 	}
-
-	game.updateSockets(0, socket, facilitatorID);
-
-	if (facilitatorID !== socket["id"]){
+	//creates resources and initializes player in game state
+	game.updateSockets(0, socket, isFacilitator);
+	
+	if (!isFacilitator){
 		trigger['new player connection'](game, socket["id"]);
 	}	
 });
@@ -64,7 +63,7 @@ module.exports.emit = function(socketID, eventID, data, callback, isBroadcast)
 		socket.emit(eventID, data, callback);
 	}
 	
-	//temporary broadcast if not facilitator
+	//temporary broadcast if to no one
 	else {
 		io.emit(eventID, data);
 	}

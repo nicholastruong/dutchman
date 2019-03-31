@@ -10,7 +10,6 @@ module.exports = function(server, config) {
 			let players = currentGame['players'];
 
 			let facilitatorID = currentGame.facilitatorID;
-
 			var newPlayerInfo = {
 				socketID: socketID,
 				resources: players[socketID]['resources'],
