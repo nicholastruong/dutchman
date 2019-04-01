@@ -37,8 +37,8 @@ var curr_space, prev_space;
 var shape_graphics = [];
 
 var onModal;
-var enableMove = true;
-var hasMadeMove = false;
+var enableMove;
+var hasMadeMove;
 
 var destx = boardWidth / 2; 
 var desty = boardHeight / 2;
@@ -107,26 +107,6 @@ function attachClickListener(physics, graphic, index) {
             physics.moveTo(car, destx, desty, 200);
          }
       }
-
-      // console.log(onModal);
-      // if (!onModal) {
-      //    if (index == curr_space) {
-      //       alert("You can move to a new space");
-      //    }
-      //    else if (validMove(index)) {
-      //       console.log("index is now " + index);
-
-      //       prev_space = curr_space;
-      //       curr_space = index;
-      //       destx = icon_spot[index][0];
-      //       desty = icon_spot[index][1];
-      //       physics.moveTo(car, destx, desty, 200);
-      //       enableMove = false;
-      //    }
-      //    else {
-      //       alert("Sorry this is not a valid move");
-      //    }
-      // }
    });
 
    graphic.on('pointerout', function () { graphic.clear(); });
@@ -196,18 +176,22 @@ function update() {
 function checkMove(i) { // checks if space i is a valid move
    if (i == curr_space) {
       if (!hasMadeMove) {
-        alert("You can move to a new space");
+        customAlert("You can move to a new space");
       }
       return false;
    }
 
    if (hasMadeMove && i == prev_space) {
-      if (confirm("Do you want to undo your move?")) {
-         curr_space = prev_space;
-         hasMadeMove = false;
-         return true;
-      }
-      return false;
+      // if (confirm("Do you want to undo your move?")) {
+      //    curr_space = prev_space;
+      //    hasMadeMove = false;
+      //    return true;
+      // }
+      // return false;
+      customAlert("You are undoing your move");
+      curr_space = prev_space;
+      hasMadeMove = false;
+      return true;
    }
 
    if (connections[curr_space].includes(i)) {
@@ -218,12 +202,12 @@ function checkMove(i) { // checks if space i is a valid move
          return true;
       }
       else {
-         alert("You have already moved this day");
+         customAlert("You have already moved this day");
          return false;
       }
    }
 
-   alert("Sorry this is not a valid move");
+   customAlert("Sorry this is not a valid move");
    return false;
 }
 

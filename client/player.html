@@ -5,13 +5,18 @@
   <title>Player Page</title>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
   <link rel="import" href="/provTradeModal.html">
   <link rel="import" href="/teamTradeModal.html">
+
   <script src="/socket.io/socket.io.js"></script>
+  
   <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
   <script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.js"></script>
+  
   <script type="text/javascript" src="/js/player_gameboard.js"></script>
   <script type="text/javascript" src="/js/playerController.js"></script>
   <script type="text/javascript" src="/js/boardspace_data.js"></script>
@@ -20,6 +25,9 @@
       window.controller = new PlayerController();
     }
   </script>
+
+  <!-- bootbox code -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.js"></script>
 
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -64,6 +72,11 @@
             <span class="resourcetext" style="padding-left:10px;">Cash Description</span>
           </p>
           <p class="resourcetag">
+            <img src="assets/cashimage.png" style="padding-left:10px; padding-top: 2px;" width="17%" height="9%">
+            <span id="gold" style="padding:4px "> 0 Gold </span>
+            <span class="resourcetext" style="padding-left:10px;">Gold Description</span>
+          </p>
+          <p class="resourcetag">
             <img src="assets/caveimage.png" style="padding-left:10px;" width="17%" height="9%">
             <span id="caves" style="padding:4px "> 0 Caves </span>
             <span class="resourcetext" style="padding-left:10px;">Cave Description</span>
@@ -72,11 +85,6 @@
             <img src="assets/turboimage.png" style="padding-left:10px; padding-top: 2px;" width="17%" height="9%">
             <span id="turbo" style="padding:4px "> 0 Turbo Boost </span>
             <span class="resourcetext" style="padding-left:10px;">Turbo Boost Description</span>
-          </p>
-          <p class="resourcetag">
-            <img src="assets/turboimage.png" style="padding-left:10px; padding-top: 2px;" width="17%" height="9%">
-            <span id="gold" style="padding:4px "> 0 Gold </span>
-            <span class="resourcetext" style="padding-left:10px;">Gold Description</span>
           </p>
         </div>
 
@@ -107,8 +115,11 @@
 
         <button class="btn btn-primary" id ="leftColButton" style="" onClick="watchVideo()">Watch Video</button>
         
-        <a data-target="#forecastModal" data-toggle="modal">
+        <a data-target="#forecastModal" data-toggle="modal" id="forecastButton">
           <button class="btn btn-primary" id ="leftColButton">Weather Forecast</button>
+          <span class="resourcetext" style="margin-left:80px; margin-top: 10px; padding-left: 5px; background-color: rgba(155, 97, 43, 1)">
+            Use batteries to see the weather forecast for the next five days.
+          </span>
         </a>
 
       </div>

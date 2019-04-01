@@ -13,6 +13,11 @@ weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "a
 
 var playerNames = {};
 
+$(document).ready(function(){
+   console.log("documentReady called");
+
+});
+
 FacilitatorController.prototype = {
   /**
    * Register handlers for incoming events sent by the server.
@@ -93,6 +98,7 @@ FacilitatorController.prototype = {
       console.log(d); 
 
       addNewBoardIcon(name)
+
     });
     
     socket.on('player ready', function(d){
@@ -152,10 +158,39 @@ FacilitatorController.prototype = {
 
     var instructionButton = document.getElementById("instructionblock");
     instructionButton.addEventListener('click', function(){
-      alert("Instructions for facilitator");
+      // alert("Instructions for facilitator");
+
+      customAlert("Instructions for facilitator");
     });
   }
-
   
+};
+
+function customAlert(message) {
+   alertBox = bootbox.dialog({
+      message: message,
+      title: '',
+      backdrop: true,
+      onEscape: true,
+      buttons: {
+         ok: {
+            label: "Okay",
+            className: 'alertButton'
+            // callback: function(){
+            //    alertBox.modal("hide");
+            // }
+         },
+      },
+      show: false
+   });
+
+   alertBox.on('hidden.bs.modal', function () {
+      onModal = false;
+      console.log("onModal is false");
+   });
+
+   onModal = true;
+   console.log("onModal is true");
+   alertBox.modal('show');
 };
 

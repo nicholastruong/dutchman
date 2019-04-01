@@ -43,6 +43,8 @@ var global_physics;
 var colors = ["black", "blue", "green", "orange", "pink", "red"];
 var colorSelector = 0;
 
+var onModal;
+
 // var destx = boardWidth / 2; 
 // var desty = boardHeight / 2;
 
@@ -67,6 +69,8 @@ function create() {
    background = this.add.sprite(boardWidth / 2, boardHeight / 2, "background");
    background.displayWidth = boardWidth;
    background.scaleY = background.scaleX;
+
+   onModal = false;
 
    for (i = 0; i < spaces.length; i++) {
       graphic = this.add.graphics();
@@ -93,25 +97,28 @@ function create() {
    }
 
    global_physics = this.physics;
+   makeMuddy(false);
 }
 
 
 function attachClickListener(physics, graphic, index, locations) {
    graphic.on('pointerdown', function(pointer) {
-      var players = "The following players are in this space:\n";
-      var empty = true;
-      for (id in locations) {
-         if (locations[id] == index) {
-            players += id + "\n";
-            empty = false;
+      if (!onModal) {
+         var players = "The following players are in this space:<br><br>";
+         var empty = true;
+         for (id in locations) {
+            if (locations[id] == index) {
+               players += id + ", ";
+               empty = false;
+            }
          }
-      }
 
-      if (empty) {
-         alert("There are no players in this space")
-      }
-      else {
-         alert(players);
+         if (empty) {
+            customAlert("There are no players in this space")
+         }
+         else {
+            customAlert(players.substring(0, players.length - 2));
+         }
       }
    });
 
@@ -121,48 +128,54 @@ function attachClickListener(physics, graphic, index, locations) {
 
 function attachPolygonListeners(scene, graphic, polygon, index) {
    graphic.on('pointerover', function () {
-      // console.log("pointerover on index " + index);
+      if (!onModal) {
+         // console.log("pointerover on index " + index);
 
-      graphic.fillStyle(0xffffff, 0.5);
-      graphic.fillPoints(polygon.points, true);  
+         graphic.fillStyle(0xffffff, 0.5);
+         graphic.fillPoints(polygon.points, true);
+      }
    });
 }
 
 function attachCornerListeners(scene, graphic, square, circle, index) {
    graphic.on('pointerover', function () {
-      coeffs = [];
+      if (!onModal) {
+         coeffs = [];
 
-      if (index == 4) { 
-         coeffs = [1.626, 0.35, 0.2, 1.626]; 
-      }
-      else if (index == 9) { 
-         coeffs = [-0.2, 1.626, -1.626, 0.35]; 
-      }
-      else if (index == 12) { 
-         coeffs = [-1.626, -0.35, -0.2, -1.626]; 
-      }
-      
-      path = scene.add.path(square[0], square[1]);
-      for (j = 2; j < square.length-1; j += 2) {
-         path.lineTo(square[j], square[j+1]);
-      }
-      path.cubicBezierTo(
-         square[0], square[1],
-         circle[0] + circle[2] * coeffs[0], circle[1] + circle[2] * coeffs[1],
-         circle[0] + circle[2] * coeffs[2], circle[1] + circle[2] * coeffs[3]
-      )
+         if (index == 4) { 
+            coeffs = [1.626, 0.35, 0.2, 1.626]; 
+         }
+         else if (index == 9) { 
+            coeffs = [-0.2, 1.626, -1.626, 0.35]; 
+         }
+         else if (index == 12) { 
+            coeffs = [-1.626, -0.35, -0.2, -1.626]; 
+         }
+         
+         path = scene.add.path(square[0], square[1]);
+         for (j = 2; j < square.length-1; j += 2) {
+            path.lineTo(square[j], square[j+1]);
+         }
+         path.cubicBezierTo(
+            square[0], square[1],
+            circle[0] + circle[2] * coeffs[0], circle[1] + circle[2] * coeffs[1],
+            circle[0] + circle[2] * coeffs[2], circle[1] + circle[2] * coeffs[3]
+         )
 
-      path.closePath();
+         path.closePath();
 
-      graphic.fillStyle(0xffffff, 0.5);
-      graphic.fillPoints(path.getPoints(), true);
+         graphic.fillStyle(0xffffff, 0.5);
+         graphic.fillPoints(path.getPoints(), true);
+      }
    })
 }
 
 function attachCircleListeners(graphic, circle, index) {
    graphic.on('pointerover', function () {
-      graphic.fillStyle(0xffffff, 0.5);
-      graphic.fillCircleShape(circle);
+      if (!onModal) {
+         graphic.fillStyle(0xffffff, 0.5);
+         graphic.fillCircleShape(circle);
+      }
    })
 }
 

@@ -3,8 +3,11 @@
   "version": "0.0.1",
   "description": "401 project",
   "dependencies": {
+    "bootbox": "^5.0.1",
     "express": "^4.16.4",
     "mysql": "^2.16.0",
+    "npm": "^6.9.0",
+    "popper.js": "^1.14.7",
     "socket.io": "^2.2.0"
   },
   "scripts": {

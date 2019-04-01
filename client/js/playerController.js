@@ -18,6 +18,8 @@ var teamname = "";
 var firstDayinMud = false;
 var curr_day = 1;
 
+var socket;
+
 $(document).ready(function(){
    console.log("documentReady called");
 
@@ -148,45 +150,101 @@ PlayerController.prototype = {
   _RegisterOutgoing: function() 
   {
     let scope = this;
-    let socket = this.socket;
+    socket = this.socket;
 
     var readyButton = document.getElementById("ready");
     readyButton.addEventListener('click', function(){
-      var reallyReady = false;
+      // var reallyReady = false;
       if (hasMadeMove) {
-         reallyReady = true;
+         reallyReady();
       }
       else {
-         if (curr_space == 0 && confirm("Are you sure you want to stay in Apache Junction for another day?")) {
-            reallyReady = true;
+         if (curr_space == 0) {
+            customConfirm("Are you sure you want to stay in Apache Junction for another day?");
          }
-         if (curr_space == 20 && confirm("Are you sure you want to stay in the Lost Dutchman Goldmine?")) {
-            reallyReady = true;
+         if (curr_space == 20) {
+            customConfirm("Are you sure you want to stay in the Lost Dutchman Goldmine?");
          }
-         if (curr_space != 0 && curr_space != 20 && confirm("Are you sure you want to stay in the same space?")) {
-            reallyReady = true;
+         if (curr_space != 0 && curr_space != 20) {
+            customConfirm("Are you sure you want to stay in the same space?");
          }
-      }
-
-      if (reallyReady) {
-         $('#readybutton').prop('disabled', true)
-         enableMove = false;
-         socket.emit('ready', 
-            {
-               currentSpace: curr_space,
-               currentCoords: [car.x, car.y]
-            }
-         ); 
       }
     });
 
     var instructionButton = document.getElementById("instructionblock");
     instructionButton.addEventListener('click', function(){
-      alert("Instructions for players");
+      customAlert("Instructions for players");
     });
   }
+};
+
+function reallyReady() {
+   $('#readybutton').prop('disabled', true)
+   enableMove = false;
+   socket.emit('ready', 
+      {
+         currentSpace: curr_space,
+         currentCoords: [car.x, car.y]
+      }
+   ); 
 }
 
-function updateForecast() {
 
+function customAlert(message) {
+   alertBox = bootbox.dialog({
+      message: message,
+      title: '',
+      backdrop: true,
+      onEscape: true,
+      buttons: {
+         ok: {
+            label: "Okay",
+            className: 'alertButton'
+         },
+      },
+      show: false
+   });
+
+   alertBox.on('hidden.bs.modal', function () {
+      onModal = false;
+      console.log("onModal is false");
+   });
+
+   onModal = true;
+   console.log("onModal is true");
+   alertBox.modal('show');
+};
+
+function customConfirm(message) {
+   confirmBox = bootbox.confirm({
+      message: message,
+      title: '',
+      buttons: {
+         confirm: {
+            label: 'Yes',
+            className: 'btn-success'
+         },
+         cancel: {
+            label: 'No',
+            className: 'btn-danger'
+         }
+      },
+      callback: function (result) {
+         console.log("callback with result: " + result);
+         if (result) {
+            reallyReady();
+         }
+      },
+      show: false
+   });
+
+   confirmBox.on('hidden.bs.modal', function () {
+      onModal = false;
+      console.log("onModal is false");
+   });
+
+   onModal = true;
+   console.log("onModal is true");
+   confirmBox.modal('show');
 }
+
