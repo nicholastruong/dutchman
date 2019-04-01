@@ -6,7 +6,7 @@
  const server = require("./server.js");
  const highCountryPath = new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 10]);
  const plateauPath = new Set([15, 16, 17, 18, 19, 9]);
- const lowCountryPath = new Set([11, 12, 13, 14]);
+ const lowCountryPath = new Set([11, 12, 13, 14, 21, 22]);
  const minePath = new Set([20]);
 
  //TODO: CHANGE HARDCODED WEATHER
@@ -35,7 +35,7 @@
 		 			'canyon' : 'normal'
 		 	   },
 			2: {
-		 			'low' : 'rainy',
+		 			'low' : 'sunny',
 		 			'high' : 'sunny',
 		 			'canyon' : 'normal'
 		 	   },
@@ -282,12 +282,22 @@
  		//helper function get weather based on location
  		getWeather: function(currentLocation, day) {
  			let scope = this;
- 			if(highCountryPath.has(currentLocation) || plateauPath.has(currentLocation)) {
+ 			if(highCountryPath.has(currentLocation) || minePath.has(currentLocation)) {
  				return [scope.weather[day]['high'], scope.weather[day]['canyon']];
  			}
  			else {
  				return [scope.weather[day]['low'], scope.weather[day]['canyon']];
  			}
+ 		},
+
+ 		getWeatherForecast: function(day) {
+ 			let scope = this;
+ 			forecast = [];
+ 			for (i = day; i < day + 5; i++) {
+ 				forecast.push(scope.weather[i]);
+ 			}
+
+ 			return forecast;
  		},
 
  	};

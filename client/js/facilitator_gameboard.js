@@ -32,11 +32,11 @@ $(document).ready(function(){
 // list of global variables
 var game;
 var boardWidth, boardHeight;
-var startSpace;
 var cars = {};
 var dests = {};
 var locations = {};
 var connections;
+var shape_graphics = [];
 
 var global_physics;
 
@@ -88,6 +88,8 @@ function create() {
             attachPolygonListeners(this, graphic, new_polygon, i);
          }
       }   
+
+      shape_graphics.push(graphic);
    }
 
    global_physics = this.physics;
@@ -193,3 +195,16 @@ function updateDestinations(socketID, location, coords) {
   }
 }
 
+
+function makeMuddy(isMuddy) {
+   if (isMuddy) {
+      shape_graphics[12].visible = false;
+      shape_graphics[21].visible = true;
+      shape_graphics[22].visible = true;
+   }
+   if (!isMuddy) {
+      shape_graphics[12].visible = true;
+      shape_graphics[21].visible = false;
+      shape_graphics[22].visible = false;
+   }
+}

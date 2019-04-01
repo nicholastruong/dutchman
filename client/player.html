@@ -101,7 +101,10 @@
         </div>
 
         <button class="btn btn-primary" id ="leftColButton" style="" onClick="watchVideo()">Watch Video</button>
-        <button class="btn btn-primary" id ="leftColButton" style="" onClick="weatherForecast()">Weather Forecast</button>
+        
+        <a data-target="#forecastModal" data-toggle="modal">
+          <button class="btn btn-primary" id ="leftColButton">Weather Forecast</button>
+        </a>
 
       </div>
 
@@ -116,9 +119,13 @@
           <h2 id="day" style="font-size:2.5vw; font-family:EdmundsFont; color: white">Day 1</h2>
 
           <div class="weather">
-            <img id="weatherimg" class="weatherimg" src="assets/sunny.png" height="20%" width="20%">
+            <img id="weatherimg" class="weatherimg" src="assets/weather/sunny.png" height="20%" width="20%">
             <p id="weathertext" class="weathertext">sunny and cool</p>
           </div>
+
+          <h2 id="canyonstatus" class="weatherlabel" style="margin-top: 10px;">
+            Canyon is Normal
+          </h2>
         </div>
 
         <button id="instructionblock" class="rightcol">
@@ -134,5 +141,131 @@
     </div>
   </div>
 </body>
+
+
+
+
+
+<!--WEATHER FORECAST MODAL-->
+
+<div class="modal modal-yellow" id="forecastModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+         <span aria-hidden="true">&times;</span>
+         </button>
+         <div id="tradeTitle">Weather Forecast</div>
+      </div>
+
+      <div id="forecastContainer" class="container">
+         <div class="modal-body">
+            <div class="row">
+               <div id="forecast_cols" class="col-xs-12 col-md-offset-1">
+                  <div id="resourcetitle"></div>
+                  <table class="table">
+                     <thead>
+                        <tr>
+                           <th scope="col"></th>
+                           <th scope="col" id="low_forecast0"></th>
+                           <th scope="col" id="low_forecast1"></th>
+                           <th scope="col" id="low_forecast2"></th>
+                           <th scope="col" id="low_forecast3"></th>
+                           <th scope="col" id="low_forecast4"></th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr>
+                           <th style="width: 12%; font-size: 1.25vw;">Low Country & Plateau</th>
+                           <td style="width: 17%;">
+                              <span>
+                                 <img id="low_forecast_img0" class="forecast_img">
+                                 <p id="low_forecast_txt0" class="forecast_text"></p>
+                              </span>
+                           </td>
+                           <td style="width: 17%;">
+                              <span>
+                                 <img id="low_forecast_img1" class="forecast_img">
+                                 <p id="low_forecast_txt1" class="forecast_text"></p>
+                              </span>
+                           </td>
+                           <td style="width: 17%;">
+                              <span>
+                                 <img id="low_forecast_img2" class="forecast_img">
+                                 <p id="low_forecast_txt2" class="forecast_text"></p>
+                              </span>
+                           </td>
+                           <td style="width: 17%;">
+                              <span>
+                                 <img id="low_forecast_img3" class="forecast_img">
+                                 <p id="low_forecast_txt3" class="forecast_text"></p>
+                              </span>
+                           </td>
+                           <td style="width: 17%;">
+                              <span>
+                                 <img id="low_forecast_img4" class="forecast_img">
+                                 <p id="low_forecast_txt4" class="forecast_text"></p>
+                              </span>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+               <div id="forecast_cols" class="col-xs-12 col-md-offset-1">
+                  <div id="resourcetitle"></div>
+                  <table class="table">
+                     <thead>
+                        <tr>
+                           <th scope="col"></th>
+                           <th scope="col" id="high_forecast0"></th>
+                           <th scope="col" id="high_forecast1"></th>
+                           <th scope="col" id="high_forecast2"></th>
+                           <th scope="col" id="high_forecast3"></th>
+                           <th scope="col" id="high_forecast4"></th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr>
+                           <th style="width: 12%; font-size: 1.25vw">High Country & Mine</th>
+                           <td style="width: 17%;">
+                              <span>
+                                 <img id="high_forecast_img0" class="forecast_img">
+                                 <p id="high_forecast_txt0" class="forecast_text"></p>
+                              </span>
+                           </td>
+                           <td style="width: 17%;">
+                              <span>
+                                 <img id="high_forecast_img1" class="forecast_img">
+                                 <p id="high_forecast_txt1" class="forecast_text"></p>
+                              </span>
+                           </td>
+                           <td style="width: 17%;">
+                              <span>
+                                 <img id="high_forecast_img2" class="forecast_img">
+                                 <p id="high_forecast_txt2" class="forecast_text"></p>
+                              </span>
+                           </td>
+                           <td style="width: 17%;">
+                              <span>
+                                 <img id="high_forecast_img3" class="forecast_img">
+                                 <p id="high_forecast_txt3" class="forecast_text"></p>
+                              </span>
+                           </td>
+                           <td style="width: 17%;">
+                              <span>
+                                 <img id="high_forecast_img4" class="forecast_img">
+                                 <p id="high_forecast_txt4" class="forecast_text"></p>
+                              </span>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+         </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 </html>

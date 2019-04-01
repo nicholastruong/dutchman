@@ -148,8 +148,6 @@ h2 {
 	margin-top: 2vh;
 }
 
-
-
 .weatherimg {
 	padding-left:5px; 
 	vertical-align: middle;
@@ -162,6 +160,41 @@ h2 {
 	font-family:EdmundsFont;
 	color: white;
 }
+
+.weatherlabel {
+	font-size:1.5vw; 
+	font-family:EdmundsFont; 
+	color: white;
+}
+
+
+#forecastContainer {
+	padding-top: 5px;
+	text-align: center;
+	position: relative;
+	
+  	width:100%;
+    background-color: #edce70;
+}
+
+.forecast_img {
+	vertical-align: middle;
+	width: 2.5vw;
+	height: 2.5vw;
+}
+
+.forecast_text {
+	display: inline-block; 
+	font-size: 1.5vw;
+	padding-left: 5px;
+	font-family:EdmundsFont;
+	color: white;
+}
+
+#forecast_cols {
+     margin-left: 0%; 
+}
+
 
 #instructionbutton {
 	font-size:2.5vw; 
@@ -250,7 +283,7 @@ table {
 }
 
 th {
-  font-size: 2vw;
+  font-size: 1.5vw;
   border: 1px solid #dddddd;
   text-align: left;
   padding: 3px;

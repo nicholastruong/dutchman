@@ -107,12 +107,18 @@ FacilitatorController.prototype = {
        $('#day').text("Day: " + d['day']);
 
        $('#lowweathertext').text(d['weather']['low']); 
-       $('#lowweatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
+       $('#lowweatherimg').attr("src", "assets/weather/" + weather[d['weather']['low']][1] + ".png");
        
        $('#highweathertext').text(d['weather']['high']);
-       $('#highweatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
+       $('#highweatherimg').attr("src", "assets/weather/" + weather[d['weather']['high']][1] + ".png");
 
-       //to find if it's flooded: d['weather']['canyon']
+       $('#canyonstatus').text("Canyon is " + d['weather']['canyon']);
+       if (d['weather']['canyon'] == "flooded") {
+         makeMuddy(true);
+       }
+       else {
+         makeMuddy(false);
+       }
     }); 
 
     socket.on('updated player status', function(d) {

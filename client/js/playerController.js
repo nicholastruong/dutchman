@@ -11,6 +11,13 @@ var PlayerController = function()
   scope._RegisterOutgoing();
 }
 
+weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]};
+
+var weatherForecast;
+var teamname = "";
+var firstDayinMud = false;
+var curr_day = 1;
+
 $(document).ready(function(){
    console.log("documentReady called");
 
@@ -29,19 +36,40 @@ $(document).ready(function(){
          onModal = false;
       });
 
-   teamname = prompt("Enter a team name of less than 10 characters long:", "Team Awesome");
-   if (teamname == null || teamname == "") {
-      teamname = "Team null";
-   } 
-   if (teamname.length > 10) {
-      teamname = teamname.substring(0, 10)
-   }
-   $('#team_name').text(teamname)
+   $('#forecastModal')
+      .on('shown.bs.modal', function (e) {
+         onModal = true;
+         // console.log(document.getElementById("low_forecast_txt0"));
+
+         if (weatherForecast != null) { // && curr_day % 5 == 0) { sends weather forecast everyday for debugging
+            for (i = 0; i < 5; i++) {
+               $('#low_forecast' + i).text("Day " + (curr_day + i));
+               $('#high_forecast' + i).text("Day " + (curr_day + i));
+
+               $('#low_forecast_txt' + i).text(weather[weatherForecast[i]['low']][0]);
+               $('#high_forecast_txt' + i).text(weather[weatherForecast[i]['high']][0]);
+
+               $('#low_forecast_img' + i).attr("src", "assets/weather/" + weather[weatherForecast[i]['low']][1] + ".png");
+               $('#high_forecast_img' + i).attr("src", "assets/weather/" + weather[weatherForecast[i]['high']][1] + ".png");
+            }
+         }  
+      })
+      .on('hidden.bs.modal', function (e) {
+         onModal = false;
+      });
+
+   // teamname = prompt("Enter a team name of less than 10 characters long:", "Team Awesome");
+   // if (teamname == null || teamname == "") {
+   //    teamname = "Team null";
+   // } 
+   // if (teamname.length > 10) {
+   //    teamname = teamname.substring(0, 10)
+   // }
+   teamname = "Team 1";
+   $('#team_name').text(teamname);
 
 });
 
-weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]}
-var teamname = ""
 
 PlayerController.prototype = {
   /**
@@ -79,10 +107,19 @@ PlayerController.prototype = {
 
     socket.on('server send updateDay', function(d) {
        console.log(d);
+       curr_day = d['day'];
        $('#day').text("Day: " + d['day']);
        $('#weathertext').text(d['weather'][0]);
-       $('#weatherimg').attr("src", "assets/" + weather[d['weather']][1] + ".png");
-       //to find if canyon is flooded: d['weather'][1]
+       $('#weatherimg').attr("src", "assets/weather/" + weather[d['weather'][0]][1] + ".png");
+
+       $('#canyonstatus').text("Canyon is " + d['weather'][1]);
+       if (d['weather'][1] == "flooded") {
+         makeMuddy(true);
+       }
+       else {
+         makeMuddy(false);
+       }
+
        var resources = d['resources'];
 
 
@@ -94,8 +131,14 @@ PlayerController.prototype = {
        $('#turbo').text(resources['turbo'] + " Turbo Boost");
        $('#tents').text(resources['tents'] + " Tents");
 
+       hasMadeMove = false;
        enableMove = true;
        $('#readybutton').prop('disabled', false);
+    });
+
+    socket.on('server send forecast', function(d) {
+      console.log(d);
+      weatherForecast = d['forecast'];
 
     });
 
@@ -109,7 +152,7 @@ PlayerController.prototype = {
     var readyButton = document.getElementById("ready");
     readyButton.addEventListener('click', function(){
       var reallyReady = false;
-      if (!enableMove) {
+      if (hasMadeMove) {
          reallyReady = true;
       }
       else {
@@ -141,4 +184,8 @@ PlayerController.prototype = {
       alert("Instructions for players");
     });
   }
+}
+
+function updateForecast() {
+
 }

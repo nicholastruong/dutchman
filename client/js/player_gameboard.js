@@ -24,8 +24,7 @@ $(document).ready(function(){
          update: update
       },
    };
-   onModal=false;
-    game = new Phaser.Game(config);
+   game = new Phaser.Game(config);
 });
 
 
@@ -34,12 +33,12 @@ var game;
 var boardWidth, boardHeight;
 var car;
 var connections;
-var curr_space;
+var curr_space, prev_space;
 var shape_graphics = [];
 
 var onModal;
-var enableMove;
-var muddy;
+var enableMove = true;
+var hasMadeMove = false;
 
 var destx = boardWidth / 2; 
 var desty = boardHeight / 2;
@@ -63,8 +62,11 @@ function create() {
    background.scaleY = background.scaleX;
 
    curr_space = 0;
+   prev_space = 0;
 
+   onModal = false;
    enableMove = true;
+   hasMadeMove = false;
 
    for (i = 0; i < spaces.length; i++) {
       graphic = this.add.graphics();
@@ -98,21 +100,33 @@ function create() {
 function attachClickListener(physics, graphic, index) {
    
    graphic.on('pointerdown', function(pointer) {
-      // console.log(onModal);
-      if (enableMove && !onModal) {
-         if (validMove(index)) {
-            console.log("index is now " + index);
-
-            curr_space = index;
+      if (!onModal && enableMove) {
+         if (checkMove(index)) {
             destx = icon_spot[index][0];
             desty = icon_spot[index][1];
             physics.moveTo(car, destx, desty, 200);
-            // enableMove = false;
-         }
-         else {
-            alert("Sorry this is not a valid move");
          }
       }
+
+      // console.log(onModal);
+      // if (!onModal) {
+      //    if (index == curr_space) {
+      //       alert("You can move to a new space");
+      //    }
+      //    else if (validMove(index)) {
+      //       console.log("index is now " + index);
+
+      //       prev_space = curr_space;
+      //       curr_space = index;
+      //       destx = icon_spot[index][0];
+      //       desty = icon_spot[index][1];
+      //       physics.moveTo(car, destx, desty, 200);
+      //       enableMove = false;
+      //    }
+      //    else {
+      //       alert("Sorry this is not a valid move");
+      //    }
+      // }
    });
 
    graphic.on('pointerout', function () { graphic.clear(); });
@@ -120,7 +134,7 @@ function attachClickListener(physics, graphic, index) {
 
 function attachPolygonListeners(scene, graphic, polygon, index) {
    graphic.on('pointerover', function () {
-      if (!onModal) {
+      if (!onModal && enableMove) {
         // console.log("pointerover on index " + index);
 
         graphic.fillStyle(0xffffff, 0.5);
@@ -131,7 +145,7 @@ function attachPolygonListeners(scene, graphic, polygon, index) {
 
 function attachCornerListeners(scene, graphic, square, circle, index) {
    graphic.on('pointerover', function () {
-      if (!onModal) {
+      if (!onModal && enableMove) {
         coeffs = [];
 
         if (index == 4) { 
@@ -164,7 +178,7 @@ function attachCornerListeners(scene, graphic, square, circle, index) {
 
 function attachCircleListeners(graphic, circle, index) {
    graphic.on('pointerover', function () {
-      if (!onModal) {
+      if (!onModal && enableMove) {
         graphic.fillStyle(0xffffff, 0.5);
         graphic.fillCircleShape(circle);
       }
@@ -179,13 +193,40 @@ function update() {
    }
 }
 
-function validMove(i) { // checks if space i is adjacent to the current space
-   if (i == curr_space || connections[curr_space].includes(i)) {
-      return true;
+function checkMove(i) { // checks if space i is a valid move
+   if (i == curr_space) {
+      if (!hasMadeMove) {
+        alert("You can move to a new space");
+      }
+      return false;
    }
 
+   if (hasMadeMove && i == prev_space) {
+      if (confirm("Do you want to undo your move?")) {
+         curr_space = prev_space;
+         hasMadeMove = false;
+         return true;
+      }
+      return false;
+   }
+
+   if (connections[curr_space].includes(i)) {
+      if (!hasMadeMove) {
+         prev_space = curr_space;
+         curr_space = i;
+         hasMadeMove = true;
+         return true;
+      }
+      else {
+         alert("You have already moved this day");
+         return false;
+      }
+   }
+
+   alert("Sorry this is not a valid move");
    return false;
 }
+
 
 function makeMuddy(isMuddy) {
    if (isMuddy) {
