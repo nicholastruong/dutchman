@@ -130,6 +130,7 @@ PlayerController.prototype = {
        $('#caves').text(resources['caves'] + " Caves");
        $('#turbo').text(resources['turbo'] + " Turbo Boost");
        $('#tents').text(resources['tents'] + " Tents");
+       $('#gold').text(resources['gold'] + " Gold");
 
        hasMadeMove = false;
        enableMove = true;

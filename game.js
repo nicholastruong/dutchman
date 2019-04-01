@@ -200,6 +200,7 @@
  			//if in mine, use either one cave or shelter
  			
  			if(currentLocation === 20) {
+ 				resources['gold'] += 1;
  				if(resources['caves'] > 0) {
  					resources['caves'] -= 1;
  				}
@@ -273,7 +274,8 @@
 	 						tires: 20,
 	 						cash: 20,
 	 						caves: 0,
-	 						turbo: 0
+	 						turbo: 0,
+	 						gold: 0
 	 					}
 	 				};	
  			}			
