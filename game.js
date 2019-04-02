@@ -284,7 +284,7 @@
 	 						tires: grub_stakes.tires[grub_id],
 	 						cash: grub_stakes.cash[grub_id],
 	 						caves: 0,
-	 						turbo: 0,
+	 						turbo: 1, // temporary to debug turbo-boost movement
 	 						gold: 0
 	 					}
 	 				};	

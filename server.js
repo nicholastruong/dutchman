@@ -46,7 +46,14 @@ io.on("connection", function(socket) {
 	if (!isFacilitator){
 		console.log("connection is NOT facilitator");
 		trigger['new player connection'](game, socket["id"]);
-		
+
+		// used to send initial grubstake to connecting player on day 1
+		let currentGame = game['games']['0'];
+		let players = currentGame['players'];
+		let currentLocation = players[socket["id"]]['currentLocation'];
+		trigger['server send updateDay'](
+			socket["id"], players[socket["id"]]['resources'], game.getWeather(currentLocation, currentGame['day']), currentGame
+		);
 	}	
 });
 
