@@ -2,10 +2,10 @@
 
 const eventId = "new player connection";
 module.exports = function(server, config) {
-	
 	return {
 		id: eventId,
 		func: function(game, socketID) {
+			console.log("new player connection");
 			let currentGame = game['games']['0'];
 			let players = currentGame['players'];
 

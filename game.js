@@ -262,17 +262,27 @@
  			}
  			else {
 	 			//initial values of resources
+	 			let grub_stakes = {
+	 				supplies: [22, 20, 21, 20, 18],
+	 				fuel: [27, 24, 22, 22, 30],
+	 				tents: [0, 7, 8, 6, 4],
+	 				batteries: [0, 3, 0, 3, 2],
+	 				tires: [0, 0, 1, 1, 1],
+	 				cash: [40, 10, 0, 10, 0]
+	 			};
+
+	 			let grub_id = Math.floor(Math.random()*5);
 	 			game.players[id] = 
 	 				{
 	 					socket: socket,
 	 					currentLocation: 0,
 	 					resources : {
-	 						supplies: 100,
-	 						fuel: 100,
-	 						tents: 20,
-	 						batteries: 20,
-	 						tires: 20,
-	 						cash: 20,
+	 						supplies: grub_stakes.supplies[grub_id],
+	 						fuel: grub_stakes.fuel[grub_id],
+	 						tents: grub_stakes.tents[grub_id],
+	 						batteries: grub_stakes.batteries[grub_id],
+	 						tires: grub_stakes.tires[grub_id],
+	 						cash: grub_stakes.cash[grub_id],
 	 						caves: 0,
 	 						turbo: 0,
 	 						gold: 0
@@ -280,6 +290,12 @@
 	 				};	
  			}			
  		}, 
+
+ 		getResources: function(gameID, playerID) {
+ 			let scope = this;
+ 			let game = scope.games[gameID];
+ 			return game.players[playerID].resources;
+ 		},
 
  		//helper function get weather based on location
  		getWeather: function(currentLocation, day) {

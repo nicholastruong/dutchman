@@ -124,7 +124,6 @@ PlayerController.prototype = {
 
        var resources = d['resources'];
 
-
        $('#fuel').text(resources['fuel'] + " Fuel");
        $('#supplies').text(resources['supplies'] + " Supplies");
        $('#tires').text(resources['tires'] + " Spare Tires");

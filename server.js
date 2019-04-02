@@ -31,6 +31,7 @@ var openSockets = module.exports.openSockets = [];
 
 io.on("connection", function(socket) {
 	//console.log(socket.handshake.headers.referer);
+	let gameID = 0; //HARDODED
 	console.log("new connection !");
 	console.log("socket ID: " + socket["id"]);
 	openSockets[socket["id"]] = socket;
@@ -40,10 +41,12 @@ io.on("connection", function(socket) {
 		isFacilitator = true;
 	}
 	//creates resources and initializes player in game state
-	game.updateSockets(0, socket, isFacilitator);
+	game.updateSockets(gameID, socket, isFacilitator);
 	
 	if (!isFacilitator){
+		console.log("connection is NOT facilitator");
 		trigger['new player connection'](game, socket["id"]);
+		
 	}	
 });
 
@@ -76,6 +79,7 @@ const incomingEventsPath = "./events/incoming";
 
 function loadEvents(path, outgoing)
 {
+	console.log("loading events");
 	fs.readdir(path, function(err, files) {
 		if (err) {
 			console.error("Error loading events: " + err.stack); // non-fatal
