@@ -109,6 +109,7 @@ PlayerController.prototype = {
     });
 
     socket.on('server send updateDay', function(d) {
+      console.log(d['resourcesExpended']);
        curr_day = d['day'];
        resources = d['resources'];
        $('#day').text("Day: " + d['day']);
