@@ -4,6 +4,8 @@ var amountBuy = new Map();
 var amountSell = new Map();
 var constMapOfValues = new Map([["supplies", 20],["fuel", 10], ["batteries", 10], ["tents", 10], ["tires", 30], ["cash", 1], ["caves", 0], ["turbo", 0], ["gold", 0]]);
 
+
+
 function sellTableBuilder(tableType){
     var buttonClickParam = "";
     if (tableType ==2){
@@ -162,7 +164,7 @@ let myMap = this.resources;
         amountSell.set(String(r), 0);
         amountBuy.set(String(r), 0);
     }
-    console.log(amountBuy);
+    
     offerTable = sellTableBuilder(2);
     requestTable = buyTableBuilder(2);
 
@@ -220,15 +222,27 @@ function subtractItemBuy(tradeType, resourceName){ //RIGHT Table
 function initiateTeamTrade(){
     let socket = this.socket;
     socket.on('connect', function(){
-        var id = socket.io.engine.id;
+        var id = this.id;
         let trade = {
             proposerID : id,
             targetID : fillin,
-            offered_resources: this.amountBuy,
-            requested_resources: this.amountSell
+            offered_resources: this.amountSell,
+            requested_resources: this.amountBuy
         }
         socket.emit('player send tradeOffer', {trade: trade});
     });
+    //REVERT ALL MAPS HOLDING RESOURCE STATUS TO 0
+    let myMap = this.resources;
+    for ( let r in myMap){
+        amountSell.set(String(r), 0);
+        amountBuy.set(String(r), 0);
+    }
+    console.log(amountSell);
+    var tableContainerBuy = document.getElementById("requestTable");
+    tableContainerBuy.innerHTML= buyTableBuilder(2); 
+    var tableContainerSell = document.getElementById("offerTable");
+    tableContainerSell.innerHTML= sellTableBuilder(2); 
+    $('#teamTradeModal').modal('hide');
 }
 
 function finishProvTrade(){
@@ -240,8 +254,20 @@ function finishProvTrade(){
     }
     
     socket.on('connect', function(){
-        var id = socket.io.engine.id;
+        var id = this.id;
     socket.emit(id, 'server send updateResources', myMap);
     });
+    //REVERT ALL MAPS HOLDING RESOURCE STATUS TO 0
+    for ( let r in myMap){
+        amountSell.set(String(r), 0);
+        amountBuy.set(String(r), 0);
+    }
+    console.log(amountSell);
+    var tableContainerBuy = document.getElementById("buyTable");
+    tableContainerBuy.innerHTML= buyTableBuilder(1); 
+    var tableContainerSell = document.getElementById("sellTable");
+    tableContainerSell.innerHTML= sellTableBuilder(1); 
+    $('#provTradeModal').modal('hide');
 }
+
 
