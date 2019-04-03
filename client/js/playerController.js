@@ -177,7 +177,19 @@ PlayerController.prototype = {
 
     var instructionButton = document.getElementById("instructionblock");
     instructionButton.addEventListener('click', function(){
-      customAlert("Instructions for players");
+      customAlert("Welcome to The Search for The Lost Dutchman's Gold Mine." + 
+        "</p>The main objective of this game is to work with your team and plan out your resources in " + 
+        "order to retrieve as much gold from the mine as possible.</p>You are not competing" + 
+        " against the other teams going to the mine, so work with them in order to maximize success.</p>" + 
+        " Learn more about each different resource by mousing over them.</br></br>" + 
+        "Gameplay</br> - Click on the board space you wish to travel that day.</br> - Click the 'Ready for Next Day' button when " + 
+        "you have completed all desired actions for that day.</br> - Click the 'Team Trade' button when your team is on the same " + 
+        "game space as another team in order to trade resources with them.</br> - Click the 'Provisioner Trade' button when " +
+        "your team is at Apache Junction or any other trading post to trade resources with the provisioner.</br>" + 
+        " - Click the 'Weather Forecast' button on any fifth day in order to use one of your batteries and receive " + 
+        "a weather forecast about the next five days.</br></br>" +
+        "Rules</br>1. Your team may not return to Apache Junction on the same path that you took to the mine.</br>" + 
+        "2. Your team receives one gold for each day you are able to stay at the mine before returning.");
     });
   }
 };

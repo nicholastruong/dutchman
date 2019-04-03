@@ -181,7 +181,10 @@ FacilitatorController.prototype = {
     instructionButton.addEventListener('click', function(){
       // alert("Instructions for facilitator");
 
-      customAlert("Instructions for facilitator");
+      customAlert("Instructions for Facilitator</p> - Click any game space to find out which teams" + 
+        " are currently located there.</p> - Send messages to all the teams by using the dialog in" + 
+        " the bottom right.</p> - View the resources of all the teams in the window on the left.</p>" +
+        " - Press the 'Start Next Day' to advance the game for all the teams when they are ready.");
     });
   }
   
