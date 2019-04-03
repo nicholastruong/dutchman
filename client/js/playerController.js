@@ -121,12 +121,7 @@ PlayerController.prototype = {
           customAlert("You got one gold from the mine!");
        }
 
-       if (d['weather'][1] == "flooded") {
-         makeMuddy(true);
-       }
-       else {
-         makeMuddy(false);
-       }
+       floodCanyon(d['weather'][1] == "flooded");
        updateWeather_Resources(d['weather'], d['resources']);
 
        hasMadeMove = false;
