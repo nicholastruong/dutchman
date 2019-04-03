@@ -9,6 +9,8 @@ var PlayerController = function()
 
   scope._RegisterSocketHandlers();
   scope._RegisterOutgoing();
+
+  //window.location.href = "login.html";
 }
 
 weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]};
@@ -17,7 +19,7 @@ var weatherForecast;
 var teamname = "";
 var firstDayinMud = false;
 var curr_day = 1;
-
+var resources;
 var socket;
 
 $(document).ready(function(){
@@ -107,8 +109,8 @@ PlayerController.prototype = {
     });
 
     socket.on('server send updateDay', function(d) {
-       console.log(d);
        curr_day = d['day'];
+       resources = d['resources'];
        $('#day').text("Day: " + d['day']);
 
        if (curr_space == 4 && d['resources']['turbo'] > 0) {
@@ -128,9 +130,17 @@ PlayerController.prototype = {
     });
 
     socket.on('server send forecast', function(d) {
-      console.log(d);
       weatherForecast = d['forecast'];
 
+    });
+
+    socket.on('out of resources', function(d){
+      $('#messages').append($('<li>').text("You're out of resources. Use your beacon!"));
+    });
+
+    socket.on('end game', function(d){
+      $('#messages').append($('<li>').text("Game has ended!"));
+      //Disable buttons and movement here
     });
 
   },
