@@ -12,7 +12,7 @@ $(document).ready(function(){
       backgroundColor: 0xedce70,
       scale: {
          mode: Phaser.Scale.FIT,
-         autoCenter: Phaser.Scale.CENTER_BOTH
+         autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
       },
       physics: {
          default: 'arcade',

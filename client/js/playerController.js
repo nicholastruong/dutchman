@@ -45,7 +45,7 @@ $(document).ready(function(){
          onModal = true;
          // console.log(document.getElementById("low_forecast_txt0"));
 
-         if (weatherForecast != null) { // && curr_day % 5 == 0) { sends weather forecast everyday for debugging
+         if (weatherForecast != null && curr_day % 5 == 0) { // sends weather forecast everyday for debugging
             for (i = 0; i < 5; i++) {
                $('#low_forecast' + i).text("Day " + (curr_day + i));
                $('#high_forecast' + i).text("Day " + (curr_day + i));
@@ -104,7 +104,6 @@ PlayerController.prototype = {
       socket.emit('player send tradeResponse', {trade: trade, accepted: true});
     }); */
 
-
     socket.on('facilitator broadcast', function(msg) {
       $('#messages').append($('<li>').text(msg));
     });
@@ -113,27 +112,22 @@ PlayerController.prototype = {
        console.log(d);
        curr_day = d['day'];
        $('#day').text("Day: " + d['day']);
-       $('#weathertext').text(d['weather'][0]);
-       $('#weatherimg').attr("src", "assets/weather/" + weather[d['weather'][0]][1] + ".png");
 
-       $('#canyonstatus').text("Canyon is " + d['weather'][1]);
+       if (curr_space == 4 && d['resources']['turbo'] > 0) {
+          customAlert("Your turbos have been activated!");
+          hasTurbos = true;
+       }
+       if (curr_space == 20) {
+          customAlert("You got one gold from the mine!");
+       }
+
        if (d['weather'][1] == "flooded") {
          makeMuddy(true);
        }
        else {
          makeMuddy(false);
        }
-
-       var resources = d['resources'];
-
-       $('#fuel').text(resources['fuel'] + " Fuel");
-       $('#supplies').text(resources['supplies'] + " Supplies");
-       $('#tires').text(resources['tires'] + " Spare Tires");
-       $('#cash').text("$" + resources['cash'] + " Cash");
-       $('#caves').text(resources['caves'] + " Caves");
-       $('#turbo').text(resources['turbo'] + " Turbo Boost");
-       $('#tents').text(resources['tents'] + " Tents");
-       $('#gold').text(resources['gold'] + " Gold");
+       updateWeather_Resources(d['weather'], d['resources']);
 
        hasMadeMove = false;
        enableMove = true;
@@ -188,6 +182,22 @@ function reallyReady() {
          currentCoords: [car.x, car.y]
       }
    ); 
+}
+
+function updateWeather_Resources(weatherData, resources) {
+   $('#weathertext').text(weatherData[0]);
+   $('#weatherimg').attr("src", "assets/weather/" + weather[weatherData[0]][1] + ".png");
+
+   $('#canyonstatus').text("Canyon is " + weatherData[1]);
+
+   $('#fuel').text(resources['fuel'] + " Fuel");
+   $('#supplies').text(resources['supplies'] + " Supplies");
+   $('#tires').text(resources['tires'] + " Spare Tires");
+   $('#cash').text("$" + resources['cash'] + " Cash");
+   $('#caves').text(resources['caves'] + " Caves");
+   $('#turbo').text(resources['turbo'] + " Turbo Boost");
+   $('#tents').text(resources['tents'] + " Tents");
+   $('#gold').text(resources['gold'] + " Gold");
 }
 
 

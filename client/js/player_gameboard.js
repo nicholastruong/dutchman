@@ -12,7 +12,7 @@ $(document).ready(function(){
       backgroundColor: 0xedce70,
       scale: {
          mode: Phaser.Scale.FIT,
-         autoCenter: Phaser.Scale.CENTER_BOTH
+         autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
       },
       physics: {
          default: 'arcade',
@@ -39,6 +39,7 @@ var shape_graphics = [];
 var onModal;
 var enableMove;
 var hasMadeMove;
+var hasTurbos;
 
 var destx = boardWidth / 2; 
 var desty = boardHeight / 2;
@@ -67,6 +68,7 @@ function create() {
    onModal = false;
    enableMove = true;
    hasMadeMove = false;
+   hasTurbos = false;
 
    for (i = 0; i < spaces.length; i++) {
       graphic = this.add.graphics();
@@ -182,19 +184,13 @@ function checkMove(i) { // checks if space i is a valid move
    }
 
    if (hasMadeMove && i == prev_space) {
-      // if (confirm("Do you want to undo your move?")) {
-      //    curr_space = prev_space;
-      //    hasMadeMove = false;
-      //    return true;
-      // }
-      // return false;
       customAlert("You are undoing your move");
       curr_space = prev_space;
       hasMadeMove = false;
       return true;
    }
 
-   if (connections[curr_space].includes(i)) {
+   if (connections[curr_space].includes(i) || (hasTurbos && checkExtendedConnections(i))) {
       if (!hasMadeMove) {
          prev_space = curr_space;
          curr_space = i;
@@ -211,8 +207,23 @@ function checkMove(i) { // checks if space i is a valid move
    return false;
 }
 
+function checkExtendedConnections(i) {
+   console.log(connections[curr_space]);
+   for (j = 0; j < connections[curr_space].length; j++) {
+      console.log(connections[curr_space][j] + ": " + connections[connections[curr_space][j]]);         
+      if (connections[connections[curr_space][j]].includes(i)) {
+         return true;
+      }
+   }
+
+   return false;
+}
+
 
 function makeMuddy(isMuddy) {
+   if (shape_graphics.length == 0) {
+      return;
+   }
    if (isMuddy) {
       shape_graphics[12].visible = false;
       shape_graphics[21].visible = true;

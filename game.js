@@ -270,21 +270,21 @@
 
 	 			let grub_id = Math.floor(Math.random()*5);
 	 			game.players[id] = 
- 				{
- 					socket: socket,
- 					currentLocation: 0,
- 					resources : {
- 						supplies: grub_stakes.supplies[grub_id],
- 						fuel: grub_stakes.fuel[grub_id],
- 						tents: grub_stakes.tents[grub_id],
- 						batteries: grub_stakes.batteries[grub_id],
- 						tires: grub_stakes.tires[grub_id],
- 						cash: grub_stakes.cash[grub_id],
- 						caves: 0,
- 						turbo: 0,
- 						gold: 0
- 					}
- 				};	
+	 				{
+	 					socket: socket,
+	 					currentLocation: 0,
+	 					resources : {
+	 						supplies: grub_stakes.supplies[grub_id],
+	 						fuel: grub_stakes.fuel[grub_id],
+	 						tents: grub_stakes.tents[grub_id],
+	 						batteries: grub_stakes.batteries[grub_id],
+	 						tires: grub_stakes.tires[grub_id],
+	 						cash: grub_stakes.cash[grub_id],
+	 						caves: 0,
+	 						turbo: 1, // temporary to debug turbo-boost movement
+	 						gold: 0
+	 					}
+	 				};	
  			}			
  		}, 
 
