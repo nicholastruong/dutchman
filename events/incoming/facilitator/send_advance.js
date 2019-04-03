@@ -14,17 +14,24 @@ module.exports = function(socket, server, game, config){
 		var playersOutOfResources = [];
 
 		for (socketID in players) {
-			
-			var newResources = players[socketID]['resources'];
-			var currentLocation = players[socketID]['currentLocation'];
-			var playerWeatherReport = game.getWeather(currentLocation, currentGame['day']);
-			var hasEnoughResources = game.updateResources(0, socketID, currentGame['day']); //0 is gameID
-			
-			var colocatedPlayers = game.getColocatedPlayers(0, socketID);
-			console.log('colocated Players');
-			console.log(colocatedPlayers);
 
-			server.trigger['server send updateDay'](socketID, newResources, playerWeatherReport, currentGame, colocatedPlayers);
+			var playerWeatherReport = game.getWeather(currentLocation, currentGame['day']);
+			//deep copy of old resources
+			var oldResources = JSON.parse(JSON.stringify(players[socketID]['resources']));
+			var currentLocation = players[socketID]['currentLocation'];
+			//updates resources, and notifies if doesn't have enough resources
+			var hasEnoughResources = game.updateResources(0, socketID, currentGame['day']); //0 is gameID
+			var newResources = players[socketID]['resources'];
+
+			var resourcesExpended = {};
+			for (r in newResources) {
+				if (newResources[r] - oldResources[r] !== 0) {
+					resourcesExpended[r] = newResources[r] - oldResources[r];
+				}
+			}
+
+			var colocatedPlayers = game.getColocatedPlayers(0, socketID);
+			server.trigger['server send updateDay'](socketID, newResources, playerWeatherReport, currentGame, colocatedPlayers, resourcesExpended);
 
 			if (true) { // currentGame['day'] == 5 || currentGame['day'] == 10 || currentGame['day'] == 15) { // sends weather info everday for debugging
 				var weatherForecast = game.getWeatherForecast(currentGame['day']);
