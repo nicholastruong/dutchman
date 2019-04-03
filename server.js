@@ -52,7 +52,11 @@ io.on("connection", function(socket) {
 		let players = currentGame['players'];
 		let currentLocation = players[socket["id"]]['currentLocation'];
 		trigger['server send updateDay'](
-			socket["id"], players[socket["id"]]['resources'], game.getWeather(currentLocation, currentGame['day']), currentGame
+			socket["id"], 
+			players[socket["id"]]['resources'], 
+			game.getWeather(currentLocation, currentGame['day']), 
+			currentGame,
+			game.getColocatedPlayers(gameID, socket["id"])
 		);
 	}	
 });

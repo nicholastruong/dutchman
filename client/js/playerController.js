@@ -9,6 +9,8 @@ var PlayerController = function()
 
   scope._RegisterSocketHandlers();
   scope._RegisterOutgoing();
+
+  //window.location.href = "login.html";
 }
 
 weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]};
@@ -135,6 +137,15 @@ PlayerController.prototype = {
     socket.on('server send forecast', function(d) {
       weatherForecast = d['forecast'];
 
+    });
+
+    socket.on('out of resources', function(d){
+      $('#messages').append($('<li>').text("You're out of resources. Use your beacon!"));
+    });
+
+    socket.on('end game', function(d){
+      $('#messages').append($('<li>').text("Game has ended!"));
+      //Disable buttons and movement here
     });
 
   },
