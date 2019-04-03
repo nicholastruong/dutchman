@@ -1,5 +1,12 @@
 <!--PROVISIONER TRADE MODAL-->
 
+  <script type="text/javascript" src="/js/provTradeController.js"></script>
+    <script>
+        provTradeManager();
+      </script>
+
+
+
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true">&times;</span>
@@ -11,63 +18,11 @@
       <div class="row">
         <div class="col-xs-5 col-md-offset-1">
           <div id="resourcetitle">Sell at Post</div>
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Resource</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col">Current Amount</th>
-                <th scope="col">Amount Trading</th>
-                <th scope="col">Value</th>
-                <th scope="col">Value Trading</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">Fuel</th>
-                <td><button type="button" class="btn btn-light">+</button></td>
-                <td><button type="button" class="btn btn-light">-</button></td>
-                <td>7</td>
-                <td>2</td>
-                <td>$10</td>
-                <td>$20</td>
-              </tr>
-              <tr>
-                <th scope="row"></th>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>Total $ Trading</td>
-                <td>$20</td>
-              </tr>
-            </tbody>
-          </table>
+          <table id = "provTable" class="table"></table>
         </div>
         <div class="col-xs-5 col-md-offset-1">
           <div id="resourcetitle"> Buy from Post </div>
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Resource</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col">Amount Buying</th>
-                <th scope="col">Value</th>
-                <th scope="col">Total Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">Fuel</th>
-                <td><button type="button" class="btn btn-light">+</button></td>
-                <td><button type="button" class="btn btn-light">-</button></td>
-                <td></td>
-                <td>$10</td>
-                <td>$20</td>
-              </tr>
-            </tbody>
+          <table id = "buyTable" class="table">
           </table>
         </div>
       </div>
