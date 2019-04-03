@@ -1,8 +1,9 @@
-var myMap = new Map([["Supplies", 7],["Fuel", 7], ["Batteries", 7], ["Tents", 7], ["Spare Tires", 7]]);
+var myMap = new Map();
 var amountBuy = new Map();
 
 var amountSell = new Map();
-var constMapOfValues = new Map([["Supplies", 20],["Fuel", 10], ["Batteries", 10], ["Tents", 10], ["Spare Tires", 30]]);
+var constMapOfValues = new Map([["supplies", 20],["fuel", 10], ["batteries", 10], ["tents", 10], ["tires", 30], ["cash", 1], ["caves", 0], ["turbo", 0], ["gold", 0]]);
+
 function sellTableBuilder(tableType){
     var buttonClickParam = "";
     if (tableType ==2){
@@ -23,8 +24,8 @@ var table = `<thead>
             <tbody>`
 
 var total = 0;
-for ( let [r, a] of myMap){
-   
+var myMap = this.resources;
+for ( let r in myMap){
     table+= `
             <tr>
                 <th scope="row">
@@ -44,7 +45,7 @@ for ( let [r, a] of myMap){
     table += `')">-</button></td>
                 <td>
             `;
-    table += String(a); //Current Amount
+    table += myMap[r]; //Current Amount
     table += `</td><td>`;
     table += String(amountSell.get(r)); //Amount Trading
     table += `</td><td>$`;
@@ -112,7 +113,7 @@ function buyTableBuilder(tableType){
                 table += `</td>
                 <td>
                 `
-                table += String(a); // value
+                table += "$" + String(a); // value
                 
                 table += `</td>
                 <td>
@@ -142,7 +143,8 @@ table += `</td>
 }
 function provTradeManager(){
 //INITIALIZE amountAdded map
-for ( let [r,a] of myMap){
+let myMap = this.resources;
+for ( let r in myMap){
     amountSell.set(String(r), 0);
     amountBuy.set(String(r), 0);
 }
@@ -151,14 +153,16 @@ sellTable = sellTableBuilder(1);
 buyTable = buyTableBuilder(1);
 
 document.getElementById("sellTable").innerHTML += sellTable;
-document.getElementById("buyTable").innerHTML += buyTable
+document.getElementById("buyTable").innerHTML += buyTable;
 }
 
 function teamTradeManager(){
-    for ( let [r,a] of myMap){
+let myMap = this.resources;
+    for ( let r in myMap){
         amountSell.set(String(r), 0);
         amountBuy.set(String(r), 0);
     }
+    console.log(amountBuy);
     offerTable = sellTableBuilder(2);
     requestTable = buyTableBuilder(2);
 
@@ -170,9 +174,11 @@ document.getElementById("requestTable").innerHTML += requestTable
 //FUNCTIONS THAT HANDLE BUTTON LOGIC IN TABLES
 
 function addItemSell(tradeType, resourceName){ //LEFT Table offerTable or sellTable
+    let myMap = this.resources;
     var type=1;
     if (tradeType=="offerTable"){type=2}
-    if (amountSell.get(resourceName) < myMap.get(resourceName)){
+    
+    if (amountSell.get(resourceName) < myMap[resourceName]){
    amountSell.set(resourceName, amountSell.get(resourceName) + 1);
    var tableContainer = document.getElementById(tradeType);
     tableContainer.innerHTML= sellTableBuilder(type); 
@@ -189,8 +195,6 @@ function subtractItemSell(tradeType, resourceName){ //LEFT Table
     tableContainer.innerHTML= sellTableBuilder(type); 
     }
 }
-
-
 
 function addItemBuy(tradeType, resourceName){ //RIGHT requestTable or buyTable
    var type=1;
@@ -211,5 +215,33 @@ function subtractItemBuy(tradeType, resourceName){ //RIGHT Table
     tableContainer.innerHTML= buyTableBuilder(type); 
     
     }
+}
+
+function initiateTeamTrade(){
+    let socket = this.socket;
+    socket.on('connect', function(){
+        var id = socket.io.engine.id;
+        let trade = {
+            proposerID : id,
+            targetID : fillin,
+            offered_resources: this.amountBuy,
+            requested_resources: this.amountSell
+        }
+        socket.emit('player send tradeOffer', {trade: trade});
+    });
+}
+
+function finishProvTrade(){
+    let socket = this.socket;
+    let myMap = this.resources;
+    for ( let buy in myMap){
+        myMap[buy] -=amountSell.get(buy);
+        myMap[buy] +=amountBuy.get(buy);
+    }
+    
+    socket.on('connect', function(){
+        var id = socket.io.engine.id;
+    socket.emit(id, 'server send updateResources', myMap);
+    });
 }
 

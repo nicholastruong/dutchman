@@ -39,6 +39,7 @@ var shape_graphics = [];
 var onModal;
 var enableMove;
 var hasMadeMove;
+var flooded;
 var hasTurbos;
 
 var destx = boardWidth / 2; 
@@ -95,7 +96,7 @@ function create() {
    }
 
    car = this.physics.add.image(icon_spot[0][0], icon_spot[0][1], "car");
-   makeMuddy(false);
+   floodCanyon(false);
 }
 
 
@@ -103,11 +104,14 @@ function attachClickListener(physics, graphic, index) {
    
    graphic.on('pointerdown', function(pointer) {
       if (!onModal && enableMove) {
-         if (checkMove(index)) {
-            destx = icon_spot[index][0];
-            desty = icon_spot[index][1];
-            physics.moveTo(car, destx, desty, 200);
-         }
+        if (flooded && ((curr_space == 21 && index == 22) || (curr_space == 22 && index == 21))) {
+          customAlert("You cannot cross the canyon while it is flooded");
+        }
+        else if (checkMove(index)) {
+          destx = icon_spot[index][0];
+          desty = icon_spot[index][1];
+          physics.moveTo(car, destx, desty, 200);
+        }
       }
    });
 
@@ -115,14 +119,15 @@ function attachClickListener(physics, graphic, index) {
 }
 
 function attachPolygonListeners(scene, graphic, polygon, index) {
-   graphic.on('pointerover', function () {
-      if (!onModal && enableMove) {
-        // console.log("pointerover on index " + index);
+  graphic.on('pointerover', function () {
+    // console.log("flooded:" + flooded + " curr_space:" + curr_space + " index:" + index);
+    if (!onModal && enableMove && (!flooded || ((curr_space != 21 || index != 22) && (curr_space != 22 || index != 21)))) {
+      // console.log("pointerover on index " + index);
 
-        graphic.fillStyle(0xffffff, 0.5);
-        graphic.fillPoints(polygon.points, true);  
-      }
-   });
+      graphic.fillStyle(0xffffff, 0.5);
+      graphic.fillPoints(polygon.points, true);  
+    }
+  });
 }
 
 function attachCornerListeners(scene, graphic, square, circle, index) {
@@ -208,9 +213,9 @@ function checkMove(i) { // checks if space i is a valid move
 }
 
 function checkExtendedConnections(i) {
-   console.log(connections[curr_space]);
+   // console.log(connections[curr_space]);
    for (j = 0; j < connections[curr_space].length; j++) {
-      console.log(connections[curr_space][j] + ": " + connections[connections[curr_space][j]]);         
+      // console.log(connections[curr_space][j] + ": " + connections[connections[curr_space][j]]);         
       if (connections[connections[curr_space][j]].includes(i)) {
          return true;
       }
@@ -220,16 +225,19 @@ function checkExtendedConnections(i) {
 }
 
 
-function makeMuddy(isMuddy) {
+function floodCanyon(isFlooded) {
    if (shape_graphics.length == 0) {
       return;
    }
-   if (isMuddy) {
+
+   flooded = isFlooded;
+   if ((isFlooded && curr_space != 12) || curr_space == 21 || curr_space == 22) {
       shape_graphics[12].visible = false;
       shape_graphics[21].visible = true;
       shape_graphics[22].visible = true;
+      return;
    }
-   if (!isMuddy) {
+   else {
       shape_graphics[12].visible = true;
       shape_graphics[21].visible = false;
       shape_graphics[22].visible = false;

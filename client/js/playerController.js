@@ -19,7 +19,7 @@ var weatherForecast;
 var teamname = "";
 var firstDayinMud = false;
 var curr_day = 1;
-
+var resources;
 var socket;
 
 $(document).ready(function(){
@@ -109,8 +109,8 @@ PlayerController.prototype = {
     });
 
     socket.on('server send updateDay', function(d) {
-       console.log(d);
        curr_day = d['day'];
+       resources = d['resources'];
        $('#day').text("Day: " + d['day']);
 
        if (curr_space == 4 && d['resources']['turbo'] > 0) {
@@ -121,14 +121,17 @@ PlayerController.prototype = {
           customAlert("You got one gold from the mine!");
        }
 
+
        if (d['weather'][1] == "flooded") {
-         makeMuddy(true);
+         //makeMuddy(true);
        }
        else {
-         makeMuddy(false);
+         //makeMuddy(false);
        }
        updateWeather(d['weather']);
        updateResources(d['resources']);
+       floodCanyon(d['weather'][1] == "flooded");
+       
 
        hasMadeMove = false;
        enableMove = true;
@@ -136,7 +139,6 @@ PlayerController.prototype = {
     });
 
     socket.on('server send forecast', function(d) {
-      console.log(d);
       weatherForecast = d['forecast'];
 
     });
