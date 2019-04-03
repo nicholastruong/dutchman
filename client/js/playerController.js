@@ -2,15 +2,17 @@ var PlayerController = function()
 {
   let scope = this;
 
+  console.log(getUrlVars());
+  let token = getUrlVars()['token'];
   //open socket
-  let socket = scope.socket = io();
+  let socket = scope.socket = io(document.location.hostname + ":3000?token=" + token);
   console.log("hey look at my socket");
   console.log(socket);
 
   scope._RegisterSocketHandlers();
   scope._RegisterOutgoing();
 
-  //window.location.href = "login.html";
+  //swindow.location.href = "login.html";
 }
 
 weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]};
@@ -19,7 +21,7 @@ var weatherForecast;
 var teamname = "";
 var firstDayinMud = false;
 var curr_day = 1;
-
+var resources;
 var socket;
 
 $(document).ready(function(){
@@ -109,8 +111,9 @@ PlayerController.prototype = {
     });
 
     socket.on('server send updateDay', function(d) {
-       console.log(d);
+      console.log(d['resourcesExpended']);
        curr_day = d['day'];
+       resources = d['resources'];
        $('#day').text("Day: " + d['day']);
 
        if (curr_space == 4 && d['resources']['turbo'] > 0) {
@@ -121,13 +124,17 @@ PlayerController.prototype = {
           customAlert("You got one gold from the mine!");
        }
 
+
        if (d['weather'][1] == "flooded") {
-         makeMuddy(true);
+         //makeMuddy(true);
        }
        else {
-         makeMuddy(false);
+         //makeMuddy(false);
        }
-       updateWeather_Resources(d['weather'], d['resources']);
+       updateWeather(d['weather']);
+       updateResources(d['resources']);
+       floodCanyon(d['weather'][1] == "flooded");
+       
 
        hasMadeMove = false;
        enableMove = true;
@@ -135,10 +142,13 @@ PlayerController.prototype = {
     });
 
     socket.on('server send forecast', function(d) {
-      console.log(d);
       weatherForecast = d['forecast'];
 
     });
+
+    socket.on('update resources', function(d) {
+      updateResources(d);
+    }); 
 
     socket.on('out of resources', function(d){
       $('#messages').append($('<li>').text("You're out of resources. Use your beacon!"));
@@ -191,8 +201,24 @@ PlayerController.prototype = {
         "Rules</br>1. Your team may not return to Apache Junction on the same path that you took to the mine.</br>" + 
         "2. Your team receives one gold for each day you are able to stay at the mine before returning.");
     });
+
+    var videoTurboButton = document.getElementById("videoTurboButton");
+    videoTurboButton.addEventListener('click', function(){
+      //customAlert("Instructions for players");
+      socket.emit('add turbo');
+    });
+
+
   }
 };
+
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
 
 function reallyReady() {
    $('#readybutton').prop('disabled', true)
@@ -205,12 +231,14 @@ function reallyReady() {
    ); 
 }
 
-function updateWeather_Resources(weatherData, resources) {
+function updateWeather(weatherData) {
    $('#weathertext').text(weatherData[0]);
    $('#weatherimg').attr("src", "assets/weather/" + weather[weatherData[0]][1] + ".png");
 
    $('#canyonstatus').text("Canyon is " + weatherData[1]);
+}
 
+function updateResources(resources) {
    $('#fuel').text(resources['fuel'] + " Fuel");
    $('#supplies').text(resources['supplies'] + " Supplies");
    $('#tires').text(resources['tires'] + " Spare Tires");

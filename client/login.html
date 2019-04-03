@@ -1,10 +1,45 @@
 <!doctype html>
 <html>
+<head>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
+</head>
 
 <div class="container">
-	<input type="text" name="username" placeholder="Username" required>
-	<input type="password" name="password" placeholder="Password" required>
-	<input type="submit" value="Login">
+	<input type="text" id="username" placeholder="Username" required>
+	<input type="text" id="password" placeholder="Password" required>
+	<input type="submit" value="Login" onclick = "submitLogin()">
 </div>
 
 <html>
+<script>
+var socket = io(document.location.hostname + ":3000?noAuth");
+function submitLogin() {
+	let username = $("#username").val();
+	let password = $("#password").val();
+
+	console.log("user + pass");
+	console.log(username);
+	console.log(password);
+	socket.emit("client login",
+		{
+			username: username,
+			password: password
+		},
+		function (response) {
+			if (response.success) {
+				console.log('asdfasdf');
+				if (response.isFacilitator) window.location.href = "/facilitator?token=" + response.token;
+				else window.location.href = "/player?token=" + response.token;
+				console.log(window.location);
+				//window.location.href = ("player?token=" + response.token);
+
+				//window.location.href = "player.html";
+			}
+			else console.log('rqewrqwer');
+		}
+	);
+	console.log("hello");
+}
+</script>
