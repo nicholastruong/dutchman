@@ -227,9 +227,6 @@
  					resources['supplies'] -= 1;
  				}
  			}
- 			
- 			
-
  		},
 
  		commitTrade: function (gameID, trade) {
@@ -273,23 +270,43 @@
 
 	 			let grub_id = Math.floor(Math.random()*5);
 	 			game.players[id] = 
-	 				{
-	 					socket: socket,
-	 					currentLocation: 0,
-	 					resources : {
-	 						supplies: grub_stakes.supplies[grub_id],
-	 						fuel: grub_stakes.fuel[grub_id],
-	 						tents: grub_stakes.tents[grub_id],
-	 						batteries: grub_stakes.batteries[grub_id],
-	 						tires: grub_stakes.tires[grub_id],
-	 						cash: grub_stakes.cash[grub_id],
-	 						caves: 0,
-	 						turbo: 0,
-	 						gold: 0
-	 					}
-	 				};	
+ 				{
+ 					socket: socket,
+ 					currentLocation: 0,
+ 					resources : {
+ 						supplies: grub_stakes.supplies[grub_id],
+ 						fuel: grub_stakes.fuel[grub_id],
+ 						tents: grub_stakes.tents[grub_id],
+ 						batteries: grub_stakes.batteries[grub_id],
+ 						tires: grub_stakes.tires[grub_id],
+ 						cash: grub_stakes.cash[grub_id],
+ 						caves: 0,
+ 						turbo: 0,
+ 						gold: 0
+ 					}
+ 				};	
  			}			
  		}, 
+
+ 		getColocatedPlayers: function(gameID, playerID) {
+ 			let scope = this;
+ 			let game = scope.games[gameID];
+
+ 			let currentLocation = game.players[playerID]['currentLocation'];
+ 			let colocatedPlayers = [ ];
+
+			for (var key in game.players) {
+				if (key == playerID) continue;
+
+				if (game.players[key]['currentLocation'] == currentLocation) {
+					colocatedPlayers.push({
+						playerID: key
+					});
+				}
+			} 
+
+			return colocatedPlayers;	
+ 		},
 
  		getResources: function(gameID, playerID) {
  			let scope = this;

@@ -9,6 +9,8 @@ var PlayerController = function()
 
   scope._RegisterSocketHandlers();
   scope._RegisterOutgoing();
+
+  //window.location.href = "login.html";
 }
 
 weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]};
