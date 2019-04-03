@@ -180,7 +180,17 @@
  			game.players[socketID]['currentLocation'] = location;
  			game.players[socketID]['currentCoords'] = coords;
  		},
+
+ 		addTurbo: function(gameID, socketID) {
+ 			let scope = this;
+ 			let game = scope.games[gameID];
+ 			if(socketID in game.players){
+ 				game.players[socketID]['resources']['turbo'] = 3;
+ 			}
+
+ 		},
  		
+ 		//returns true if has enough resources, returns false otherwise
  		updateResources: function(gameID, socketID, day) {
  			let scope = this;
  			let game = scope.games[gameID];
@@ -227,6 +237,24 @@
  					resources['supplies'] -= 1;
  				}
  			}
+
+
+ 			//if any supply, fuel, cave, or tent is less than 0, call the beacon!
+ 			if(resources['fuel'] < 0 || resources['supplies'] < 0 || (resources['caves'] < 0 && resources['tents'] < 0)) {
+ 				if(resources['fuel'] < 0) {
+ 					resources['fuel'] = 0;
+ 				}
+ 				if(resources['supplies'] < 0) {
+ 					resources['supplies'] = 0;
+ 				}
+ 				if(resources['caves'] < 0 && resources['tents'] < 0) {
+ 					resources['caves'] = 0;
+ 					resources['tents'] = 0;
+ 				}
+
+ 				return false;
+ 			}
+ 			return true;
  		},
 
  		commitTrade: function (gameID, trade) {
@@ -281,7 +309,7 @@
 	 						tires: grub_stakes.tires[grub_id],
 	 						cash: grub_stakes.cash[grub_id],
 	 						caves: 0,
-	 						turbo: 1, // temporary to debug turbo-boost movement
+	 						turbo: 0, 
 	 						gold: 0
 	 					}
 	 				};	

@@ -49,50 +49,56 @@ FacilitatorController.prototype = {
        var slabel = srow.insertCell(0);
        slabel.innerHTML = "Supplies";
        var sunits = srow.insertCell(1);
-       sunits.setAttribute("id", "supplies" + teamcount);
+       sunits.setAttribute("id", "supplies" + name);
        sunits.innerHTML = resources['supplies'];
        var frow = table.insertRow(2);
        var flabel = frow.insertCell(0);
        flabel.innerHTML = "Fuel";
        var funits = frow.insertCell(1);
-       funits.setAttribute("id", "fuel" + teamcount);
+       funits.setAttribute("id", "fuel" + name);
        funits.innerHTML = resources['fuel'];
        var trow = table.insertRow(3);
        var tlabel = trow.insertCell(0);
        tlabel.innerHTML = "Tents";
        var tunits = trow.insertCell(1);
-       tunits.setAttribute("id", "tents" + teamcount);
+       tunits.setAttribute("id", "tents" + name);
        tunits.innerHTML = resources['tents'];
        var brow = table.insertRow(4);
        var blabel = brow.insertCell(0);
        blabel.innerHTML = "Batteries";
        var bunits = brow.insertCell(1);
-       bunits.setAttribute("id", "batteries" + teamcount);
+       bunits.setAttribute("id", "batteries" + name);
        bunits.innerHTML = resources['batteries'];
        var strow = table.insertRow(5);
        var stlabel = strow.insertCell(0);
        stlabel.innerHTML = "Spare Tires";
        var stunits = strow.insertCell(1);
-       stunits.setAttribute("id", "tires" + teamcount);
+       stunits.setAttribute("id", "tires" + name);
        stunits.innerHTML = resources['tires'];
        var crow = table.insertRow(6);
        var clabel = crow.insertCell(0);
        clabel.innerHTML = "Cash";
        var cunits = crow.insertCell(1);
-       cunits.setAttribute("id", "cash" + teamcount);
+       cunits.setAttribute("id", "cash" + name);
        cunits.innerHTML = resources['cash'];
        var cvrow = table.insertRow(7);
        var cvlabel = cvrow.insertCell(0);
        cvlabel.innerHTML = "Caves";
        var cvunits = cvrow.insertCell(1);
-       cvunits.setAttribute("id", "caves" + teamcount);
+       cvunits.setAttribute("id", "caves" + name);
        cvunits.innerHTML = resources['caves'];
        var tbrow = table.insertRow(8);
        var tblabel = tbrow.insertCell(0);
        tblabel.innerHTML = "Turbo Boost";
        var tbunits = tbrow.insertCell(1);
-       tbunits.setAttribute("id", "turbo" + teamcount);
+       tbunits.setAttribute("id", "turbo" + name);
        tbunits.innerHTML = resources['turbo'];
+       var grow = table.insertRow(9);
+       var glabel = grow.insertCell(0);
+       glabel.innerHTML = "Gold";
+       var gunits = grow.insertCell(1);
+       gunits.setAttribute("id", "gold" + name);
+       gunits.innerHTML = resources['gold'];
        teamcount++;
 
       console.log(d); 
@@ -105,6 +111,9 @@ FacilitatorController.prototype = {
       console.log(d);
       $('#messages').append($('<li>').text("Player is ready for the next day"));
       console.log("player is ready");
+
+
+
     });
 
 
@@ -133,11 +142,18 @@ FacilitatorController.prototype = {
 
       for (player in d) {
         updateDestinations(playerNames[player], d[player]['location'], d[player]['coords'])
+        updateResources(playerNames[player], d[player]['resources']);
       }
     });
 
     socket.on('end game', function(d){
       $('#messages').append($('<li>').text("Game has ended"));
+    });
+
+    socket.on('out of resources', function(d) {
+      for (player in d){
+        $('#messages').append($('<li>').text(player + " is out of resources"));
+      }
     });
 
   },
@@ -198,4 +214,26 @@ function customAlert(message) {
    console.log("onModal is true");
    alertBox.modal('show');
 };
+
+function updateResources(teamname, resources) {
+    //console.log("update " + teamname + " resources " + resources['supplies'] + resources['fuel']);
+    var supplies = document.getElementById('supplies' + teamname);
+    supplies.innerHTML = resources['supplies'];
+    var fuel = document.getElementById('fuel' + teamname);
+    fuel.innerHTML = resources['fuel'];
+    var tents = document.getElementById('tents' + teamname);
+    tents.innerHTML = resources['tents'];
+    var batteries = document.getElementById('batteries' + teamname);
+    batteries.innerHTML = resources['batteries'];
+    var tires = document.getElementById('tires' + teamname);
+    tires.innerHTML = resources['tires'];
+    var cash = document.getElementById('cash' + teamname);
+    cash.innerHTML = resources['cash'];
+    var caves = document.getElementById('caves' + teamname);
+    caves.innerHTML = resources['caves'];
+    var turbo = document.getElementById('turbo' + teamname);
+    turbo.innerHTML = resources['turbo'];
+    var gold = document.getElementById('gold' + teamname);
+    gold.innerHTML = resources['gold'];
+}
 
