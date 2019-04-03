@@ -220,7 +220,7 @@ function subtractItemBuy(tradeType, resourceName){ //RIGHT Table
 function initiateTeamTrade(){
     let socket = this.socket;
     socket.on('connect', function(){
-        var playerID = socket.io.engine.id;
+        var id = socket.io.engine.id;
         let trade = {
             proposerID : id,
             targetID : fillin,
@@ -238,8 +238,10 @@ function finishProvTrade(){
         myMap[buy] -=amountSell.get(buy);
         myMap[buy] +=amountBuy.get(buy);
     }
-
-    console.log(myMap);
-    socket.emit(socket.io.engine.id, 'server send updateResources', myMap);
+    
+    socket.on('connect', function(){
+        var id = socket.io.engine.id;
+    socket.emit(id, 'server send updateResources', myMap);
+    });
 }
 

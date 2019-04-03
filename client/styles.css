@@ -68,7 +68,7 @@ h2 {
 	font-family: EdmundsFont;
 }
 
-#leftColButton {
+.leftColButton {
 	background-color: #492300;
 	border: none;
 	width: 100%; 
@@ -99,7 +99,7 @@ h2 {
 #tradeTitle {
 	text-align: center;
 	color: black;
-	font-size: 6vh;
+	font-size: 3vw;
 	padding-top: 5px;
 	font-family: EdmundsFont;
 }
@@ -137,7 +137,7 @@ h2 {
 .modal-lg {
 	width: 80%;
 	margin: auto;
-	padding-top: 5%;
+	padding-top: 1.25%;
   }
   
 #right {

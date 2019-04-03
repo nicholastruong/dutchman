@@ -180,6 +180,15 @@
  			game.players[socketID]['currentLocation'] = location;
  			game.players[socketID]['currentCoords'] = coords;
  		},
+
+ 		addTurbo: function(gameID, socketID) {
+ 			let scope = this;
+ 			let game = scope.games[gameID];
+ 			if(socketID in game.players){
+ 				game.players[socketID]['resources']['turbo'] = 3;
+ 			}
+
+ 		},
  		
  		//returns true if has enough resources, returns false otherwise
  		updateResources: function(gameID, socketID, day) {
@@ -300,9 +309,8 @@
 	 						tires: grub_stakes.tires[grub_id],
 	 						cash: grub_stakes.cash[grub_id],
 	 						caves: 0,
-	 						turbo: 1, // temporary to debug turbo-boost movement
-	 						gold: 0,
-	 						beacon: 1
+	 						turbo: 0, 
+	 						gold: 0
 	 					}
 	 				};	
  			}			
