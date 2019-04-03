@@ -140,6 +140,11 @@ PlayerController.prototype = {
 
     });
 
+    socket.on('end game', function(d){
+      $('#messages').append($('<li>').text("Game has ended!"));
+      //Disable buttons and movement here
+    });
+
   },
 
   _RegisterOutgoing: function() 

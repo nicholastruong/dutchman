@@ -28,6 +28,10 @@ module.exports = function(socket, server, game, config){
 			}
 		}
 
+		if(currentGame['day'] === 20) {
+			server.trigger['end game'](socket, server, game);
+		}
+
 		//send all updated player status to facilitator
 		server.trigger['server update player states'](socket, server, game);
 		server.trigger['update server weather'](socket, server, game, facilitatorWeatherReport)

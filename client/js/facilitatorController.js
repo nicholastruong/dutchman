@@ -135,6 +135,11 @@ FacilitatorController.prototype = {
         updateDestinations(playerNames[player], d[player]['location'], d[player]['coords'])
       }
     });
+
+    socket.on('end game', function(d){
+      $('#messages').append($('<li>').text("Game has ended"));
+    });
+
   },
 
   _RegisterOutgoing: function() 
