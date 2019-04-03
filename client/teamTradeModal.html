@@ -1,8 +1,4 @@
 <!--TEAM TRADE MODAL-->
-<script type="text/javascript" src="/js/tradeController.js"></script>
-    <script>
-        teamTradeManager();
-      </script>
 
 
         <div class="modal-header">
@@ -39,3 +35,12 @@
       </div>
     </div>
   </div>
+
+  <script type="text/javascript" src="/js/tradeController.js">
+    $('body').on('hidden.bs.modal', '.modal', function () {
+      $(this).removeData('bs.modal');
+      });</script>
+        <script>
+            teamTradeManager();
+          </script>
+    

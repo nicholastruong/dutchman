@@ -19,46 +19,74 @@ http.listen(3000, function(){
 app.use(express.static(__dirname + '/client')); // need to do this to give server access to all files in a folder
 
 app.get('/', function(req, res){
-  res.sendFile(__dirname + '/client/player.html');
+  res.sendFile(__dirname + '/client/login.html');
 });
+
+app.get('/player', function(req, res){
+  //let token = req.query.token;
+  res.sendFile(__dirname + '/client/player.html');
+})
 
 app.get('/facilitator', function(req, res){
   res.sendFile(__dirname + '/client/facilitator.html');
 });
 
 // Authenticate clients
+var authenticatedUsers = module.exports.authenticatedUsers = {};
 var openSockets = module.exports.openSockets = [];
+
+io.use(function(socket, next)
+{
+	let noAuth = socket.handshake.query.noAuth !== undefined;
+	let token = socket.handshake.query.token;
+
+	if (noAuth) {
+		return next(); // continue without authentication
+	}
+	else {
+		socket.user = authenticatedUsers[token];
+		console.log("authenticated user: ");
+		console.log(socket.user);
+		//if (socket.user == undefined) {
+			//return next(new Error("authenticationFailure"));
+		//}
+		//else {
+		//	return next();
+		//}
+	}
+
+	console.log("No auth" + noAuth); 
+	return next();
+});
 
 io.on("connection", function(socket) {
 	//console.log(socket.handshake.headers.referer);
 	let gameID = 0; //HARDODED
 	console.log("new connection !");
 	console.log("socket ID: " + socket["id"]);
-	openSockets[socket["id"]] = socket;
-	var isFacilitator = false; 
-	//hacky way of getting facilitator rn
-	if (socket.handshake.headers.referer !== "http://localhost:3000/"){
-		isFacilitator = true;
-	}
-	//creates resources and initializes player in game state
-	game.updateSockets(gameID, socket, isFacilitator);
-	
-	if (!isFacilitator){
-		console.log("connection is NOT facilitator");
-		trigger['new player connection'](game, socket["id"]);
+	if (socket.user != undefined) {
+		openSockets[socket["id"]] = socket;
+		var isFacilitator = socket.user.isFacilitator;
 
-		// used to send initial grubstake to connecting player on day 1
-		let currentGame = game['games']['0'];
-		let players = currentGame['players'];
-		let currentLocation = players[socket["id"]]['currentLocation'];
-		trigger['server send updateDay'](
-			socket["id"], 
-			players[socket["id"]]['resources'], 
-			game.getWeather(currentLocation, currentGame['day']), 
-			currentGame,
-			game.getColocatedPlayers(gameID, socket["id"])
-		);
-	}	
+		game.updateSockets(gameID, socket, isFacilitator);
+		
+		if (!isFacilitator){
+			console.log("connection is NOT facilitator");
+			trigger['new player connection'](game, socket["id"]);
+
+			// used to send initial grubstake to connecting player on day 1
+			let currentGame = game['games']['0'];
+			let players = currentGame['players'];
+			let currentLocation = players[socket["id"]]['currentLocation'];
+			trigger['server send updateDay'](
+				socket["id"], 
+				players[socket["id"]]['resources'], 
+				game.getWeather(currentLocation, currentGame['day']), 
+				currentGame,
+				game.getColocatedPlayers(gameID, socket["id"])
+			);	
+		}	
+	}
 });
 
 //load game state

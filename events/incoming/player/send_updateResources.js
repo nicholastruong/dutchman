@@ -10,7 +10,7 @@ module.exports = function(server, config)
 			server.trigger(playerID, eventID, 
 				{
                     resources: resources
-  				},
+  				}
   			);
 		}
 	};

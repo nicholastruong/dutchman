@@ -2,15 +2,17 @@ var PlayerController = function()
 {
   let scope = this;
 
+  console.log(getUrlVars());
+  let token = getUrlVars()['token'];
   //open socket
-  let socket = scope.socket = io();
+  let socket = scope.socket = io(document.location.hostname + ":3000?token=" + token);
   console.log("hey look at my socket");
   console.log(socket);
 
   scope._RegisterSocketHandlers();
   scope._RegisterOutgoing();
 
-  //window.location.href = "login.html";
+  //swindow.location.href = "login.html";
 }
 
 weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]};
@@ -190,6 +192,14 @@ PlayerController.prototype = {
 
   }
 };
+
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
 
 function reallyReady() {
    $('#readybutton').prop('disabled', true)
