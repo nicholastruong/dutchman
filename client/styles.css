@@ -33,7 +33,7 @@ h2 {
 }
 
 #board {
-	margin: auto;
+	/*margin: auto;*/
 	/*width: 820px;*/
 	padding: 10px;
 }
@@ -51,11 +51,11 @@ h2 {
 
 #resourceblock {
 	width: 100%;
-	height: 25vw;
+	height: 28vw;
 	background-color: rgba(155, 97, 43, 1);
 	text-align: left;
 	color: black;
-	font-size: 1vw;
+	font-size: 1.25vw;
 	margin-top: 2vh;
 }
 
@@ -117,9 +117,10 @@ h2 {
 	background-color: #edce70;
   }
 
-.modal-body{
+.modal-body, .modal-footer {
 	background-color: #edce70;
 	overflow-x: auto;
+	border-top: 0px;
 }
 
 .modal-content  {
@@ -144,22 +145,61 @@ h2 {
 	/*position: relative;*/
 }
 
-#weather {
+.weather {
 	margin-top: 2vh;
 }
 
-#weatherimg {
+.weatherimg {
 	padding-left:5px; 
 	vertical-align: middle;
 }
 
-#weathertext {
+.weathertext {
 	display: inline-block; 
 	font-size:2vw; 
 	padding-left: 0.6vw; 
 	font-family:EdmundsFont;
 	color: white;
 }
+
+.weatherlabel {
+	font-size:1.5vw; 
+	font-family:EdmundsFont; 
+	color: white;
+}
+
+
+#forecastButton:hover .resourcetext {
+	visibility: visible;
+}
+
+#forecastContainer {
+	padding-top: 5px;
+	text-align: center;
+	position: relative;
+	
+  	width:100%;
+    background-color: #edce70;
+}
+
+.forecast_img {
+	vertical-align: middle;
+	width: 2.5vw;
+	height: 2.5vw;
+}
+
+.forecast_text {
+	display: inline-block; 
+	font-size: 1.5vw;
+	padding-left: 5px;
+	font-family:EdmundsFont;
+	color: white;
+}
+
+#forecast_cols {
+     margin-left: 0%; 
+}
+
 
 #instructionbutton {
 	font-size:2.5vw; 
@@ -208,10 +248,27 @@ h2 {
 
 
 
-/*.resourcetag {
-	font-size: 1.2vw;
-	height: 2.5vw
-}*/
+.resourcetag {
+	/*font-size: 1.2vw;
+	height: 2.5vw */
+}
+
+.resourcetext {
+	visibility: hidden;
+	width: 200px;
+  	background-color: #492300;
+  	color: #fff;
+  	border-radius: 6px;
+  	padding: 5px 0;
+
+  	/* Position the tooltip */
+  	position: absolute;
+  	z-index: 1;
+}
+
+.resourcetag:hover .resourcetext {
+	visibility: visible;
+}
 
 .rightcol {
 	width: 80%;
@@ -223,4 +280,60 @@ h2 {
 	background-color: #492300;
 }
 
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  color: white;
+}
+
+th {
+  font-size: 1.5vw;
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 3px;
+}
+
+td {
+  font-size: 1vw;
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 3px;
+}
+
+table:nth-child(even) {
+	background-color: #492300;
+}
+
+#copyright {
+	margin-top: 1vw;
+	margin-left: 5px;
+	font-size: 0.75vw;
+	color: white;
+	text-align: center;
+}
+ 
+
+.bootbox .modal-content {
+	width: 35vw;
+}
+
+.bootbox-body {
+	color: white;
+	width: 80%;
+}
+
+.bootbox div div div {
+	background-color: rgba(155, 97, 43, 1);
+}
+
+.alertButton, .btn-danger, .btn-success {
+    background-color: #492300;
+	border: none;
+	width: 25%; 
+	margin-top: 10px;
+	color: white;
+	/*font-family:EdmundsFont; */
+	font-size: 1.5vw;
+}
 

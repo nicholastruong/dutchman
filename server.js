@@ -6,7 +6,6 @@ var io = require('socket.io')(http);
 const fs = require("fs");
 const path = require("path");
 
-var facilitatorID;
 var openSockets = {};
 
 const config = require("./config.js")
@@ -31,17 +30,31 @@ app.get('/facilitator', function(req, res){
 var openSockets = module.exports.openSockets = [];
 
 io.on("connection", function(socket) {
-	console.log(socket.handshake.headers.referer);
-	console.log(socket["id"]);
+	//console.log(socket.handshake.headers.referer);
+	let gameID = 0; //HARDODED
+	console.log("new connection !");
+	console.log("socket ID: " + socket["id"]);
 	openSockets[socket["id"]] = socket;
-
+	var isFacilitator = false; 
 	//hacky way of getting facilitator rn
 	if (socket.handshake.headers.referer !== "http://localhost:3000/"){
-		facilitatorID = socket["id"];
+		isFacilitator = true;
 	}
-
-	game.updateSockets(0, socket, facilitatorID);
+	//creates resources and initializes player in game state
+	game.updateSockets(gameID, socket, isFacilitator);
 	
+	if (!isFacilitator){
+		console.log("connection is NOT facilitator");
+		trigger['new player connection'](game, socket["id"]);
+
+		// used to send initial grubstake to connecting player on day 1
+		let currentGame = game['games']['0'];
+		let players = currentGame['players'];
+		let currentLocation = players[socket["id"]]['currentLocation'];
+		trigger['server send updateDay'](
+			socket["id"], players[socket["id"]]['resources'], game.getWeather(currentLocation, currentGame['day']), currentGame
+		);
+	}	
 });
 
 //load game state
@@ -60,7 +73,7 @@ module.exports.emit = function(socketID, eventID, data, callback, isBroadcast)
 		socket.emit(eventID, data, callback);
 	}
 	
-	//temporary broadcast if not facilitator
+	//temporary broadcast if to no one
 	else {
 		io.emit(eventID, data);
 	}
@@ -73,6 +86,7 @@ const incomingEventsPath = "./events/incoming";
 
 function loadEvents(path, outgoing)
 {
+	console.log("loading events");
 	fs.readdir(path, function(err, files) {
 		if (err) {
 			console.error("Error loading events: " + err.stack); // non-fatal

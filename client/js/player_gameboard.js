@@ -12,7 +12,7 @@ $(document).ready(function(){
       backgroundColor: 0xedce70,
       scale: {
          mode: Phaser.Scale.FIT,
-         autoCenter: Phaser.Scale.CENTER_BOTH
+         autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
       },
       physics: {
          default: 'arcade',
@@ -24,8 +24,7 @@ $(document).ready(function(){
          update: update
       },
    };
-   onModal=false;
-    game = new Phaser.Game(config);
+   game = new Phaser.Game(config);
 });
 
 
@@ -33,12 +32,14 @@ $(document).ready(function(){
 var game;
 var boardWidth, boardHeight;
 var car;
-var boardspaces;
 var connections;
-var curr_space;
+var curr_space, prev_space;
+var shape_graphics = [];
 
 var onModal;
 var enableMove;
+var hasMadeMove;
+var hasTurbos;
 
 var destx = boardWidth / 2; 
 var desty = boardHeight / 2;
@@ -48,91 +49,26 @@ var desty = boardHeight / 2;
 function preload() {
    console.log("preload called");
    this.load.image("background", "/assets/gameboard.png");
-   this.load.image("team_icon", "/assets/team_icon.png");
+   this.load.image("car", "/assets/cars/black.png");
 }
 
 
 function create() {
    console.log("create called");
 
-   // define connections between board spaces
-   connections = [ // should move this to external text file
-    [1], // apache junction
-    [0, 2, 14, 15], // space outside apache junction
-    [1, 3], 
-    [2, 4],
-    [3, 5, 6], // tortilla flats
-    [4], // top-left trading post
-    [4, 7],
-    [6, 8],
-    [7, 9, 20],
-    [8, 10, 11, 20],
-    [9], // top-right trading post
-    [9, 12, 20],
-    [11, 13, 14], // Tom Canyon Ford
-    [12], // bottom-right trading post
-    [12, 1],
-    [1, 16],
-    [15, 17],
-    [16, 18],
-    [17, 19],
-    [18, 20],
-    [19, 8, 9, 11]
-   ];
-
-   // define board spaces relative to size of original image
-   var spaces = [ // should move this to external text file
-    [20, 586,  20, 783,  218, 783,  218, 596,  209, 586], // apache junction
-
-    [35, 508,  35, 586,  209, 586,  218, 596,  218, 770,  302, 770,  302, 508], // space outside apache junction
-    
-    [35, 378,  35, 508,  190, 508,  190, 378], // high country trail
-    [35, 245,  35, 378,  190, 378, 190, 245],
-
-    [35, 141,  34, 246,  246, 246,  246, 32,  136, 32], // tortilla flats
-    [90, 88, 75], // top-left trading post
-
-    [247, 32,  247, 182,  364, 182,  364, 32],
-    [365, 32,  365, 182,  479, 182,  479, 32],
-    [480, 32,  480, 182,  504, 166,  539, 180,  542, 148,  566, 176,  582, 148,  598, 179,  594, 32],
-
-    [673, 32,  595, 32,  598, 179,  627, 155,  631, 190,  662, 188,  656, 214,  771, 209,  772, 136], // space outside top-right trading post
-    [720, 88, 75], // top-right trading post
-    [604, 365,  606, 534,  730, 534,  730, 210,  656, 214,  685, 216,  671, 236,  698, 250,  671, 272,  692, 304,  659, 308,  655, 345,  624, 330,  604, 365], // right-most space
-
-    [773, 660,  771, 532,  541, 532,  541, 768,  673, 768], // Tom Canyon Ford
-    [720, 712, 75], // bottom-right trading post
-    [302, 615,  302, 770,  540, 770,  540, 615], // low country trail
-
-    [201, 502,  301, 502,  302, 594,  365, 531,  267, 435], // plateau trail
-    [267, 435,  365, 531,  417, 479,  318, 382],
-    [318, 382,  417, 479,  468, 426,  371, 329],
-    [371, 329,  468, 426,  521, 374,  423, 276],
-    [423, 276,  521, 374,  554, 340,  553, 337,  526, 347,  525, 320,  494, 318,  500, 293,  477, 279,  494, 266,  467, 243,  500, 232,  484, 212],
-    
-    [514, 205,  477, 202,  500, 232,  467, 243,  494, 266,  477, 279,  500, 293,  494, 318,  525, 320,  526, 347,  553, 337,  554, 340,  568, 358,  590, 338, // gold mine
-    604, 365,  624, 330,  655, 345,  659, 308,  692, 304,  671, 272,  698, 250,  671, 236,  685, 216,  656, 214,
-    662, 188,  631, 190,  627, 155,  598, 179,  582, 148,  566, 176,  542, 148,  539, 180,  504, 166,  512, 199]
-   ];
-   for (i = 0; i < spaces.length; i++) {
-      for (j = 0; j < spaces[i].length; j++) {
-         if (j % 2 == 0) {
-            spaces[i][j] = spaces[i][j] * boardWidth / 800;
-         }
-         else {
-            spaces[i][j] = spaces[i][j] * boardHeight / 795;
-         }
-      }
-   }
+   normalize(boardWidth, boardHeight); // function in boardspace_data.js
 
    background = this.add.sprite(boardWidth / 2, boardHeight / 2, "background");
    background.displayWidth = boardWidth;
    background.scaleY = background.scaleX;
 
    curr_space = 0;
-   boardspaces = [];
+   prev_space = 0;
 
+   onModal = false;
    enableMove = true;
+   hasMadeMove = false;
+   hasTurbos = false;
 
    for (i = 0; i < spaces.length; i++) {
       graphic = this.add.graphics();
@@ -154,29 +90,23 @@ function create() {
             attachPolygonListeners(this, graphic, new_polygon, i);
          }
       }   
+
+      shape_graphics.push(graphic);
    }
 
-   car = this.physics.add.image(spaces[0][0] + (spaces[0][4] - spaces[0][0])/2, 
-      spaces[0][1] + (spaces[0][3] - spaces[0][1])/2, "team_icon");
+   car = this.physics.add.image(icon_spot[0][0], icon_spot[0][1], "car");
+   makeMuddy(false);
 }
 
 
 function attachClickListener(physics, graphic, index) {
    
    graphic.on('pointerdown', function(pointer) {
-      console.log(onModal);
-      if (enableMove && !onModal) {
-         if (validMove(index)) {
-            console.log("index is now " + index);
-
-            curr_space = index;
-            destx = pointer.x;
-            desty = pointer.y;
+      if (!onModal && enableMove) {
+         if (checkMove(index)) {
+            destx = icon_spot[index][0];
+            desty = icon_spot[index][1];
             physics.moveTo(car, destx, desty, 200);
-            enableMove = false;
-         }
-         else {
-            alert("Sorry this is not a valid move");
          }
       }
    });
@@ -186,8 +116,8 @@ function attachClickListener(physics, graphic, index) {
 
 function attachPolygonListeners(scene, graphic, polygon, index) {
    graphic.on('pointerover', function () {
-      if (!onModal) {
-        console.log("pointerover on index " + index);
+      if (!onModal && enableMove) {
+        // console.log("pointerover on index " + index);
 
         graphic.fillStyle(0xffffff, 0.5);
         graphic.fillPoints(polygon.points, true);  
@@ -197,7 +127,7 @@ function attachPolygonListeners(scene, graphic, polygon, index) {
 
 function attachCornerListeners(scene, graphic, square, circle, index) {
    graphic.on('pointerover', function () {
-      if (!onModal) {
+      if (!onModal && enableMove) {
         coeffs = [];
 
         if (index == 4) { 
@@ -230,7 +160,7 @@ function attachCornerListeners(scene, graphic, square, circle, index) {
 
 function attachCircleListeners(graphic, circle, index) {
    graphic.on('pointerover', function () {
-      if (!onModal) {
+      if (!onModal && enableMove) {
         graphic.fillStyle(0xffffff, 0.5);
         graphic.fillCircleShape(circle);
       }
@@ -239,17 +169,70 @@ function attachCircleListeners(graphic, circle, index) {
 
 
 function update() {
-   if (Phaser.Math.Distance.Between(car.x, car.y, destx, desty) < 10) {
+   if (Phaser.Math.Distance.Between(car.x, car.y, destx, desty) < 5) {
       // console.log("car reached destination");
       car.body.stop();
    }
 }
 
-function validMove(i) { // checks if space i is adjacent to the current space
-   if (i == curr_space || connections[curr_space].includes(i)) {
+function checkMove(i) { // checks if space i is a valid move
+   if (i == curr_space) {
+      if (!hasMadeMove) {
+        customAlert("You can move to a new space");
+      }
+      return false;
+   }
+
+   if (hasMadeMove && i == prev_space) {
+      customAlert("You are undoing your move");
+      curr_space = prev_space;
+      hasMadeMove = false;
       return true;
    }
 
+   if (connections[curr_space].includes(i) || (hasTurbos && checkExtendedConnections(i))) {
+      if (!hasMadeMove) {
+         prev_space = curr_space;
+         curr_space = i;
+         hasMadeMove = true;
+         return true;
+      }
+      else {
+         customAlert("You have already moved this day");
+         return false;
+      }
+   }
+
+   customAlert("Sorry this is not a valid move");
    return false;
+}
+
+function checkExtendedConnections(i) {
+   console.log(connections[curr_space]);
+   for (j = 0; j < connections[curr_space].length; j++) {
+      console.log(connections[curr_space][j] + ": " + connections[connections[curr_space][j]]);         
+      if (connections[connections[curr_space][j]].includes(i)) {
+         return true;
+      }
+   }
+
+   return false;
+}
+
+
+function makeMuddy(isMuddy) {
+   if (shape_graphics.length == 0) {
+      return;
+   }
+   if (isMuddy) {
+      shape_graphics[12].visible = false;
+      shape_graphics[21].visible = true;
+      shape_graphics[22].visible = true;
+   }
+   if (!isMuddy) {
+      shape_graphics[12].visible = true;
+      shape_graphics[21].visible = false;
+      shape_graphics[22].visible = false;
+   }
 }
 

@@ -1,22 +1,33 @@
 const eventID = 'facilitator next day';
-var day = 1;
 module.exports = function(socket, server, game, config){
 
 	socket.on("facilitator next day", function(socket){
 		let currentGame = game['games']['0'];
 		let players = currentGame['players'];
 
-		++day;
+		currentGame['day'] += 1;
 		//for each player, update resource count in game state
 		//query game state for resources and send to each socket
+		var facilitatorWeatherReport = game.weather[currentGame['day']];
 		for (socketID in players) {
-			//0 is for hardcoded gameID
+			
 			var newResources = players[socketID]['resources'];
-			game.updateResources(0, socketID);
-			server.trigger['server send updateDay'](socketID, newResources, day);
+			var currentLocation = players[socketID]['currentLocation'];
+			var playerWeatherReport = game.getWeather(currentLocation, currentGame['day']);
+			game.updateResources(0, socketID, currentGame['day']); //0 is gameID
 
+			server.trigger['server send updateDay'](socketID, newResources, playerWeatherReport, currentGame);
+
+			if (true) { // currentGame['day'] == 5 || currentGame['day'] == 10 || currentGame['day'] == 15) { // sends weather info everday for debugging
+				var weatherForecast = game.getWeatherForecast(currentGame['day']);
+
+				server.trigger['server send forecast'](socketID, weatherForecast);
+			}
 		}
-		
+
+		//send all updated player status to facilitator
+		server.trigger['server update player states'](socket, server, game);
+		server.trigger['update server weather'](socket, server, game, facilitatorWeatherReport)
 		
 	});
 }
