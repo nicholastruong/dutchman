@@ -15,14 +15,21 @@ module.exports = function(socket, server, game, config){
 			var currentLocation = players[socketID]['currentLocation'];
 			var playerWeatherReport = game.getWeather(currentLocation, currentGame['day']);
 			game.updateResources(0, socketID, currentGame['day']); //0 is gameID
+			var colocatedPlayers = game.getColocatedPlayers(0, socketID);
+			console.log('colocated Players');
+			console.log(colocatedPlayers);
 
-			server.trigger['server send updateDay'](socketID, newResources, playerWeatherReport, currentGame);
+			server.trigger['server send updateDay'](socketID, newResources, playerWeatherReport, currentGame, colocatedPlayers);
 
 			if (true) { // currentGame['day'] == 5 || currentGame['day'] == 10 || currentGame['day'] == 15) { // sends weather info everday for debugging
 				var weatherForecast = game.getWeatherForecast(currentGame['day']);
 
 				server.trigger['server send forecast'](socketID, weatherForecast);
 			}
+		}
+
+		if(currentGame['day'] === 20) {
+			server.trigger['end game'](socket, server, game);
 		}
 
 		//send all updated player status to facilitator

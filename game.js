@@ -227,9 +227,6 @@
  					resources['supplies'] -= 1;
  				}
  			}
- 			
- 			
-
  		},
 
  		commitTrade: function (gameID, trade) {
@@ -290,6 +287,26 @@
 	 				};	
  			}			
  		}, 
+
+ 		getColocatedPlayers: function(gameID, playerID) {
+ 			let scope = this;
+ 			let game = scope.games[gameID];
+
+ 			let currentLocation = game.players[playerID]['currentLocation'];
+ 			let colocatedPlayers = [ ];
+
+			for (var key in game.players) {
+				if (key == playerID) continue;
+
+				if (game.players[key]['currentLocation'] == currentLocation) {
+					colocatedPlayers.push({
+						playerID: key
+					});
+				}
+			} 
+
+			return colocatedPlayers;	
+ 		},
 
  		getResources: function(gameID, playerID) {
  			let scope = this;

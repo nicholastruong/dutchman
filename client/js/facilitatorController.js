@@ -145,6 +145,11 @@ FacilitatorController.prototype = {
         updateResources(playerNames[player], d[player]['resources']);
       }
     });
+
+    socket.on('end game', function(d){
+      $('#messages').append($('<li>').text("Game has ended"));
+    });
+
   },
 
   _RegisterOutgoing: function() 
