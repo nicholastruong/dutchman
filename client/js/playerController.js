@@ -114,8 +114,7 @@ PlayerController.prototype = {
        $('#day').text("Day: " + d['day']);
 
        if (curr_space == 4 && d['resources']['turbo'] > 0) {
-          customAlert("Your turbos have been activated!");
-          hasTurbos = true;
+          customConfirm("Do you wish to activate your Turbos?", function() { hasTurbos = true; });
        }
        if (curr_space == 20) {
           customAlert("You got one gold from the mine!");
@@ -158,13 +157,13 @@ PlayerController.prototype = {
       }
       else {
          if (curr_space == 0) {
-            customConfirm("Are you sure you want to stay in Apache Junction for another day?");
+            customConfirm("Are you sure you want to stay in Apache Junction for another day?", reallyReady);
          }
          if (curr_space == 20) {
-            customConfirm("Are you sure you want to stay in the Lost Dutchman Goldmine?");
+            customConfirm("Are you sure you want to stay in the Lost Dutchman Goldmine?", reallyReady);
          }
          if (curr_space != 0 && curr_space != 20) {
-            customConfirm("Are you sure you want to stay in the same space?");
+            customConfirm("Are you sure you want to stay in the same space?", reallyReady);
          }
       }
     });
@@ -229,7 +228,7 @@ function customAlert(message) {
    alertBox.modal('show');
 };
 
-function customConfirm(message) {
+function customConfirm(message, callbackFunc) {
    confirmBox = bootbox.confirm({
       message: message,
       title: '',
@@ -246,7 +245,7 @@ function customConfirm(message) {
       callback: function (result) {
          console.log("callback with result: " + result);
          if (result) {
-            reallyReady();
+            callbackFunc();
          }
       },
       show: false

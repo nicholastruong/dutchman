@@ -181,31 +181,34 @@ function update() {
 }
 
 function checkMove(i) { // checks if space i is a valid move
-   if (i == curr_space) {
-      if (!hasMadeMove) {
-        customAlert("You can move to a new space");
+   if (hasMadeMove) {
+      if (i == prev_space) {
+         customAlert("You are undoing your move");
+         curr_space = prev_space;
+         hasMadeMove = false;
+         return true;
+      }
+
+      if (i != curr_space) {
+         customAlert("You have already moved this day");
       }
       return false;
    }
 
-   if (hasMadeMove && i == prev_space) {
-      customAlert("You are undoing your move");
-      curr_space = prev_space;
-      hasMadeMove = false;
-      return true;
+   if (i == curr_space) {
+      customAlert("You can move to a new space");
+      return false;
    }
 
    if (connections[curr_space].includes(i) || (hasTurbos && checkExtendedConnections(i))) {
-      if (!hasMadeMove) {
-         prev_space = curr_space;
-         curr_space = i;
-         hasMadeMove = true;
-         return true;
-      }
-      else {
-         customAlert("You have already moved this day");
+      if ([11, 12, 13, 14, 21, 22].includes(i)) {
+         customAlert("You cannot use the Low Country Path if you have Turbos installed!");
          return false;
       }
+      prev_space = curr_space;
+      curr_space = i;
+      hasMadeMove = true;
+      return true;
    }
 
    customAlert("Sorry this is not a valid move");
