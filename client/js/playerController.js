@@ -140,6 +140,10 @@ PlayerController.prototype = {
 
     });
 
+    socket.on('out of resources', function(d){
+      $('#messages').append($('<li>').text("You're out of resources. Use your beacon!"));
+    });
+
     socket.on('end game', function(d){
       $('#messages').append($('<li>').text("Game has ended!"));
       //Disable buttons and movement here

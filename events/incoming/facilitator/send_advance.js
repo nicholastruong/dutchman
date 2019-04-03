@@ -9,12 +9,17 @@ module.exports = function(socket, server, game, config){
 		//for each player, update resource count in game state
 		//query game state for resources and send to each socket
 		var facilitatorWeatherReport = game.weather[currentGame['day']];
+
+
+		var playersOutOfResources = [];
+
 		for (socketID in players) {
 			
 			var newResources = players[socketID]['resources'];
 			var currentLocation = players[socketID]['currentLocation'];
 			var playerWeatherReport = game.getWeather(currentLocation, currentGame['day']);
-			game.updateResources(0, socketID, currentGame['day']); //0 is gameID
+			var hasEnoughResources = game.updateResources(0, socketID, currentGame['day']); //0 is gameID
+			
 			var colocatedPlayers = game.getColocatedPlayers(0, socketID);
 			console.log('colocated Players');
 			console.log(colocatedPlayers);
@@ -26,7 +31,16 @@ module.exports = function(socket, server, game, config){
 
 				server.trigger['server send forecast'](socketID, weatherForecast);
 			}
+
+			//notifies player and facilitator that they are out of resources
+			if(!hasEnoughResources) {
+				server.trigger['out of resources'](socketID);
+				playersOutOfResources.push(socketID);
+			}
+
 		}
+
+		server.trigger['update server player out of resources'](server, game, playersOutOfResources);
 
 		if(currentGame['day'] === 20) {
 			server.trigger['end game'](socket, server, game);

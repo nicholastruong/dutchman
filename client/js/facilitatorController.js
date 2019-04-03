@@ -140,6 +140,12 @@ FacilitatorController.prototype = {
       $('#messages').append($('<li>').text("Game has ended"));
     });
 
+    socket.on('out of resources', function(d) {
+      for (player in d){
+        $('#messages').append($('<li>').text(player + " is out of resources"));
+      }
+    });
+
   },
 
   _RegisterOutgoing: function() 
