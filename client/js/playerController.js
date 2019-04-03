@@ -17,7 +17,7 @@ var weatherForecast;
 var teamname = "";
 var firstDayinMud = false;
 var curr_day = 1;
-
+var resources;
 var socket;
 
 $(document).ready(function(){
@@ -107,8 +107,8 @@ PlayerController.prototype = {
     });
 
     socket.on('server send updateDay', function(d) {
-       console.log(d);
        curr_day = d['day'];
+       resources = d['resources'];
        $('#day').text("Day: " + d['day']);
 
        if (curr_space == 4 && d['resources']['turbo'] > 0) {
@@ -133,7 +133,6 @@ PlayerController.prototype = {
     });
 
     socket.on('server send forecast', function(d) {
-      console.log(d);
       weatherForecast = d['forecast'];
 
     });
