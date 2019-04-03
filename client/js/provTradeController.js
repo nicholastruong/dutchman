@@ -3,7 +3,11 @@ var amountBuy = new Map();
 
 var amountSell = new Map();
 var constMapOfValues = new Map([["Supplies", 20],["Fuel", 10], ["Batteries", 10], ["Tents", 10], ["Spare Tires", 30]]);
-function sellTableBuilder(){
+function sellTableBuilder(tableType){
+    var buttonClickParam = "";
+    if (tableType ==2){
+        buttonClickParam = "offerTable"
+    } else { buttonClickParam = "sellTable"}
 
 var table = `<thead>
               <tr>
@@ -29,10 +33,14 @@ for ( let [r, a] of myMap){
     table+= `
             </th>
                 <td><button type="button" class="refresher btn btn-light" onClick = "addItemSell('`
-    table += String(r);
+                table += buttonClickParam;
+                table += "','";
+                table += String(r);
     table +=    `')">+</button></td>
                 <td><button type="button" class="refresher btn btn-light" onClick = "subtractItemSell('`
-    table += String(r);
+                table += buttonClickParam;
+                table += "','";
+                table += String(r);
     table += `')">-</button></td>
                 <td>
             `;
@@ -64,7 +72,11 @@ table += `</td>
 return table;
 
 }
-function buyTableBuilder(){
+function buyTableBuilder(tableType){
+    var buttonClickParam = "";
+    if (tableType ==2){
+        buttonClickParam = "requestTable"
+    } else { buttonClickParam = "buyTable"}
     var total =0;
     var table = `<thead>
               <tr>
@@ -86,9 +98,13 @@ function buyTableBuilder(){
                 table += String(r);// resourceName
                 table += `</th>
                 <td><button type="button" class="btn btn-light" onClick = "addItemBuy('`;
+                table += buttonClickParam;
+                table += "','";
                 table += String(r);
                 table +=`')">+</button></td>
-                <td><button type="button" class="btn btn-light" onClick = "subtractItemBuy('`; 
+                <td><button type="button" class="btn btn-light" onClick = "subtractItemBuy('`;
+                table += buttonClickParam;
+                table += "','";
                 table+= String(r);
                 table+=`')">-</button></td>
                 <td>`
@@ -131,10 +147,10 @@ for ( let [r,a] of myMap){
     amountBuy.set(String(r), 0);
 }
 
-sellTable = sellTableBuilder();
-buyTable = buyTableBuilder();
+sellTable = sellTableBuilder(1);
+buyTable = buyTableBuilder(1);
 
-document.getElementById("provTable").innerHTML += sellTable;
+document.getElementById("sellTable").innerHTML += sellTable;
 document.getElementById("buyTable").innerHTML += buyTable
 }
 
@@ -143,44 +159,57 @@ function teamTradeManager(){
         amountSell.set(String(r), 0);
         amountBuy.set(String(r), 0);
     }
-    offerTable = sellTableBuilder();
-    requestTable = buyTableBuilder();
+    offerTable = sellTableBuilder(2);
+    requestTable = buyTableBuilder(2);
 
 document.getElementById("offerTable").innerHTML += offerTable;
 document.getElementById("requestTable").innerHTML += requestTable
 
 }
 
-function addItemBuy(resourceName){
-    amountBuy.set(resourceName, amountBuy.get(resourceName) + 1);
-    
-    var tableContainer = document.getElementById("buyTable");
-    tableContainer.innerHTML= buyTableBuilder();
-}
+//FUNCTIONS THAT HANDLE BUTTON LOGIC IN TABLES
 
-function subtractItemBuy(resourceName){
-    if (amountBuy.get(resourceName) > 0){
-        amountBuy.set(resourceName, amountBuy.get(resourceName) - 1);
-    
-    var tableContainer = document.getElementById("buyTable");
-    tableContainer.innerHTML= buyTableBuilder(); 
-    
-    }
-}
-
-function addItemSell(resourceName){
+function addItemSell(tradeType, resourceName){ //LEFT Table offerTable or sellTable
+    var type=1;
+    if (tradeType=="offerTable"){type=2}
     if (amountSell.get(resourceName) < myMap.get(resourceName)){
    amountSell.set(resourceName, amountSell.get(resourceName) + 1);
-   var tableContainer = document.getElementById("provTable");
-    tableContainer.innerHTML= sellTableBuilder(); 
+   var tableContainer = document.getElementById(tradeType);
+    tableContainer.innerHTML= sellTableBuilder(type); 
     }
 }
 
-function subtractItemSell(resourceName){
+function subtractItemSell(tradeType, resourceName){ //LEFT Table
+    var type=1;
+    if (tradeType=="offerTable"){type=2}
     if (amountSell.get(resourceName) > 0){
     amountSell.set(resourceName, amountSell.get(resourceName) - 1);
     
-    var tableContainer = document.getElementById("provTable");
-    tableContainer.innerHTML= sellTableBuilder(); 
+    var tableContainer = document.getElementById(tradeType);
+    tableContainer.innerHTML= sellTableBuilder(type); 
     }
 }
+
+
+
+function addItemBuy(tradeType, resourceName){ //RIGHT requestTable or buyTable
+   var type=1;
+    if (tradeType=="requestTable"){type=2}
+    amountBuy.set(resourceName, amountBuy.get(resourceName) + 1);
+    
+    var tableContainer = document.getElementById(tradeType);
+    tableContainer.innerHTML= buyTableBuilder(type);
+}
+
+function subtractItemBuy(tradeType, resourceName){ //RIGHT Table
+    var type=1;
+    if (tradeType=="requestTable"){type=2}
+    if (amountBuy.get(resourceName) > 0){
+        amountBuy.set(resourceName, amountBuy.get(resourceName) - 1);
+    
+    var tableContainer = document.getElementById(tradeType);
+    tableContainer.innerHTML= buyTableBuilder(type); 
+    
+    }
+}
+
