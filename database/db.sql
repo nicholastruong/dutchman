@@ -53,6 +53,8 @@ CREATE TABLE weather (
 	PRIMARY KEY(day)
 );
 
+
+
 INSERT INTO weather
 	(day, low_country, high_country, canyon)
 VALUES
