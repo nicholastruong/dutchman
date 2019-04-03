@@ -127,7 +127,8 @@ PlayerController.prototype = {
        else {
          makeMuddy(false);
        }
-       updateWeather_Resources(d['weather'], d['resources']);
+       updateWeather(d['weather']);
+       updateResources(d['resources']);
 
        hasMadeMove = false;
        enableMove = true;
@@ -139,6 +140,10 @@ PlayerController.prototype = {
       weatherForecast = d['forecast'];
 
     });
+
+    socket.on('update resources', function(d) {
+      updateResources(d);
+    }); 
 
     socket.on('out of resources', function(d){
       $('#messages').append($('<li>').text("You're out of resources. Use your beacon!"));
@@ -179,6 +184,14 @@ PlayerController.prototype = {
     instructionButton.addEventListener('click', function(){
       customAlert("Instructions for players");
     });
+
+    var videoTurboButton = document.getElementById("videoTurboButton");
+    videoTurboButton.addEventListener('click', function(){
+      //customAlert("Instructions for players");
+      socket.emit('add turbo');
+    });
+
+
   }
 };
 
@@ -193,12 +206,14 @@ function reallyReady() {
    ); 
 }
 
-function updateWeather_Resources(weatherData, resources) {
+function updateWeather(weatherData) {
    $('#weathertext').text(weatherData[0]);
    $('#weatherimg').attr("src", "assets/weather/" + weather[weatherData[0]][1] + ".png");
 
    $('#canyonstatus').text("Canyon is " + weatherData[1]);
+}
 
+function updateResources(resources) {
    $('#fuel').text(resources['fuel'] + " Fuel");
    $('#supplies').text(resources['supplies'] + " Supplies");
    $('#tires').text(resources['tires'] + " Spare Tires");
