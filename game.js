@@ -181,11 +181,16 @@
  			game.players[socketID]['currentCoords'] = coords;
  		},
 
- 		addTurbo: function(gameID, socketID) {
+ 		addResource: function(gameID, socketID, resource) {
  			let scope = this;
  			let game = scope.games[gameID];
  			if(socketID in game.players){
- 				game.players[socketID]['resources']['turbo'] = 3;
+ 				if (resource == "turbo") {
+ 					game.players[socketID]['resources']['turbo'] = 3;
+ 				}
+ 				if (resource == "cave") {
+ 					game.players[socketID]['resources']['caves'] = 12;
+ 				}
  			}
 
  		},

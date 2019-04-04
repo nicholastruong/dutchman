@@ -1,14 +1,14 @@
 
     
 /*
-	For when a player gets the turbo
+	For when a player gets the cave
 */
 
-const eventID = "add turbo";
+const eventID = "add cave";
 module.exports = function(socket, server, game){
-	socket.on("add turbo", function(data){
+	socket.on("add cave", function(data){
 
-		game.addResource(0, socket['id'], "turbo");
+		game.addResource(0, socket['id'], "cave");
 
 		let currentGame = game['games']['0'];
 		let players = currentGame['players'];

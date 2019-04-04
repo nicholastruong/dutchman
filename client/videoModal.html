@@ -1,0 +1,49 @@
+<!--VIDEO MODAL-->
+
+<!-- currently unsed because I can't figure out how to modify these 
+   values from playerController.js before the modal is first shown -->
+
+<div class="modal-header">
+   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+   <span aria-hidden="true">&times;</span>
+   </button>
+   <div id="tradeTitle">Helpful Videos</div>
+</div>
+<div id="videoModalContainer" class="container" style="width: 100%; padding: 0px;">
+   <div class="modal-body">
+      <div class="row">
+         <div class="col-sm-12">
+            <table class="table" id="videoTable">
+               <thead>
+                  <tr>
+                     <p id="videoExplaination" style="margin: 7.5px; margin-bottom: 20px;">
+                        You can watch one of the following videos, but you will have to stay an extra day in Apache Junction.
+                     </p>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td class="col-md-6" style="border-top-width: 4px; border-top-color: rgba(155, 97, 43, 1);">
+                        <img class="videoImage" src="assets/tortillaflats.png">
+                        <button class="btn btn-primary leftColButton" id="tortillaflatsButton" style="width: 80%;" onclick="watchVideo('turbos')">
+                           Tortilla Flats
+                        </button>
+                     </td>
+                     <td class="col-md-6" style="border-top-width: 4px; border-top-color: rgba(155, 97, 43, 1);">
+                        <img class="videoImage" src="assets/goldmine.png">
+                        <button class="btn btn-primary leftColButton" id="goldmineButton" style="width: 80%;" onclick="watchVideo('caves')">
+                           The Mine and its Gold
+                        </button>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+
+   <div class="modal-footer">
+      <button type="button" id="modalButton" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+   </div>
+</div>
+

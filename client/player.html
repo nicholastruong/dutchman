@@ -43,55 +43,55 @@
         <div id="resourceblock">
           <div id="resourcetitle"> Resources </div>
           <p class="resourcetag">
-            <img src="assets/suppliesimage.png" style="padding-left:10px;" width="17%" height="9%">
+            <img src="assets/resources/suppliesimage.png" style="padding-left:10px;" width="17%" height="9%">
             <span id="supplies" style="padding:4px "> 0 Supplies </span>
             <span class="resourcetext" style="padding:7px;">Supplies are used everyday 
             during the game. The amount of supplies required depends on the weather of that day.</span>
           </p>
           <p class="resourcetag">
-            <img src="assets/fuelimage.png" style="padding-left:10px;" width="17%" height="9%">
+            <img src="assets/resources/fuelimage.png" style="padding-left:10px;" width="17%" height="9%">
             <span id="fuel" style="padding:4px "> 0 Fuel </span>
             <span class="resourcetext" style="padding:7px;">Fuel is required to maintain your vehicle 
             throughout the game. The amount of fuel required depends on the weather of that day.</span>
           </p>
           <p class="resourcetag">
-            <img src="assets/tentimage.png" style="padding-left:10px;" width="17%" height="9%">
+            <img src="assets/resources/tentimage.png" style="padding-left:10px;" width="17%" height="9%">
             <span id="tents" style="padding:4px "> 0 Tents </span>
             <span class="resourcetext" style="padding:7px;">Tents are used for shelter while staying 
             at the mine. One tent is used everyday your team stays at the mine.</span>
           </p>
           <p class="resourcetag">
-            <img src="assets/batteryimage.png" style="padding-left:10px;" width="17%" height="9%">
+            <img src="assets/resources/batteryimage.png" style="padding-left:10px;" width="17%" height="9%">
             <span id="battries" style="padding:4px "> 0 Batteries </span>
             <span class="resourcetext" style="padding:7px;">Batteries can be used on every fifth day 
             of the journey to recieve a forecast of the weather for the next five days.</span>
           </p>
           <p class="resourcetag">
-            <img src="assets/tireimage.png" style="padding-left:10px;" width="17%" height="9%">
+            <img src="assets/resources/tireimage.png" style="padding-left:10px;" width="17%" height="9%">
             <span id="sparetires" style="padding:4px "> 0 Spare Tires </span>
             <span class="resourcetext" style="padding:7px;">Spare Tires are required if the team 
             encounters ice shards from an arctic blast during the game.</span>
           </p>
           <p class="resourcetag">
-            <img src="assets/gold.png" style="padding-left:10px; padding-top: 2px;" width="17%" height="9%">
+            <img src="assets/resources/gold.png" style="padding-left:10px; padding-top: 2px;" width="17%" height="9%">
             <span id="gold" style="padding:4px "> 0 Gold </span>
             <span class="resourcetext" style="padding:7px;">You've found Gold!!! Get as much back to 
             Apache Junction as possible.</span>
           </p>
           <p class="resourcetag">
-            <img src="assets/cashimage.png" style="padding-left:10px;" width="17%" height="9%">
+            <img src="assets/resources/cashimage.png" style="padding-left:10px;" width="17%" height="9%">
             <span id="cash" style="padding:4px "> $0 Cash </span>
             <span class="resourcetext" style="padding:7px;">Cash can be used to trade for resources 
             with other teams or the provisioner while at Apache Junction or a trading post.</span>
           </p>
-          <p class="resourcetag">
-            <img src="assets/caveimage.png" style="padding-left:10px;" width="17%" height="9%">
+          <p class="resourcetag" id="caveRow" hidden="true">
+            <img src="assets/resources/caveimage.png" style="padding-left:10px;" width="17%" height="9%">
             <span id="caves" style="padding:4px "> 0 Caves </span>
             <span class="resourcetext" style="padding:7px;">Caves can be used for shelter while 
             staying at the mine instead of a tent.</span>
           </p>
-          <p class="resourcetag">
-            <img src="assets/turboimage.png" style="padding-left:10px; padding-top: 2px;" width="17%" height="9%">
+          <p class="resourcetag" id="turboRow" hidden="true">
+            <img src="assets/resources/turboimage.png" style="padding-left:10px; padding-top: 2px;" width="17%" height="9%">
             <span id="turbo" style="padding:4px "> 0 Turbo Boost </span>
             <span class="resourcetext" style="padding-left:10px;">Turbo Boost will allow your team to move 
             two spaces per day once you have stopped at Tortilla Flats to get them installed.</span>
@@ -123,11 +123,21 @@
           </div>
         </div>
 
-        <button class="btn btn-primary leftColButton" id ="videoTurboButton" style="">Watch Video</button>
+        <!-- <button class="btn btn-primary leftColButton" id ="videoTurboButton" style="">Watch Video</button> -->
+        <a href="/videoModal.html" data-target="#videoModal" data-toggle="modal">
+          <button class="btn btn-primary leftColButton" id ="videoTurboButton" style="">Watch Video</button>
+        </a>
+        <div class="modal modal-yellow" id="videoModal" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content" style="background-color: rgba(155, 97, 43, 1);">
+              
+            </div>
+          </div>
+        </div>
         
         <a data-target="#forecastModal" data-toggle="modal" id="forecastButton">
           <button class="btn btn-primary leftColButton" id="forecastButton">Weather Forecast</button>
-          <span class="resourcetext" style="margin-left:80px; margin-top: 10px; padding-left: 5px; background-color: rgba(155, 97, 43, 1)">
+          <span class="resourcetext" style="margin-left:80px; margin-top: 10px; padding-left: 5px; background-color: rgba(155, 97, 43, 1);">
             Use batteries to see the weather forecast for the next five days.
           </span>
         </a>

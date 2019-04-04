@@ -107,7 +107,9 @@ function attachClickListener(physics, graphic, index, locations) {
          var players = "The following players are in this space:<br><br>";
          var empty = true;
          for (id in locations) {
-            if (locations[id] == index) {
+            if (locations[id] == index 
+              || (index == 12 && [21, 22].includes(locations[id])) 
+                || ([21, 22].includes(index) && locations[id] == 12)) { // account for Tom Canyon Ford
                players += id + ", ";
                empty = false;
             }

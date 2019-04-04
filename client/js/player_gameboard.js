@@ -111,6 +111,7 @@ function attachClickListener(physics, graphic, index) {
           destx = icon_spot[index][0];
           desty = icon_spot[index][1];
           physics.moveTo(car, destx, desty, 200);
+          $("#videoTurboButton").attr("disabled", (index != 0 || curr_day != 1));
         }
       }
    });
@@ -201,7 +202,7 @@ function checkMove(i) { // checks if space i is a valid move
    }
 
    if (connections[curr_space].includes(i) || (hasTurbos && checkExtendedConnections(i))) {
-      if ([11, 12, 13, 14, 21, 22].includes(i)) {
+      if (hasTurbos && lowCountry_path.includes(i)) {
          customAlert("You cannot use the Low Country Path if you have Turbos installed!");
          return false;
       }
