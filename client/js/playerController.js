@@ -111,27 +111,23 @@ PlayerController.prototype = {
     });
 
     socket.on('server send updateDay', function(d) {
-      console.log(d['resourcesExpended']);
-       curr_day = d['day'];
-       resources = d['resources'];
-       $('#day').text("Day: " + d['day']);
+      curr_day = d['day'];
+      resources = d['resources'];
+      $('#day').text("Day: " + d['day']);
 
-       if (curr_space == 4 && d['resources']['turbo'] > 0) {
-          customConfirm("Do you wish to activate your Turbos?", function() { hasTurbos = true; });
-       }
-       if (curr_space == 20) {
-          customAlert("You got one gold from the mine!");
-       }
+      // console.log(d['resourcesExpended']);
+      if (d['resourcesExpended'] != undefined) {
+        updateAlert(d['weather'], d['resourcesExpended']);
+      }
+
+      updateWeather(d['weather']);
+      updateResources(d['resources']);
+      floodCanyon(d['weather'][1] == "flooded");
 
 
-       updateWeather(d['weather']);
-       updateResources(d['resources']);
-       floodCanyon(d['weather'][1] == "flooded");
-       
-
-       hasMadeMove = false;
-       enableMove = true;
-       $('#readybutton').prop('disabled', false);
+      hasMadeMove = false;
+      enableMove = true;
+      $('#readybutton').prop('disabled', false);
     });
 
     socket.on('server send forecast', function(d) {
@@ -214,14 +210,47 @@ function getUrlVars() {
 }
 
 function reallyReady() {
-   $('#readybutton').prop('disabled', true)
-   enableMove = false;
-   socket.emit('ready', 
-      {
-         currentSpace: curr_space,
-         currentCoords: [car.x, car.y]
-      }
-   ); 
+  $('#readybutton').prop('disabled', true)
+  enableMove = false;
+  socket.emit('ready', 
+    {
+       currentSpace: curr_space,
+       currentCoords: [car.x, car.y]
+    }
+  );
+
+  if (curr_space == 4 && $('#turbo').text() != "0 Turbo Boost") {
+    customConfirm("Do you wish to activate your Turbos?", function() { hasTurbos = true; });
+  } 
+}
+
+
+function updateAlert(weatherData, changedResources) {
+  var alert = "";
+  if (weatherData[0] == "arctic blast") {
+    alert += "Because of the cold weather, you used more resources than normal...<br><br>";
+  }
+  if (weatherData[0] == "rainy" && lowCountry_path.includes(curr_space)) {
+    alert += "Because of the mud on the low country path, you used more resources than normal...<br><br>";
+  }
+
+  if (curr_space == 20) {
+    alert += "You got 1 gold resource from the mine!<br><br>And you used the following resources:<br>";
+  }
+  else {
+    alert += "You used the following resources:<br>";
+  }
+
+  for (resource in changedResources) {
+    if (changedResources[resource] < 0) {
+      alert += "<br>" + (changedResources[resource] * -1) + " ";
+      if (resource == "tents") alert += "tent";
+      else if (resource == "caves") alert += "cave";
+      else alert += resource;
+    }
+  }
+
+  customAlert(alert);
 }
 
 function updateWeather(weatherData) {
@@ -260,11 +289,9 @@ function customAlert(message) {
 
    alertBox.on('hidden.bs.modal', function () {
       onModal = false;
-      console.log("onModal is false");
    });
 
    onModal = true;
-   console.log("onModal is true");
    alertBox.modal('show');
 };
 
