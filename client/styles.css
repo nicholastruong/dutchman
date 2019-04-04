@@ -337,3 +337,82 @@ table:nth-child(even) {
 	font-size: 1.5vw;
 }
 
+.card{
+	height: 46%;
+	margin-top: auto;
+	margin-bottom: auto;
+	width: 40%;
+	left: 30%;
+	top: 35%;
+	position: fixed;
+	background-color: rgba(73,35,0,0.75); /*change*/
+}
+
+.card-header h3{
+	color: white;
+	font-weight: bold;
+}
+
+.input-group-prepend span{
+	width: 50px;
+	background-color: #edce70;
+	color: black;
+	border:0 !important;
+}
+
+input:focus{
+	outline: 0 0 0 0  !important;
+	box-shadow: 0 0 0 0 !important;
+}
+
+.transbkgd{
+	background-color: rgba(73,35,0,0.75);
+}
+
+.login_btn{
+	color: black;
+	background-color: #edce70;
+	width: 100px;
+}
+
+.login_btn:hover{
+	color: black;
+	background-color: white;
+}
+
+.loginbody{
+	background-image: url('http://getwallpapers.com/wallpaper/full/6/5/e/241791.jpg');
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 100%;
+	align-content:center;
+	align-items:center;
+	/*font-family: 'Numans', sans-serif;*/
+}
+
+.logincontainer{
+	height:100%;
+	align-content:center;
+	align-items:center;
+}
+
+.logintitle{
+	text-align: center;
+	align-content: center;
+	color: #492300;
+	font-family: EdmundsFont;
+	font-size: 10vh;
+	width:100%;
+	top:17%;
+	position:fixed;
+}
+
+.remember{
+	color: red;
+	width: 50vw;
+	height: 20px;
+	font-size: 3vh;
+	margin-left: 15px;
+	margin-right: 5px;
+}
+
