@@ -168,8 +168,9 @@ h2 {
 }
 
 .videoImage {
-	height: 150%;
+	height: 175%;
 	width: 100%;
+	margin-bottom: 20px;
 }
 
 

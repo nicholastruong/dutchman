@@ -103,15 +103,24 @@ function create() {
 function attachClickListener(physics, graphic, index) {
    
    graphic.on('pointerdown', function(pointer) {
-      if (!onModal && enableMove) {
-        if (flooded && ((curr_space == 21 && index == 22) || (curr_space == 22 && index == 21))) {
-          customAlert("You cannot cross the canyon while it is flooded");
+      if (!onModal) {
+        if ((curr_day == 1 || curr_day == 2) && stayDay2) {
+          customAlert("You watched both videos so you must stay in Apache Junction until day 3");
         }
-        else if (checkMove(index)) {
-          destx = icon_spot[index][0];
-          desty = icon_spot[index][1];
-          physics.moveTo(car, destx, desty, 200);
-          $("#videoTurboButton").attr("disabled", (index != 0 || curr_day != 1));
+        else if (curr_day == 1 && stayDay1) {
+          customAlert("You watched one of the videos so you must stay in Apache Junction until day 2");
+        }
+
+        if (enableMove) {
+          if (flooded && ((curr_space == 21 && index == 22) || (curr_space == 22 && index == 21))) {
+            customAlert("You cannot cross the canyon while it is flooded");
+          }
+          else if (checkMove(index)) {
+            destx = icon_spot[index][0];
+            desty = icon_spot[index][1];
+            physics.moveTo(car, destx, desty, 200);
+            $("#videoTurboButton").attr("disabled", (index != 0 || curr_day != 1));
+          }
         }
       }
    });
