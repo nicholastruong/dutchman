@@ -111,6 +111,7 @@ function attachClickListener(physics, graphic, index) {
           destx = icon_spot[index][0];
           desty = icon_spot[index][1];
           physics.moveTo(car, destx, desty, 200);
+          $("#videoTurboButton").attr("disabled", (index != 0 || curr_day != 1));
         }
       }
    });

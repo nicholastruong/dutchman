@@ -93,7 +93,8 @@ h2 {
 #modalButton {
 	background-color: rgba(155, 97, 43, 1);
 	border: none
-	width: 3vw;
+	width: 20%;
+	font-size: 25px;
 }
 
 #tradeTitle {
@@ -111,6 +112,10 @@ h2 {
 	
   	width:100%;
     background-color: #edce70;
+}
+
+#teamTradeModal, #provTradeModal {
+	max-height: 95%;
 }
 
 .modal-yellow .modal-backdrop {
@@ -138,8 +143,36 @@ h2 {
 	width: 80%;
 	margin: auto;
 	padding-top: 1.25%;
-  }
+}
+
+
+/*VIDEO MODAL*/
+.modal-md {
+	width: 40%;
+	padding-top: 4%;
+}
+
+#videoTable {
+	background-color: #edce70;
+}
   
+.col-md-6 {
+	align-content: center;
+	color: black;
+	border: 0px;
+	text-align: center;
+}
+
+.col-md-6 h2 {
+	font-family:EdmundsFont;
+}
+
+.videoImage {
+	height: 150%;
+	width: 100%;
+}
+
+
 #right {
 	/*height: 100%;*/
 	/*position: relative;*/

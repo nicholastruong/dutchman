@@ -19,60 +19,68 @@ weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "a
 
 var weatherForecast;
 var teamname = "";
-var firstDayinMud = false;
+var stayDay1 = false;
+var stayDay2 = false;
 var curr_day = 1;
 var resources;
 var socket;
 
 $(document).ready(function(){
-   console.log("documentReady called");
+  console.log("documentReady called");
 
-   $('#teamTradeModal')
-      .on('show.bs.modal', function (e) {
-         onModal = true;
-      })
-      .on('hidden.bs.modal', function (e) {
-         onModal = false;
-      });
-   $('#provTradeModal')
-      .on('show.bs.modal', function (e) {
-         onModal = true;
-      })
-      .on('hidden.bs.modal', function (e) {
-         onModal = false;
-      });
+  $('#teamTradeModal')
+    .on('show.bs.modal', function (e) {
+      onModal = true;
+    })
+    .on('hidden.bs.modal', function (e) {
+      onModal = false;
+    });
+  $('#provTradeModal')
+    .on('show.bs.modal', function (e) {
+      onModal = true;
+    })
+    .on('hidden.bs.modal', function (e) {
+      onModal = false;
+    });
+  $('#videoModal')
+    .on('show.bs.modal', function (e) {
+      onModal = true;
+    })
+    .on('hidden.bs.modal', function (e) {
+      onModal = false;
+    });
 
-   $('#forecastModal')
-      .on('shown.bs.modal', function (e) {
-         onModal = true;
-         // console.log(document.getElementById("low_forecast_txt0"));
+  $('#forecastModal')
+    .on('shown.bs.modal', function (e) {
+       onModal = true;
+       // console.log(document.getElementById("low_forecast_txt0"));
 
-         if (weatherForecast != null && curr_day % 5 == 0) { // sends weather forecast everyday for debugging
-            for (i = 0; i < 5; i++) {
-               $('#low_forecast' + i).text("Day " + (curr_day + i));
-               $('#high_forecast' + i).text("Day " + (curr_day + i));
+       if (weatherForecast != null && curr_day % 5 == 0) { // sends weather forecast everyday for debugging
+          for (i = 0; i < 5; i++) {
+             $('#low_forecast' + i).text("Day " + (curr_day + i));
+             $('#high_forecast' + i).text("Day " + (curr_day + i));
 
-               $('#low_forecast_txt' + i).text(weather[weatherForecast[i]['low']][0]);
-               $('#high_forecast_txt' + i).text(weather[weatherForecast[i]['high']][0]);
+             $('#low_forecast_txt' + i).text(weather[weatherForecast[i]['low']][0]);
+             $('#high_forecast_txt' + i).text(weather[weatherForecast[i]['high']][0]);
 
-               $('#low_forecast_img' + i).attr("src", "assets/weather/" + weather[weatherForecast[i]['low']][1] + ".png");
-               $('#high_forecast_img' + i).attr("src", "assets/weather/" + weather[weatherForecast[i]['high']][1] + ".png");
-            }
-         }  
-      })
-      .on('hidden.bs.modal', function (e) {
-         onModal = false;
-      });
+             $('#low_forecast_img' + i).attr("src", "assets/weather/" + weather[weatherForecast[i]['low']][1] + ".png");
+             $('#high_forecast_img' + i).attr("src", "assets/weather/" + weather[weatherForecast[i]['high']][1] + ".png");
+          }
+       }  
+    })
+    .on('hidden.bs.modal', function (e) {
+       onModal = false;
+    });
 
-   // teamname = prompt("Enter a team name of less than 10 characters long:", "Team Awesome");
-   // if (teamname == null || teamname == "") {
-   //    teamname = "Team null";
-   // } 
-   // if (teamname.length > 10) {
-   //    teamname = teamname.substring(0, 10)
-   // }
-   teamname = "Team 1";
-   $('#team_name').text(teamname);
+  // teamname = prompt("Enter a team name of less than 10 characters long:", "Team Awesome");
+  // if (teamname == null || teamname == "") {
+  //    teamname = "Team null";
+  // } 
+  // if (teamname.length > 10) {
+  //    teamname = teamname.substring(0, 10)
+  // }
+  teamname = "Team 1";
+  $('#team_name').text(teamname);
 
 });
 
@@ -115,6 +123,8 @@ PlayerController.prototype = {
       resources = d['resources'];
       $('#day').text("Day: " + d['day']);
 
+      $("#videoTurboButton").attr("disabled", (curr_day != 1));
+
       // console.log(d['resourcesExpended']);
       if (d['resourcesExpended'] != undefined) {
         updateAlert(d['weather'], d['resourcesExpended']);
@@ -126,7 +136,9 @@ PlayerController.prototype = {
 
 
       hasMadeMove = false;
-      enableMove = true;
+      console.log("curr_day:" + curr_day + " stayDay1:" + stayDay1 + " stayDay2:" + stayDay2);
+      enableMove = !((curr_day == 1 && stayDay1) || (curr_day == 2 && stayDay2))
+      // enableMove = true;
       $('#readybutton').prop('disabled', false);
     });
 
@@ -163,7 +175,12 @@ PlayerController.prototype = {
       }
       else {
          if (curr_space == 0) {
-            customConfirm("Are you sure you want to stay in Apache Junction for another day?", reallyReady);
+            if ((curr_day == 1 && stayDay1) || (curr_day == 2 && stayDay2)) {
+              customConfirm("Are you sure you're finished with your turn?", reallyReady);
+            }
+            else {
+              customConfirm("Are you sure you want to stay in Apache Junction for another day?", reallyReady);
+            }
          }
          if (curr_space == 20) {
             customConfirm("Are you sure you want to stay in the Lost Dutchman Goldmine?", reallyReady);
@@ -191,11 +208,11 @@ PlayerController.prototype = {
         "2. Your team receives one gold for each day you are able to stay at the mine before returning.");
     });
 
-    var videoTurboButton = document.getElementById("videoTurboButton");
-    videoTurboButton.addEventListener('click', function(){
-      customAlert("You received 3 turbos");
-      socket.emit('add turbo');
-    });
+    // var videoTurboButton = document.getElementById("videoTurboButton");
+    // videoTurboButton.addEventListener('click', function(){
+    //   // customAlert("You received 3 turbos");
+    //   socket.emit('add turbo');
+    // });
 
 
   }
@@ -212,6 +229,7 @@ function getUrlVars() {
 function reallyReady() {
   $('#readybutton').prop('disabled', true)
   enableMove = false;
+  onModal = false;
   socket.emit('ready', 
     {
        currentSpace: curr_space,
@@ -220,8 +238,48 @@ function reallyReady() {
   );
 
   if (curr_space == 4 && $('#turbo').text() != "0 Turbo Boost") {
-    customConfirm("Do you wish to activate your Turbos?", function() { hasTurbos = true; });
+    customConfirm("Do you wish to activate your Turbos?", function() { 
+      hasTurbos = true; 
+      onModal = false; 
+    });
   } 
+}
+
+function watchVideo(video) {
+  $('#videoModal').modal('hide');
+
+  if (video == "turbos") {
+    customConfirm("Are you sure you want to stay another day?", function() {
+      $("#tortillaflatsButton").attr("disabled", true);
+      $("#turboRow").attr("hidden", false);
+      socket.emit('add turbo');
+      customAlert("You received 3 turbos!");
+
+      enableMove = false;
+      stayDay2 = stayDay1;
+      stayDay1 = true;
+      $("#videoExplaination").text("You can watch the remaining video, but you will have to stay in Apache Junction until day 3.");
+      if ($("#goldmineButton").attr("disabled")) {
+        $("#videoExplaination").text("You have watched both of the videos already.");
+      }
+    });
+  }
+  if (video == "caves") {
+    customConfirm("Are you sure you want to stay another day?", function() {
+      $("#goldmineButton").attr("disabled", true);
+      $("#caveRow").attr("hidden", false);
+      socket.emit('add cave');
+      customAlert("You received 12 caves!");
+
+      enableMove = false;
+      stayDay2 = stayDay1;
+      stayDay1 = true;
+      $("#videoExplaination").text("You can watch the remaining video, but you will have to stay in Apache Junction until day 3.");
+      if ($("#tortillaflatsButton").attr("disabled")) {
+        $("#videoExplaination").text("You have watched both of the videos already.");
+      }
+    });
+  }
 }
 
 
@@ -314,14 +372,18 @@ function customConfirm(message, callbackFunc) {
          if (result) {
             callbackFunc();
          }
+         else {
+            onModal = false;
+            console.log("onModal is false");
+         }
       },
       show: false
    });
 
-   confirmBox.on('hidden.bs.modal', function () {
-      onModal = false;
-      console.log("onModal is false");
-   });
+   // confirmBox.on('hidden.bs.modal', function () {
+   //    onModal = false;
+   //    console.log("onModal is false");
+   // });
 
    onModal = true;
    console.log("onModal is true");
