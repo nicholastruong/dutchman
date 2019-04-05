@@ -5,6 +5,59 @@ var io = require('socket.io')(http);
 
 const fs = require("fs");
 const path = require("path");
+const mysql = require("mysql");
+const crypto = require("crypto"); //TODO: remove
+
+let db_config = {
+	host: 'localhost',
+	user: 'root',
+	password: 'root',
+	database: 'lost_dutchman'
+};
+
+function mysqlConnect(onConnect)
+{
+	module.exports.db = mysql.createConnection(db_config);
+	
+	module.exports.db.connect(function(err) {
+		if (err) {
+			console.log("Error connecting to database: " + err);
+			setTimeout(mysqlConnect, 2000, onConnect);
+		} else {
+			console.log("Connected to database...");
+			if (onConnect !== undefined) onConnect();
+		}
+	});
+	
+	module.exports.db.on("error", function(err) {
+		console.log("Database error: " + err);
+		if (err.code == "PROTOCOL_CONNECTION_LOST") // connection lost, try reconnecting
+		{
+			mysqlConnect();
+		}
+		else
+		{
+			throw err; // unhandled mysql error
+		}
+	});
+}
+
+function onSqlConnect() {
+	// Load the game state for all rooms from the database
+	/*game.loadAll(function() {
+		console.log("Loaded game states...")
+	});	*/
+
+	var salt = crypto.randomFillSync(Buffer.alloc(8)).toString("hex");
+	var password = crypto.createHash("sha256");
+	password.update("password" + salt);
+	console.log("salt: " + salt);
+	console.log(password.digest("hex"));
+
+	console.log("oh goody we connected to the database");
+}
+
+mysqlConnect(onSqlConnect);
 
 var openSockets = {};
 
@@ -24,6 +77,7 @@ app.get('/', function(req, res){
 
 app.get('/player', function(req, res){
   //let token = req.query.token;
+  //TODO: redirect if bad
   res.sendFile(__dirname + '/client/player.html');
 })
 
@@ -156,5 +210,3 @@ function loadEvents(path, outgoing)
 
 loadEvents(outgoingEventsPath, true);
 loadEvents(incomingEventsPath, false);
-
-
