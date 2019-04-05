@@ -22,7 +22,8 @@ var teamname = "";
 var stayDay1 = false;
 var stayDay2 = false;
 var curr_day = 1;
-var resources;
+var resources = new Object();
+var colocated_players = [];
 var socket;
 
 $(document).ready(function(){
@@ -121,6 +122,7 @@ PlayerController.prototype = {
     socket.on('server send updateDay', function(d) {
       curr_day = d['day'];
       resources = d['resources'];
+      colocated_players = d['colocated_players'];
       $('#day').text("Day: " + d['day']);
 
       $("#videoTurboButton").attr("disabled", (curr_day != 1));
@@ -240,7 +242,8 @@ function reallyReady() {
   if (curr_space == 4 && $('#turbo').text() != "0 Turbo Boost") {
     customConfirm("Do you wish to activate your Turbos?", function() { 
       hasTurbos = true; 
-      onModal = false; 
+      onModal = false;
+      $('#turbo').text($('#turbo').text() + " (IN USE)");
     });
   } 
 }
@@ -324,7 +327,7 @@ function updateResources(resources) {
    $('#tires').text(resources['tires'] + " Spare Tires");
    $('#cash').text("$" + resources['cash'] + " Cash");
    $('#caves').text(resources['caves'] + " Caves");
-   $('#turbo').text(resources['turbo'] + " Turbo Boost");
+   $('#turbo').text(resources['turbo'] + " Turbos");
    $('#tents').text(resources['tents'] + " Tents");
    $('#gold').text(resources['gold'] + " Gold");
 }
