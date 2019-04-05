@@ -22,7 +22,8 @@ var teamname = "";
 var stayDay1 = false;
 var stayDay2 = false;
 var curr_day = 1;
-var resources;
+var resources = new Object();
+var colocated_players = [];
 var socket;
 
 $(document).ready(function(){
@@ -121,6 +122,7 @@ PlayerController.prototype = {
     socket.on('server send updateDay', function(d) {
       curr_day = d['day'];
       resources = d['resources'];
+      colocated_players = d['colocated_players'];
       $('#day').text("Day: " + d['day']);
 
       $("#videoTurboButton").attr("disabled", (curr_day != 1));

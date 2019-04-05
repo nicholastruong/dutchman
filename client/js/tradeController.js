@@ -159,7 +159,20 @@ document.getElementById("buyTable").innerHTML += buyTable;
 }
 
 function teamTradeManager(){
+    console.log(this.colocated_players[0]);
+let colocated_players = this.colocated_players;
 let myMap = this.resources;
+let teamHTML = "<select>";
+
+for ( n in colocated_players){
+    teamHTML += "<option value ='";
+    teamHTML += colocated_players[n].playerID;
+    teamHTML += "'>";
+    teamHTML += String(colocated_players[n].playerID);
+    teamHTML += "</option>";
+}
+teamHTML += "</select>";
+document.getElementById("teamPickerTitle").innerHTML += teamHTML;
     for ( let r in myMap){
         amountSell.set(String(r), 0);
         amountBuy.set(String(r), 0);
@@ -221,23 +234,22 @@ function subtractItemBuy(tradeType, resourceName){ //RIGHT Table
 
 function initiateTeamTrade(){
     let socket = this.socket;
-    socket.on('connect', function(){
-        var id = this.id;
-        let trade = {
-            proposerID : id,
-            targetID : fillin,
-            offered_resources: this.amountSell,
-            requested_resources: this.amountBuy
-        }
-        socket.emit('player send tradeOffer', {trade: trade});
-    });
+    let id = this.id;
+    let targetID = $('#teamPickerTitle').find(":selected").text();
+    let trade = {
+        proposerID : id,
+        targetID : targetID,
+        offered_resources: this.amountSell,
+        requested_resources: this.amountBuy}
+    socket.emit('player send tradeOffer', {trade: trade});
+
     //REVERT ALL MAPS HOLDING RESOURCE STATUS TO 0
     let myMap = this.resources;
     for ( let r in myMap){
         amountSell.set(String(r), 0);
         amountBuy.set(String(r), 0);
     }
-    console.log(amountSell);
+
     var tableContainerBuy = document.getElementById("requestTable");
     tableContainerBuy.innerHTML= buyTableBuilder(2); 
     var tableContainerSell = document.getElementById("offerTable");
