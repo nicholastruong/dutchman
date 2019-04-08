@@ -368,5 +368,23 @@
  			return forecast;
  		},
 
+ 		/*
+		   This function receives a map of resources and assigns them to a given player.
+		   Used for the beacon and provisioner trading.
+ 		*/
+ 		setResources: function(gameID, playerID, resources) {
+ 			let scope = this;
+ 			let game = scope.games[gameID];
+
+ 			var playerResources = game.players[playerID].resources;
+
+ 			for (r in playerResources) {
+ 				if(r in resources) {
+ 					playerResources[r] = resources[r];
+ 				}
+ 			}
+
+ 		}
+
  	};
  };

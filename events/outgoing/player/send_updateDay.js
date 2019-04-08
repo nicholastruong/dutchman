@@ -1,7 +1,7 @@
 //sends updates to of next day to all the clients
 
 const eventID = "server send updateDay";
-module.exports = function(server, config)
+module.exports = function(server, game)
 {
 	return {
 		id: eventID,
