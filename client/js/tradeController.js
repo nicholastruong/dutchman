@@ -264,8 +264,7 @@ function finishProvTrade(){
         myMap[buy] -=amountSell.get(buy);
         myMap[buy] +=amountBuy.get(buy);
     }
-    console.log('hi');
-    console.log(myMap);
+   
 
     socket.emit('server send updateResources', {resources: myMap});
     

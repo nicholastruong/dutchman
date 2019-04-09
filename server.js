@@ -11,7 +11,7 @@ const crypto = require("crypto"); //TODO: remove
 let db_config = {
 	host: 'localhost',
 	user: 'root',
-	password: 'password',
+	password: 'root',
 	database: 'lost_dutchman'
 };
 
@@ -132,13 +132,14 @@ io.on("connection", function(socket) {
 			let currentGame = game['games']['0'];
 			let players = currentGame['players'];
 			let currentLocation = players[socket["id"]]['currentLocation'];
+			trigger['update resources'](socket['id']);
 			trigger['server send updateDay'](
 				socket["id"], 
-				players[socket["id"]]['resources'], 
 				game.getWeather(currentLocation, currentGame['day']), 
-				currentGame,
+				currentGame['day'],
 				game.getColocatedPlayers(gameID, socket["id"])
 			);	
+			
 		}	
 	}
 });
@@ -190,7 +191,7 @@ function loadEvents(path, outgoing)
 					if (outgoing)
 					{
 
-						let outgoingEventModule = require(file)(module.exports);
+						let outgoingEventModule = require(file)(module.exports, game);
 						trigger[outgoingEventModule.id] = outgoingEventModule.func;
 					}
 					else // incoming

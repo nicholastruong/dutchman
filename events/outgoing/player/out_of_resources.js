@@ -5,8 +5,9 @@ module.exports = function(server, config)
 {
 	return {
 		id: eventID,
-		func: function(socketID) {
-			server.emit(socketID, eventID, {}, false, false);
+		func: function(socketID, resources) {
+			console.log(socketID + ' is out of resources');
+			server.emit(socketID, eventID, false, false);
 		}
 	};
 }

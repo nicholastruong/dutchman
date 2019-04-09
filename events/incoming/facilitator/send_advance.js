@@ -31,7 +31,8 @@ module.exports = function(socket, server, game, config){
 			}
 
 			var colocatedPlayers = game.getColocatedPlayers(0, socketID);
-			server.trigger['server send updateDay'](socketID, newResources, playerWeatherReport, currentGame, colocatedPlayers, resourcesExpended);
+			server.trigger['server send updateDay'](socketID, playerWeatherReport, currentGame['day'], colocatedPlayers, resourcesExpended);
+			server.trigger['update resources'](socketID);
 
 			if (true) { // currentGame['day'] == 5 || currentGame['day'] == 10 || currentGame['day'] == 15) { // sends weather info everday for debugging
 				var weatherForecast = game.getWeatherForecast(currentGame['day']);

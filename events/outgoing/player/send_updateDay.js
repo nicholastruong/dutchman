@@ -5,13 +5,12 @@ module.exports = function(server, game)
 {
 	return {
 		id: eventID,
-		func: function(socketID, resources, weather, game, colocatedPlayers, resourcesExpended) {
+		func: function(socketID, weather, day, colocatedPlayers, resourcesExpended) {
 			console.log("server send updateDay");
 			server.emit(socketID, eventID, 
 				{
-					day: game['day'],
+					day: day,
   					weather: weather,
-  					resources: resources,
   					colocated_players: colocatedPlayers,
   					resourcesExpended: resourcesExpended
   				},

@@ -245,7 +245,7 @@
 
 
  			//if any supply, fuel, cave, or tent is less than 0, call the beacon!
- 			if(resources['fuel'] < 0 || resources['supplies'] < 0 || (resources['caves'] < 0 && resources['tents'] < 0)) {
+ 			if(resources['fuel'] < 0 || resources['supplies'] < 0 || (resources['caves'] < 0 && resources['tents'] < 0 && minePath.has(currentLocation))) {
  				if(resources['fuel'] < 0) {
  					resources['fuel'] = 0;
  				}

@@ -121,7 +121,7 @@ PlayerController.prototype = {
 
     socket.on('server send updateDay', function(d) {
       curr_day = d['day'];
-      resources = d['resources'];
+      
       colocated_players = d['colocated_players'];
       $('#day').text("Day: " + d['day']);
 
@@ -133,7 +133,7 @@ PlayerController.prototype = {
       }
 
       updateWeather(d['weather']);
-      updateResources(d['resources']);
+      
       floodCanyon(d['weather'][1] == "flooded");
 
 
@@ -150,10 +150,19 @@ PlayerController.prototype = {
     });
 
     socket.on('update resources', function(d) {
+      resources = d;
       updateResources(d);
     }); 
 
     socket.on('out of resources', function(d){
+      console.log('out of resources');
+
+      /*
+        
+        BUG: Can't figure out why this is triggered when resources are still valid. Cannot figure out where this is being triggered from.
+        Tried printing from out_of_resources.js but to no avail.
+
+      */
       $('#messages').append($('<li>').text("You're out of resources. Use your beacon!"));
     });
 
@@ -322,6 +331,8 @@ function updateWeather(weatherData) {
 }
 
 function updateResources(resources) {
+
+  console.log(resources);
    $('#fuel').text(resources['fuel'] + " Fuel");
    $('#supplies').text(resources['supplies'] + " Supplies");
    $('#tires').text(resources['tires'] + " Spare Tires");

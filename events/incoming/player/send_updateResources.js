@@ -8,7 +8,7 @@ module.exports = function(socket, server, game){
 		let currentGame = game['games']['0'];
 		//gameID, playerID, resources
 		game.setResources(0, socket['id'], data['resources']);
-		server.trigger['update resources'](socket['id'], data['resources']);
+		server.trigger['update resources'](socket['id']);
 		
 	});
 }
