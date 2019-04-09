@@ -5,8 +5,8 @@ module.exports = function(server, game)
 {
 	return {
 		id: eventID,
-		func: function(socketID, colocatedPlayers) {
-			server.emit(socketID, eventID, 
+		func: function(userID, colocatedPlayers) {
+			server.emit(userID, eventID, 
 				{
   					colocated_players: colocatedPlayers
   				},

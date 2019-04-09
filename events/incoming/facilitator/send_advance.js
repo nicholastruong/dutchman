@@ -1,8 +1,9 @@
 const eventID = 'facilitator next day';
 module.exports = function(socket, server, game, config){
-
-	socket.on("facilitator next day", function(socket){
-		let currentGame = game['games']['0'];
+	socket.on("facilitator next day", function(){
+		let userID = socket.user.userID;
+		let gameID = socket.user.gameID;
+		let currentGame = game['games'][gameID];
 		let players = currentGame['players'];
 
 		currentGame['day'] += 1;
@@ -13,15 +14,15 @@ module.exports = function(socket, server, game, config){
 
 		var playersOutOfResources = [];
 
-		for (socketID in players) {
+		for (playerUserID in players) {
 
 			var playerWeatherReport = game.getWeather(currentLocation, currentGame['day']);
 			//deep copy of old resources
-			var oldResources = JSON.parse(JSON.stringify(players[socketID]['resources']));
-			var currentLocation = players[socketID]['currentLocation'];
+			var oldResources = JSON.parse(JSON.stringify(players[playerUserID]['resources']));
+			var currentLocation = players[playerUserID]['currentLocation'];
 			//updates resources, and notifies if doesn't have enough resources
-			var hasEnoughResources = game.updateResources(0, socketID, currentGame['day']); //0 is gameID
-			var newResources = players[socketID]['resources'];
+			var hasEnoughResources = game.updateResources(gameID, playerUserID, currentGame['day']); //0 is gameID
+			var newResources = players[playerUserID]['resources'];
 
 			var resourcesExpended = {};
 			for (r in newResources) {
@@ -30,33 +31,32 @@ module.exports = function(socket, server, game, config){
 				}
 			}
 
-			var colocatedPlayers = game.getColocatedPlayers(0, socketID);
-			server.trigger['server send updateDay'](socketID, playerWeatherReport, currentGame['day'], colocatedPlayers, resourcesExpended);
-			server.trigger['update resources'](socketID);
+			var colocatedPlayers = game.getColocatedPlayers(gameID, playerUserID);
+			server.trigger['server send updateDay'](playerUserID, playerWeatherReport, currentGame['day'], colocatedPlayers, resourcesExpended);
+			server.trigger['update resources'](gameID, playerUserID);
 
 			if (true) { // currentGame['day'] == 5 || currentGame['day'] == 10 || currentGame['day'] == 15) { // sends weather info everday for debugging
 				var weatherForecast = game.getWeatherForecast(currentGame['day']);
 
-				server.trigger['server send forecast'](socketID, weatherForecast);
+				server.trigger['server send forecast'](playerUserID, weatherForecast);
 			}
 
 			//notifies player and facilitator that they are out of resources
 			if(!hasEnoughResources) {
-				server.trigger['out of resources'](socketID);
-				playersOutOfResources.push(socketID);
+				server.trigger['out of resources'](playerUserID);
+				playersOutOfResources.push(playerUserID);
 			}
-
 		}
 
-		server.trigger['update server player out of resources'](server, game, playersOutOfResources);
+		server.trigger['update server player out of resources'](gameID);
 
 		if(currentGame['day'] === 20) {
 			server.trigger['end game'](socket, server, game);
 		}
 
 		//send all updated player status to facilitator
-		server.trigger['server update player states'](socket, server, game);
-		server.trigger['update server weather'](socket, server, game, facilitatorWeatherReport)
+		server.trigger['server update player states'](gameID);
+		server.trigger['update server weather'](gameID, facilitatorWeatherReport)
 		
 	});
 }

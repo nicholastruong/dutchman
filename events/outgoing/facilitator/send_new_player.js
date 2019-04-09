@@ -1,19 +1,20 @@
 /* tells facilitator about a new player connection*/
 
 const eventId = "new player connection";
-module.exports = function(server, config) {
+module.exports = function(server, game) {
 	return {
 		id: eventId,
-		func: function(game, socketID) {
+		func: function(currentGame, userID) {
 			console.log("new player connection");
-			let currentGame = game['games']['0'];
-			let players = currentGame['players'];
-
+			let newPlayer = currentGame['players'][userID];
 			let facilitatorID = currentGame.facilitatorID;
+
 			var newPlayerInfo = {
-				socketID: socketID,
-				resources: players[socketID]['resources'],
-				currentLocation: players[socketID]['currentLocation']
+				socketID: userID, //TODO remove this
+				userID: userID,
+				username: newPlayer['username'],
+				resources: newPlayer['resources'],
+				currentLocation: newPlayer['currentLocation']
 			};
 			
 			server.emit(facilitatorID, "new player connection", newPlayerInfo, null, false);

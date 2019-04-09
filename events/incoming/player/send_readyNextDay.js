@@ -4,9 +4,11 @@
 const eventID = "ready";
 module.exports = function(socket, server, game){
 	socket.on("ready", function(data){
+		let gameID = socket.user.gameID;
+		let userID = socket.user.userID;
+		let currentGame = game['games'][gameID];
 
-		let currentGame = game['games']['0'];
-		game.setNextLocation(0, data['currentSpace'], data['currentCoords'], socket['id']);
+		game.setNextLocation(socket.user.gameID, data['currentSpace'], data['currentCoords'], userID);
 		server.trigger['server send updateFacilitator']();
 
 	});

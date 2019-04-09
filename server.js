@@ -6,7 +6,6 @@ var io = require('socket.io')(http);
 const fs = require("fs");
 const path = require("path");
 const mysql = require("mysql");
-const crypto = require("crypto"); //TODO: remove
 
 let db_config = {
 	host: 'localhost',
@@ -44,22 +43,15 @@ function mysqlConnect(onConnect)
 
 function onSqlConnect() {
 	// Load the game state for all rooms from the database
-	/*game.loadAll(function() {
+	game.loadAll(function() {
 		console.log("Loaded game states...")
-	});	*/
-
-	var salt = crypto.randomFillSync(Buffer.alloc(8)).toString("hex");
-	var password = crypto.createHash("sha256");
-	password.update("password" + salt);
-	console.log("salt: " + salt);
-	console.log(password.digest("hex"));
+	});	
+	//TODO: fix this to actually pull from database
 
 	console.log("oh goody we connected to the database");
 }
 
 mysqlConnect(onSqlConnect);
-
-var openSockets = {};
 
 const config = require("./config.js")
 var game = require("./game.js")(config);
@@ -99,9 +91,7 @@ io.use(function(socket, next)
 	}
 	else {
 		socket.user = authenticatedUsers[token];
-		console.log("authenticated user: ");
-		console.log(socket.user);
-		//if (socket.user == undefined) {
+		//if (socket.user == undefined) { //TODO
 			//return next(new Error("authenticationFailure"));
 		//}
 		//else {
@@ -114,52 +104,45 @@ io.use(function(socket, next)
 });
 
 io.on("connection", function(socket) {
-	//console.log(socket.handshake.headers.referer);
-	let gameID = 0; //HARDCODED
-	console.log("new connection !");
-	console.log("socket ID: " + socket["id"]);
+	console.log("new connection socket ID: " + socket["id"]);
 	if (socket.user != undefined) {
-		openSockets[socket["id"]] = socket;
-		var isFacilitator = socket.user.isFacilitator;
+		let gameID = socket.user.gameID;
+		let userID = socket.user.userID;
+		let isFacilitator = socket.user.isFacilitator;
 
-		game.updateSockets(gameID, socket, isFacilitator);
+		openSockets[userID] = socket;
+		socket.on("disconnect", function(reason) {
+			openSockets[socket.user.id] = undefined;
+		});
+
+		//TODO: generate error if user connects to game late.
+		game.onPlayerSocketConnect(socket);
 		
 		if (!isFacilitator){
 			console.log("connection is NOT facilitator");
-			trigger['new player connection'](game, socket["id"]);
 
-			// used to send initial grubstake to connecting player on day 1
-			let currentGame = game['games']['0'];
-			console.log('whaddup');
-			let players = currentGame['players'];
-			console.log(players);
-			let currentLocation = players[socket["id"]]['currentLocation'];
-			trigger['update resources'](socket['id']);
-			/*
-			trigger['server send updateDay'](
-				socket["id"], 
-				game.getWeather(currentLocation, currentGame['day']), 
-				currentGame['day'],
-				game.getColocatedPlayers(gameID, socket["id"])
-			);	
-			*/
-			
-			//need to send update of co-location to all players when new player arrives
+			let currentGame = game['games'][gameID];
+
+			//TODO: implement better facilitator front end
+			trigger['new player connection'](currentGame, userID); 
+			trigger['update resources'](gameID, userID);
+
+			// When a new player connects, update everyone else's co-location
 			if (currentGame.day === 0) {
-				for (p in players) {
-
-					//right now p is socketID
+				let players = currentGame['players'];
+				for (p in players) { 
+					// "p" corresponds to user.id of player
 					trigger['day zero'](p, game.getColocatedPlayers(gameID, p));
 				}
 			}
-			
-
+		}
+		else { 
+			//TODO: update facilitator with new method
 		}	
 	}
 });
 
 //load game state
-//TODO: load mysql
 game.loadAll(function() {
   console.log("Loaded game states...");
 });

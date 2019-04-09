@@ -5,9 +5,9 @@ module.exports = function(server, game)
 {
 	return {
 		id: eventID,
-		func: function(socketID, weather, day, colocatedPlayers, resourcesExpended) {
+		func: function(userID, weather, day, colocatedPlayers, resourcesExpended) {
 			console.log("server send updateDay");
-			server.emit(socketID, eventID, 
+			server.emit(userID, eventID, 
 				{
 					day: day,
   					weather: weather,
