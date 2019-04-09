@@ -119,6 +119,14 @@ PlayerController.prototype = {
       $('#messages').append($('<li>').text(msg));
     });
 
+    socket.on('day zero', function(d) {
+      $('#day').text("Day: " + '0');
+      enableMove = false;
+      colocated_players = d['colocated_players'];
+      updateWeather(['no weather']);
+
+    });
+
     socket.on('server send updateDay', function(d) {
       curr_day = d['day'];
       
@@ -127,7 +135,6 @@ PlayerController.prototype = {
 
       $("#videoTurboButton").attr("disabled", (curr_day != 1));
 
-      // console.log(d['resourcesExpended']);
       if (d['resourcesExpended'] != undefined) {
         updateAlert(d['weather'], d['resourcesExpended']);
       }
@@ -163,7 +170,7 @@ PlayerController.prototype = {
         Tried printing from out_of_resources.js but to no avail.
 
       */
-      $('#messages').append($('<li>').text("You're out of resources. Use your beacon!"));
+      //$('#messages').append($('<li>').text("You're out of resources. Use your beacon!"));
     });
 
     socket.on('end game', function(d){
@@ -324,10 +331,14 @@ function updateAlert(weatherData, changedResources) {
 }
 
 function updateWeather(weatherData) {
-   $('#weathertext').text(weatherData[0]);
+  if (weatherData[0] !== 'no weather') {
+
    $('#weatherimg').attr("src", "assets/weather/" + weather[weatherData[0]][1] + ".png");
 
    $('#canyonstatus').text("Canyon is " + weatherData[1]);
+  }
+  $('#weathertext').text(weatherData[0]);
+   
 }
 
 function updateResources(resources) {
@@ -337,6 +348,7 @@ function updateResources(resources) {
    $('#supplies').text(resources['supplies'] + " Supplies");
    $('#tires').text(resources['tires'] + " Spare Tires");
    $('#cash').text("$" + resources['cash'] + " Cash");
+   $('#batteries').text(resources['batteries'] + " Batteries");
    $('#caves').text(resources['caves'] + " Caves");
    $('#turbo').text(resources['turbo'] + " Turbos");
    $('#tents').text(resources['tents'] + " Tents");

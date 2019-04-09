@@ -115,7 +115,7 @@ io.use(function(socket, next)
 
 io.on("connection", function(socket) {
 	//console.log(socket.handshake.headers.referer);
-	let gameID = 0; //HARDODED
+	let gameID = 0; //HARDCODED
 	console.log("new connection !");
 	console.log("socket ID: " + socket["id"]);
 	if (socket.user != undefined) {
@@ -130,16 +130,30 @@ io.on("connection", function(socket) {
 
 			// used to send initial grubstake to connecting player on day 1
 			let currentGame = game['games']['0'];
+			console.log('whaddup');
 			let players = currentGame['players'];
+			console.log(players);
 			let currentLocation = players[socket["id"]]['currentLocation'];
 			trigger['update resources'](socket['id']);
+			/*
 			trigger['server send updateDay'](
 				socket["id"], 
 				game.getWeather(currentLocation, currentGame['day']), 
 				currentGame['day'],
 				game.getColocatedPlayers(gameID, socket["id"])
 			);	
+			*/
 			
+			//need to send update of co-location to all players when new player arrives
+			if (currentGame.day === 0) {
+				for (p in players) {
+
+					//right now p is socketID
+					trigger['day zero'](p, game.getColocatedPlayers(gameID, p));
+				}
+			}
+			
+
 		}	
 	}
 });

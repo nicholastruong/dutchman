@@ -147,7 +147,7 @@
 
  			//this is hardcoded
  			game.id = 0;
- 			game.day = 1;
+ 			game.day = 0;
 
  			//map of players (socket IDs) to player state
  			game.players = {};
