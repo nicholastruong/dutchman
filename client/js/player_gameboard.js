@@ -67,7 +67,7 @@ function create() {
    prev_space = 0;
 
    onModal = false;
-   enableMove = true;
+   enableMove = false;
    hasMadeMove = false;
    hasTurbos = false;
 
@@ -130,10 +130,7 @@ function attachClickListener(physics, graphic, index) {
 
 function attachPolygonListeners(scene, graphic, polygon, index) {
   graphic.on('pointerover', function () {
-    // console.log("flooded:" + flooded + " curr_space:" + curr_space + " index:" + index);
     if (!onModal && enableMove && (!flooded || ((curr_space != 21 || index != 22) && (curr_space != 22 || index != 21)))) {
-      // console.log("pointerover on index " + index);
-
       graphic.fillStyle(0xffffff, 0.5);
       graphic.fillPoints(polygon.points, true);  
     }
