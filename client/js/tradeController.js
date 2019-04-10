@@ -159,7 +159,6 @@ document.getElementById("buyTable").innerHTML += buyTable;
 }
 
 function teamTradeManager(){
-    console.log(this.colocated_players[0]);
 let colocated_players = this.colocated_players;
 let myMap = this.resources;
 let teamHTML = "<select>";
@@ -234,21 +233,23 @@ function subtractItemBuy(tradeType, resourceName){ //RIGHT Table
 
 function initiateTeamTrade(){
     let socket = this.socket;
-    let id = this.id;
+    let id = socket.io.engine.id;
     let targetID = $('#teamPickerTitle').find(":selected").text();
+    
     let trade = {
         proposerID : id,
         targetID : targetID,
-        offered_resources: this.amountSell,
-        requested_resources: this.amountBuy}
-    socket.emit('player send tradeOffer', {trade: trade});
-
-    //REVERT ALL MAPS HOLDING RESOURCE STATUS TO 0
+        offered_resources: JSON.stringify(Array.from(this.amountSell)),
+        requested_resources: JSON.stringify(Array.from(this.amountBuy))}
+        
+    socket.emit('player send tradeOffer', {trade: trade}, function(){
+        //REVERT ALL MAPS HOLDING RESOURCE STATUS TO 0
     let myMap = this.resources;
     for ( let r in myMap){
         amountSell.set(String(r), 0);
         amountBuy.set(String(r), 0);
     }
+    });
 
     var tableContainerBuy = document.getElementById("requestTable");
     tableContainerBuy.innerHTML= buyTableBuilder(2); 

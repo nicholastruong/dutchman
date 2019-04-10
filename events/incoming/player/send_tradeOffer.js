@@ -17,8 +17,10 @@ module.exports = function(socket, server, game) {
 		let currentGame = game['games'][roomId];
 		let players = currentGame['players'];
 
-		console.log("player send tradeOffer");
+		
+		
 		let trade = params.trade;
+		
 		server.trigger["server send giveTradeOffer"](trade);
 	});	
 
