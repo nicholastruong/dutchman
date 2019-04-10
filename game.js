@@ -266,10 +266,9 @@
  		commitTrade: function (gameID, trade) {
  			let scope = this;
  			let game = scope.games[gameID];
-
  			let proposer = game.players[trade.proposerID]['resources'];
  			let target = game.players[trade.targetID]['resources'];
-
+			
  			for (resource in trade.offered_resources) {
  				proposer[resource] -= trade.offered_resources[resource];
  				target[resource] += trade.offered_resources[resource];

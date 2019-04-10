@@ -31,6 +31,7 @@ module.exports = function(socket, server, game) {
 				accepted: true,
 				resources: game['games'][gameID]['players'][trade.proposerID]['resources']
 			};
+			
 			server.trigger["server send giveTradeResults"](trade.proposerID, tradeResultsProposer);
 
 			// Send updated resources to target
@@ -38,6 +39,7 @@ module.exports = function(socket, server, game) {
 				accepted: true,
 				resources: game['games'][gameID]['players'][trade.targetID]['resources']
 			};
+			
 			server.trigger["server send giveTradeResults"](trade.targetID, tradeResultsTarget);
 		} else {
 			// Notify proposer that the trade did not occur

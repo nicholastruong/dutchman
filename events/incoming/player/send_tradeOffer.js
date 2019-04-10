@@ -19,7 +19,6 @@ module.exports = function(socket, server, game) {
 		let trade = params.trade;
 
 		console.log("player send tradeOffer");
-
 		server.trigger["server send giveTradeOffer"](trade);
 	});	
 

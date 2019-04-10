@@ -48,7 +48,7 @@ module.exports = function(socket, server, game, config){
 			}
 		}
 
-		server.trigger['update server player out of resources'](gameID);
+		server.trigger['update server player out of resources'](gameID, playersOutOfResources);
 
 		if(currentGame['day'] === 20) {
 			server.trigger['end game'](socket, server, game);

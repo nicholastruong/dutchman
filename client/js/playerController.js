@@ -26,6 +26,8 @@ var resources = new Object();
 var colocated_players = [];
 var alert_queue = [];
 var socket;
+var reqObj = new Object();
+var offerObj = new Object();
 
 $(document).ready(function(){
   console.log("documentReady called");
@@ -153,6 +155,55 @@ PlayerController.prototype = {
       updateResources(d);
     }); 
 
+    socket.on('server send giveTradeResults', function(d){
+      console.log(d['tradeResults']);
+      if (d['tradeResults']['accepted']){
+        customAlert("The trade was accepted!");
+        console.log(d['tradeResults']);
+      } else {
+        customAlert("The trade was declined.");
+      }
+    });
+
+    socket.on('server send giveTradeOffer', function(d){
+      
+      var requestResource = new Map(JSON.parse(d['requested_resources']));
+      var offerResource = new Map(JSON.parse(d['offered_resources']));
+      var request = "";
+      var offer = "";
+
+      requestResource.forEach ((v,k) => { reqObj[k] = v });
+      offerResource.forEach ((v,k) => { offerObj[k] = v });
+     
+      for (let resource in reqObj) {
+        if ( reqObj[resource] > 0){
+          request += String(reqObj[resource]) + " " + String(resource) + ", ";
+        }
+        if ( offerObj[resource] > 0){
+          offer += String(offerObj[resource]) + " " + String(resource) + ", ";
+        }
+      }
+      
+      let trade = {
+        proposerID : d['proposerID'],
+        targetID : d['targetID'],
+        offered_resources : JSON.stringify(Array.from(offerResource)),
+        requested_resources : JSON.stringify(Array.from(requestResource))
+      }
+
+
+      let alertMsg = "Hey " + d['proposerID'] + " wants to trade with you! Do you want to give " +
+      request + "in exchange for " + offer + " ?"
+      customConfirm(alertMsg, function(r){
+        if (checkTrade(reqObj)){
+          socket.emit('player send tradeResponse', {accepted: r, trade: trade});
+        } else {
+          customAlert("Trade could not be completed due to insufficient funds.")
+          socket.emit('player send tradeResponse', {accepted: false, trade: trade});
+        }
+      }, true);
+    });
+
     socket.on('out of resources', function(d){
       console.log('out of resources');
 
@@ -208,8 +259,7 @@ PlayerController.prototype = {
     instructionButton.addEventListener('click', function(){
       customAlert("Welcome to The Search for The Lost Dutchman's Gold Mine." + 
         "</p>The main objective of this game is to work with your team and plan out your resources in " + 
-        "order to retrieve as much gold from the mine as possible.</p>You are not competing" + 
-        " against the other teams going to the mine, so work with them in order to maximize success.</p>" + 
+        "order to retrieve as much gold from the mine as possible.</p>" + 
         " Learn more about each different resource by mousing over them.</br></br>" + 
         "Gameplay</br> - Click on the board space you wish to travel that day.</br> - Click the 'Ready for Next Day' button when " + 
         "you have completed all desired actions for that day.</br> - Click the 'Team Trade' button when your team is on the same " + 
@@ -237,6 +287,25 @@ function getUrlVars() {
         vars[key] = value;
     });
     return vars;
+}
+
+function checkTrade(request){
+  currResource = this.resources;
+  for ( resource in request){
+    if ( currResource[resource] - request[resource] < 0){
+      return false;
+    }
+  }
+  return true;
+}
+
+function updateResourceTrading(add, subtract){
+  currentResources = this.resources;
+  for (amount in add){
+      currentResources[amount] += add[amount];
+      currentResources[amount] -= subtract[amount];
+  }
+  updateResources(currentResources);
 }
 
 function reallyReady() {
@@ -385,7 +454,8 @@ function customAlert(message) {
    }
 };
 
-function customConfirm(message, callbackFunc) {
+function customConfirm(message, callbackFunc, ifTrade) {
+
    confirmBox = bootbox.confirm({
       message: message,
       title: '',
@@ -402,7 +472,10 @@ function customConfirm(message, callbackFunc) {
       callback: function (result) {
          console.log("callback with result: " + result);
          if (result) {
-            callbackFunc();
+            callbackFunc(result);
+         }
+         else if (ifTrade != undefined && ifTrade){
+           callbackFunc(result);
          }
          else {
             onModal = false;
