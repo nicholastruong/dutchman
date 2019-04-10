@@ -5,8 +5,53 @@ var io = require('socket.io')(http);
 
 const fs = require("fs");
 const path = require("path");
+const mysql = require("mysql");
 
-var openSockets = {};
+let db_config = {
+	host: 'localhost',
+	user: 'root',
+	password: 'root',
+	database: 'lost_dutchman'
+};
+
+function mysqlConnect(onConnect)
+{
+	module.exports.db = mysql.createConnection(db_config);
+	
+	module.exports.db.connect(function(err) {
+		if (err) {
+			console.log("Error connecting to database: " + err);
+			setTimeout(mysqlConnect, 2000, onConnect);
+		} else {
+			console.log("Connected to database...");
+			if (onConnect !== undefined) onConnect();
+		}
+	});
+	
+	module.exports.db.on("error", function(err) {
+		console.log("Database error: " + err);
+		if (err.code == "PROTOCOL_CONNECTION_LOST") // connection lost, try reconnecting
+		{
+			mysqlConnect();
+		}
+		else
+		{
+			throw err; // unhandled mysql error
+		}
+	});
+}
+
+function onSqlConnect() {
+	// Load the game state for all rooms from the database
+	game.loadAll(function() {
+		console.log("Loaded game states...")
+	});	
+	//TODO: fix this to actually pull from database
+
+	console.log("oh goody we connected to the database");
+}
+
+mysqlConnect(onSqlConnect);
 
 const config = require("./config.js")
 var game = require("./game.js")(config);
@@ -24,6 +69,7 @@ app.get('/', function(req, res){
 
 app.get('/player', function(req, res){
   //let token = req.query.token;
+  //TODO: redirect if bad
   res.sendFile(__dirname + '/client/player.html');
 })
 
@@ -45,9 +91,7 @@ io.use(function(socket, next)
 	}
 	else {
 		socket.user = authenticatedUsers[token];
-		console.log("authenticated user: ");
-		console.log(socket.user);
-		//if (socket.user == undefined) {
+		//if (socket.user == undefined) { //TODO
 			//return next(new Error("authenticationFailure"));
 		//}
 		//else {
@@ -60,37 +104,45 @@ io.use(function(socket, next)
 });
 
 io.on("connection", function(socket) {
-	//console.log(socket.handshake.headers.referer);
-	let gameID = 0; //HARDODED
-	console.log("new connection !");
-	console.log("socket ID: " + socket["id"]);
+	console.log("new connection socket ID: " + socket["id"]);
 	if (socket.user != undefined) {
-		openSockets[socket["id"]] = socket;
-		var isFacilitator = socket.user.isFacilitator;
+		let gameID = socket.user.gameID;
+		let userID = socket.user.userID;
+		let isFacilitator = socket.user.isFacilitator;
 
-		game.updateSockets(gameID, socket, isFacilitator);
+		openSockets[userID] = socket;
+		socket.on("disconnect", function(reason) {
+			openSockets[socket.user.id] = undefined;
+		});
+
+		//TODO: generate error if user connects to game late.
+		game.onPlayerSocketConnect(socket);
 		
 		if (!isFacilitator){
 			console.log("connection is NOT facilitator");
-			trigger['new player connection'](game, socket["id"]);
 
-			// used to send initial grubstake to connecting player on day 1
-			let currentGame = game['games']['0'];
-			let players = currentGame['players'];
-			let currentLocation = players[socket["id"]]['currentLocation'];
-			trigger['server send updateDay'](
-				socket["id"], 
-				players[socket["id"]]['resources'], 
-				game.getWeather(currentLocation, currentGame['day']), 
-				currentGame,
-				game.getColocatedPlayers(gameID, socket["id"])
-			);	
+			let currentGame = game['games'][gameID];
+
+			//TODO: implement better facilitator front end
+			trigger['new player connection'](currentGame, userID); 
+			trigger['update resources'](gameID, userID);
+
+			// When a new player connects, update everyone else's co-location
+			if (currentGame.day === 0) {
+				let players = currentGame['players'];
+				for (p in players) { 
+					// "p" corresponds to user.id of player
+					trigger['day zero'](p, game.getColocatedPlayers(gameID, p));
+				}
+			}
+		}
+		else { 
+			//TODO: update facilitator with new method
 		}	
 	}
 });
 
 //load game state
-//TODO: load mysql
 game.loadAll(function() {
   console.log("Loaded game states...");
 });
@@ -136,7 +188,7 @@ function loadEvents(path, outgoing)
 					if (outgoing)
 					{
 
-						let outgoingEventModule = require(file)(module.exports);
+						let outgoingEventModule = require(file)(module.exports, game);
 						trigger[outgoingEventModule.id] = outgoingEventModule.func;
 					}
 					else // incoming
@@ -156,5 +208,3 @@ function loadEvents(path, outgoing)
 
 loadEvents(outgoingEventsPath, true);
 loadEvents(incomingEventsPath, false);
-
-

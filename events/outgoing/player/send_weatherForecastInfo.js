@@ -1,7 +1,7 @@
 //sends weather forecast info to all players with batteries
 
 const eventID = "server send forecast";
-module.exports = function(server, config)
+module.exports = function(server, game)
 {
 	return {
 		id: eventID,

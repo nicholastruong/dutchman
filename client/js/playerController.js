@@ -121,21 +121,28 @@ PlayerController.prototype = {
       $('#messages').append($('<li>').text(msg));
     });
 
+    socket.on('day zero', function(d) {
+      $('#day').text("Day: " + '0');
+      enableMove = false;
+      colocated_players = d['colocated_players'];
+      updateWeather(['no weather']);
+
+    });
+
     socket.on('server send updateDay', function(d) {
       curr_day = d['day'];
-      resources = d['resources'];
+      
       colocated_players = d['colocated_players'];
       $('#day').text("Day: " + d['day']);
 
       $("#videoTurboButton").attr("disabled", (curr_day != 1));
 
-      // console.log(d['resourcesExpended']);
       if (d['resourcesExpended'] != undefined) {
         updateAlert(d['weather'], d['resourcesExpended']);
       }
 
       updateWeather(d['weather']);
-      updateResources(d['resources']);
+      
       floodCanyon(d['weather'][1] == "flooded");
 
 
@@ -152,6 +159,7 @@ PlayerController.prototype = {
     });
 
     socket.on('update resources', function(d) {
+      resources = d;
       updateResources(d);
     }); 
 
@@ -205,7 +213,15 @@ PlayerController.prototype = {
     });
 
     socket.on('out of resources', function(d){
-      $('#messages').append($('<li>').text("You're out of resources. Use your beacon!"));
+      console.log('out of resources');
+
+      /*
+        
+        BUG: Can't figure out why this is triggered when resources are still valid. Cannot figure out where this is being triggered from.
+        Tried printing from out_of_resources.js but to no avail.
+
+      */
+      //$('#messages').append($('<li>').text("You're out of resources. Use your beacon!"));
     });
 
     socket.on('end game', function(d){
@@ -384,17 +400,24 @@ function updateAlert(weatherData, changedResources) {
 }
 
 function updateWeather(weatherData) {
-   $('#weathertext').text(weatherData[0]);
+  if (weatherData[0] !== 'no weather') {
+
    $('#weatherimg').attr("src", "assets/weather/" + weather[weatherData[0]][1] + ".png");
 
    $('#canyonstatus').text("Canyon is " + weatherData[1]);
+  }
+  $('#weathertext').text(weatherData[0]);
+   
 }
 
 function updateResources(resources) {
+
+  console.log(resources);
    $('#fuel').text(resources['fuel'] + " Fuel");
    $('#supplies').text(resources['supplies'] + " Supplies");
    $('#tires').text(resources['tires'] + " Spare Tires");
    $('#cash').text("$" + resources['cash'] + " Cash");
+   $('#batteries').text(resources['batteries'] + " Batteries");
    $('#caves').text(resources['caves'] + " Caves");
    $('#turbo').text(resources['turbo'] + " Turbos");
    $('#tents').text(resources['tents'] + " Tents");

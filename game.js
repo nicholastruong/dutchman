@@ -141,26 +141,28 @@
  			let scope = this;
 
  			let id = roomID;
+ 			console.log(roomID);
  			//TODO: query db
  			scope.games[id] = {};
  			let game = scope.games[id];
 
  			//this is hardcoded
  			game.id = 0;
- 			game.day = 1;
+ 			game.day = 0;
 
  			//map of players (socket IDs) to player state
  			game.players = {};
 
+ 			console.log("Game is: ");
+ 			console.log(scope.games[id]);
  			if (callback) callback();
  		},
 
  		loadAll: function(callback) {
  			let scope = this;
 
-
  			//TODO: fix. for now just call this once.	
- 			scope.load(0, masterCallback());
+ 			scope.load('1', masterCallback());
 
  			function masterCallback() {
  				if (callback) callback();
@@ -174,35 +176,34 @@
  			delete game.players[socketID];
  		},
 
- 		setNextLocation: function(gameID, location, coords, socketID) {
+ 		setNextLocation: function(gameID, location, coords, userID) {
  			let scope = this;
  			let game = scope.games[gameID];
- 			game.players[socketID]['currentLocation'] = location;
- 			game.players[socketID]['currentCoords'] = coords;
+ 			game.players[userID]['currentLocation'] = location;
+ 			game.players[userID]['currentCoords'] = coords;
  		},
 
- 		addResource: function(gameID, socketID, resource) {
+ 		addResource: function(gameID, userID, resource) {
  			let scope = this;
  			let game = scope.games[gameID];
- 			if(socketID in game.players){
+ 			if(userID in game.players){
  				if (resource == "turbo") {
- 					game.players[socketID]['resources']['turbo'] = 3;
+ 					game.players[userID]['resources']['turbo'] = 3;
  				}
  				if (resource == "cave") {
- 					game.players[socketID]['resources']['caves'] = 12;
+ 					game.players[userID]['resources']['caves'] = 12;
  				}
  			}
-
  		},
  		
  		//returns true if has enough resources, returns false otherwise
- 		updateResources: function(gameID, socketID, day) {
+ 		updateResources: function(gameID, userID, day) { //TODO: why does this need day? it really doesnt
  			let scope = this;
  			let game = scope.games[gameID];
 
  			var currentForecast = scope.weather[day];
- 			var resources = game.players[socketID]['resources'];
- 			var currentLocation = game.players[socketID]['currentLocation'];
+ 			var resources = game.players[userID]['resources'];
+ 			var currentLocation = game.players[userID]['currentLocation'];
  			var currentWeather;
 
  			if (lowCountryPath.has(currentLocation) || plateauPath.has(currentLocation)){
@@ -245,7 +246,7 @@
 
 
  			//if any supply, fuel, cave, or tent is less than 0, call the beacon!
- 			if(resources['fuel'] < 0 || resources['supplies'] < 0 || (resources['caves'] < 0 && resources['tents'] < 0)) {
+ 			if(resources['fuel'] < 0 || resources['supplies'] < 0 || (resources['caves'] < 0 && resources['tents'] < 0 && minePath.has(currentLocation))) {
  				if(resources['fuel'] < 0) {
  					resources['fuel'] = 0;
  				}
@@ -280,17 +281,22 @@
  			//TODO: is it moddifying?
  		},
 
- 		//updates socket for a given room on changed connection
- 		updateSockets: function (gameID, socket, isFacilitator) {
+ 		// Will set up initial resources for a new connecting player
+ 		onPlayerSocketConnect: function (socket) {
  			let scope = this;
- 			let game = scope.games[gameID];
- 			let id = socket['id'];
- 			//TODO: don't let facilitator have resources, location, etc.
- 			if (isFacilitator) {
- 				game.facilitatorID = id;
- 			}
- 			else {
-	 			//initial values of resources
+ 			let game = scope.games[socket.user.gameID];
+ 			console.log(scope.games);
+ 			console.log(game);
+ 			console.log("testing");
+
+ 			let userID = socket.user.userID;
+ 			if (socket.user.isFacilitator) {
+ 				game.facilitatorID = socket.user.userID;
+ 			} 
+ 			else if (game.day == 0 && game.players[userID] == undefined) { 
+	 			/* Assign Grub Stake only if its day 0 
+	 			   AND the user hasn't connected yet */
+
 	 			let grub_stakes = {
 	 				supplies: [22, 20, 21, 20, 18],
 	 				fuel: [27, 24, 22, 22, 30],
@@ -300,23 +306,23 @@
 	 				cash: [40, 10, 0, 10, 0]
 	 			};
 
-	 			let grub_id = Math.floor(Math.random()*5);
-	 			game.players[id] = 
-	 				{
-	 					socket: socket,
-	 					currentLocation: 0,
-	 					resources : {
-	 						supplies: grub_stakes.supplies[grub_id],
-	 						fuel: grub_stakes.fuel[grub_id],
-	 						tents: grub_stakes.tents[grub_id],
-	 						batteries: grub_stakes.batteries[grub_id],
-	 						tires: grub_stakes.tires[grub_id],
-	 						cash: grub_stakes.cash[grub_id],
-	 						caves: 0,
-	 						turbo: 0, 
-	 						gold: 0
-	 					}
-	 				};	
+	 			// Randomly pick a grub stake
+	 			let grubID = Math.floor(Math.random()*5);
+	 			game.players[userID] = {
+ 					currentLocation: 0,
+ 					username: socket.user.username,
+ 					resources : {
+ 						supplies: grub_stakes.supplies[grubID],
+ 						fuel: grub_stakes.fuel[grubID],
+ 						tents: grub_stakes.tents[grubID],
+ 						batteries: grub_stakes.batteries[grubID],
+ 						tires: grub_stakes.tires[grubID],
+ 						cash: grub_stakes.cash[grubID],
+ 						caves: 0,
+ 						turbo: 0, 
+ 						gold: 0
+ 					}
+ 				};	
  			}			
  		}, 
 
@@ -336,7 +342,6 @@
 					});
 				}
 			} 
-
 			return colocatedPlayers;	
  		},
 
@@ -366,6 +371,24 @@
 
  			return forecast;
  		},
+
+ 		/*
+		   This function receives a map of resources and assigns them to a given player.
+		   Used for the beacon and provisioner trading.
+ 		*/
+ 		setResources: function(gameID, playerID, resources) {
+ 			let scope = this;
+ 			let game = scope.games[gameID];
+
+ 			var playerResources = game.players[playerID].resources;
+
+ 			for (r in playerResources) {
+ 				if(r in resources) {
+ 					playerResources[r] = resources[r];
+ 				}
+ 			}
+
+ 		}
 
  	};
  };

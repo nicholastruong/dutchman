@@ -1,15 +1,13 @@
 /* tells facilitator status of all the players on a new day */
 
 const eventId = "server update player states";
-module.exports = function(socket, server, game, config) {
-	
+module.exports = function(server, game) {
 	return {
 		id: eventId,
-		func: function(socket, server, game) {
+		func: function(gameID) {
 			//array of players in the game
-			let currentGame = game['games']['0'];
+			let currentGame = game['games'][gameID];
 			let players = currentGame['players'];
-
 			let facilitatorID = currentGame.facilitatorID;
 
 			var updatedResources = {};
@@ -25,11 +23,6 @@ module.exports = function(socket, server, game, config) {
 			}
 
 			server.emit(facilitatorID, "updated player status", updatedResources, null, true);
-
-
-
-
-
 		}
 	};
 	

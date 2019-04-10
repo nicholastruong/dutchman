@@ -1,17 +1,13 @@
 //sends updates of resources after provisioner trading
 
 const eventID = "server send updateResources";
-module.exports = function(server, config)
-{
-	return {
-		id: eventID,
-		func: function(playerID, resources) {
-			console.log("server send updateResources");
-			server.trigger(playerID, eventID, 
-				{
-                    resources: resources
-  				}
-  			);
-		}
-	};
+
+module.exports = function(socket, server, game){
+	socket.on("server send updateResources", function(data){
+		let gameID = socket.user.gameID;
+		let userID = socket.user.userID;
+
+		game.setResources(gameID, userID, data['resources']);
+		server.trigger['update resources'](userID);
+	});
 }

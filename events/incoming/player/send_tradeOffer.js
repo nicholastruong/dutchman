@@ -13,14 +13,20 @@ const eventID = "player send tradeOffer";
 module.exports = function(socket, server, game) {
 	socket.on(eventID, function(params, response) {
 		// TODO: store trades in game.js and have them be cancellable
-		let roomId = '0'; // TODO: socket.user.roomId
-		let currentGame = game['games'][roomId];
-		let players = currentGame['players'];
+		let gameID = socket.user.gameID;
+		let currentGame = game['games'][gameID];
 
+<<<<<<< HEAD
 		
 		
 		let trade = params.trade;
 		
+=======
+		let trade = params.trade;
+
+		console.log("player send tradeOffer");
+
+>>>>>>> 9f7350884c39cae4d725e240dfc7fd3a59d0cfa3
 		server.trigger["server send giveTradeOffer"](trade);
 	});	
 

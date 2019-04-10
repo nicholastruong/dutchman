@@ -3,7 +3,7 @@
 */
 
 const eventID = "server send giveTradeResults";
-module.exports = function(server, config)
+module.exports = function(server, game)
 {
 	return {
 		id: eventID,

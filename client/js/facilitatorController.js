@@ -3,7 +3,10 @@ var FacilitatorController = function()
   let scope = this;
 
   //open socket
-  let socket = scope.socket = io();
+  console.log(getUrlVars());
+  let token = getUrlVars()['token'];
+
+  let socket = scope.socket = io(document.location.hostname + ":3000?token=" + token);
 
   scope._RegisterSocketHandlers();
   scope._RegisterOutgoing();
@@ -174,7 +177,7 @@ FacilitatorController.prototype = {
 
     var nextDayButton = document.getElementById("ready");
     nextDayButton.addEventListener('click', function(){
-      socket.emit('facilitator next day');
+      socket.emit('facilitator next day'); 
     });
 
     var instructionButton = document.getElementById("instructionblock");
@@ -189,6 +192,14 @@ FacilitatorController.prototype = {
   }
   
 };
+
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
 
 function customAlert(message) {
    alertBox = bootbox.dialog({

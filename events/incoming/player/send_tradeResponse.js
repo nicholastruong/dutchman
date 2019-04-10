@@ -16,7 +16,7 @@ module.exports = function(socket, server, game) {
 		console.log("player send tradeResponse");
 		// TODO: remove trade from game.js
 		// TODO: send information to facilitator as well
-		let roomId = '0'; //TODO: socket.user.roomId
+		let gameID = socket.user.gameID; 
 		let accepted = params.accepted;
 		let trade = params.trade;
 
@@ -24,12 +24,12 @@ module.exports = function(socket, server, game) {
 
 		if (accepted == true) {
 			// Update resources
-			game.commitTrade(roomId, params.trade);
+			game.commitTrade(gameID, params.trade);
 
 			// Send updated resources to proposer
 			tradeResultsProposer = {
 				accepted: true,
-				resources: game['games'][roomId]['players'][trade.proposerID]['resources']
+				resources: game['games'][gameID]['players'][trade.proposerID]['resources']
 			};
 			
 			server.trigger["server send giveTradeResults"](trade.proposerID, tradeResultsProposer);
@@ -37,7 +37,7 @@ module.exports = function(socket, server, game) {
 			// Send updated resources to target
 			tradeResultsTarget = {
 				accepted: true,
-				resources: game['games'][roomId]['players'][trade.targetID]['resources']
+				resources: game['games'][gameID]['players'][trade.targetID]['resources']
 			};
 			
 			server.trigger["server send giveTradeResults"](trade.targetID, tradeResultsTarget);
