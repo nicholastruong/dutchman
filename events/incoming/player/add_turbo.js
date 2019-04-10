@@ -9,7 +9,7 @@ module.exports = function(socket, server, game){
 		let userID = socket.user.userID;
 
 		game.addResource(gameID, userID, "turbo");
-		server.trigger['update resources'](userID);
+		server.trigger['update resources'](gameID, userID);
 		server.trigger['server send updateFacilitator']();
 
 	});

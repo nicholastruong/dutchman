@@ -15,8 +15,6 @@ module.exports = function(socket, server, game) {
 		// TODO: store trades in game.js and have them be cancellable
 		let gameID = socket.user.gameID;
 		let currentGame = game['games'][gameID];
-
-		
 		
 		let trade = params.trade;
 		
