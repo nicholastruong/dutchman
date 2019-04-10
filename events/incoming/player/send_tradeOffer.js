@@ -16,17 +16,10 @@ module.exports = function(socket, server, game) {
 		let gameID = socket.user.gameID;
 		let currentGame = game['games'][gameID];
 
-<<<<<<< HEAD
 		
 		
 		let trade = params.trade;
 		
-=======
-		let trade = params.trade;
-
-		console.log("player send tradeOffer");
-
->>>>>>> 9f7350884c39cae4d725e240dfc7fd3a59d0cfa3
 		server.trigger["server send giveTradeOffer"](trade);
 	});	
 
