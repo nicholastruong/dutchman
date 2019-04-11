@@ -149,15 +149,12 @@ PlayerController.prototype = {
     socket.on('server send giveTradeOffer', function(d){
       
       
-      var requestResource = new Map(JSON.parse(d['requested_resources']));
-      var offerResource = new Map(JSON.parse(d['offered_resources']));
+      var reqObj = d['requested_resources'];
+      var offerObj = d['offered_resources'];
       
       var request = "";
       var offer = "";
 
-      requestResource.forEach ((v,k) => { reqObj[k] = v });
-      offerResource.forEach ((v,k) => { offerObj[k] = v });
-     
       for (let resource in reqObj) {
         if ( reqObj[resource] > 0){
           request += String(reqObj[resource]) + " " + String(resource) + ", ";
@@ -166,23 +163,23 @@ PlayerController.prototype = {
           offer += String(offerObj[resource]) + " " + String(resource) + ", ";
         }
       }
-      
+      /*
       let trade = {
         proposerID : d['proposerID'],
         targetID : d['targetID'],
         offered_resources : JSON.stringify(Array.from(offerResource)),
         requested_resources : JSON.stringify(Array.from(requestResource))
       }
-
+*/
 
       let alertMsg = "Hey " + d['proposerID'] + " wants to trade with you! Do you want to give " +
       request + "in exchange for " + offer + " ?"
       customConfirm(alertMsg, function(r){
         if (checkTrade(reqObj)){
-          socket.emit('player send tradeResponse', {accepted: r, trade: trade});
+          socket.emit('player send tradeResponse', {accepted: r, trade: d});
         } else {
           customAlert("Trade could not be completed due to insufficient funds.")
-          socket.emit('player send tradeResponse', {accepted: false, trade: trade});
+          socket.emit('player send tradeResponse', {accepted: false, trade: d});
         }
       }, true);
     });
