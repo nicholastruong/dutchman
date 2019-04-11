@@ -10,7 +10,7 @@ const mysql = require("mysql");
 let db_config = {
 	host: 'localhost',
 	user: 'root',
-	password: 'root',
+	password: 'password',
 	database: 'lost_dutchman'
 };
 
@@ -125,30 +125,46 @@ io.on("connection", function(socket) {
 			openSockets[socket.user.id] = undefined;
 		});
 
+		let currentGame = game['games'][gameID];
 		//TODO: generate error if user connects to game late.
 		game.onPlayerSocketConnect(socket);
-		
-		if (!isFacilitator){
-			console.log("connection is NOT facilitator");
 
-			let currentGame = game['games'][gameID];
-
-			//TODO: implement better facilitator front end
-			trigger['new player connection'](gameID, userID); 
-			trigger['update resources'](gameID, userID);
-
-			// When a new player connects, update everyone else's co-location
-			if (currentGame.day === 0) {
-				let players = currentGame['players'];
-				for (userID in players) { 
-					trigger['day zero'](gameID, userID);
+		//if game started, send back to login page
+		if (currentGame.day !== 0) {
+			openSockets[userID] = null;
+			
+			for (token in authenticatedUsers){
+				if(authenticatedUsers[token] === socket.user){
+					authenticatedUsers[token] = undefined;
 				}
 			}
+			
+
+			socket.disconnect(true);
+		} 
+		else {
+			if (!isFacilitator){
+				console.log("connection is NOT facilitator");
+
+				//TODO: implement better facilitator front end
+				trigger['new player connection'](gameID, userID); 
+				trigger['update resources'](gameID, userID);
+
+				// When a new player connects, update everyone else's co-location
+				if (currentGame.day === 0) {
+					let players = currentGame['players'];
+					for (userID in players) { 
+						trigger['day zero'](gameID, userID);
+					}
+				}
+			}
+			else { 
+				//sends true because first time updating player states
+				trigger['server update player states'](gameID, true);
+			}	
 		}
-		else { 
-			//sends true because first time updating player states
-			trigger['server update player states'](gameID, true);
-		}	
+		
+		
 	}
 });
 
