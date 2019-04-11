@@ -100,6 +100,7 @@ PlayerController.prototype = {
         $("#weatherdetails").attr("hidden", false);
         $("#canyonstatus").attr("hidden", false);
         $("#readybutton").text("Ready for Next Day");
+        $("#videoTurboButton").attr("disabled", true);
       }
       
       $('#day').text("Day: " + d['day']);
@@ -316,7 +317,8 @@ function updateResourceTrading(add, subtract){
 }
 
 function reallyReady() {
-  if (curr_day == 0) { $("#videoTurboButton").attr("disabled", true); }
+  // if (curr_day == 0) { $("#videoTurboButton").attr("disabled", true); }
+  $("#videoTurboButton").attr("disabled", true);
   if (curr_day % 5 == 0 && !forecastAvailable) { $("#forecastButton").attr("disabled", true); }
   $('#readybutton').attr('disabled', true);
   enableMove = false;
@@ -489,6 +491,7 @@ function customConfirm(message, callbackFunc, ifTrade) {
 
    confirmBox = bootbox.confirm({
       message: message,
+      closeButton: false,
       title: '',
       buttons: {
          confirm: {
