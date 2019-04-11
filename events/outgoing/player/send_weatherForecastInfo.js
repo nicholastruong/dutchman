@@ -14,8 +14,7 @@ module.exports = function(server, game)
 				{
 					forecast: weatherForecast 
   				},
-  				null,
-  				false
+  				null
   			);
 		}
 	};

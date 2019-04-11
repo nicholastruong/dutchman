@@ -23,8 +23,7 @@ module.exports = function(server, game)
   					colocated_players: colocatedPlayers,
   					resourcesExpended: resourcesExpended
   				},
-  				null,
-  				false
+  				null
   			);
 
 

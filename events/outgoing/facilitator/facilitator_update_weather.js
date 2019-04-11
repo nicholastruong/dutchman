@@ -14,7 +14,7 @@ module.exports = function(server, game) {
 				weather: weatherReport
 			};
 
-			server.emit(facilitatorID, "facilitator weather report", report, null, false);
+			server.emit(facilitatorID, "facilitator weather report", report, null);
 		}
 	};
 };

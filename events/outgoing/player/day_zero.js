@@ -10,8 +10,7 @@ module.exports = function(server, game)
 				{
   					colocated_players: colocatedPlayers
   				},
-  				null,
-  				false
+  				null
   			);
 		}
 	};

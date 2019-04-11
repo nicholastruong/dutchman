@@ -9,7 +9,7 @@ module.exports = function(socket, server, game){
 		let currentGame = game['games'][gameID];
 
 		game.setNextLocation(socket.user.gameID, data['currentSpace'], data['currentCoords'], userID);
-		server.trigger['server send updateFacilitator']();
+		server.trigger['server send updateFacilitator'](gameID);
 
 	});
 }
