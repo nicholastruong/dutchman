@@ -6,8 +6,10 @@ var PlayerController = function()
   let token = getUrlVars()['token'];
   //open socket
   let socket = scope.socket = io(document.location.hostname + ":3000?token=" + token);
-  console.log("hey look at my socket");
   console.log(socket);
+  if (socket['connected'] == false) {
+    window.location.href = '/';
+  }
 
   scope._RegisterSocketHandlers();
   scope._RegisterOutgoing();
@@ -83,6 +85,11 @@ PlayerController.prototype = {
     let scope = this;
     let socket = this.socket;
 
+    socket.on('redirect', function() {
+      console.log("hey im redirecting");
+      window.location.href = '/';
+    });
+
     socket.on('facilitator broadcast', function(msg) {
       $('#messages').append($('<li>').text(msg));
     });
@@ -92,6 +99,7 @@ PlayerController.prototype = {
       $('#team_name').text("Team " + teamname);
       enableMove = false;
       colocated_players = d['colocated_players'];
+      console.log(colocated_players);
     });
 
     socket.on('server send updateDay', function(d) {
