@@ -4,26 +4,37 @@ const eventId = "server update player states";
 module.exports = function(server, game) {
 	return {
 		id: eventId,
-		func: function(gameID, facilitatorID) {
+		func: function(gameID, isFirstTime) {
 			//array of players in the game
 			let currentGame = game['games'][gameID];
+			let facilitatorID = currentGame.facilitatorID;
 			let players = currentGame['players'];
 			
-			var updatedResources = {};
+			var update = {};
 
-			for (p in players) {
+			//notifies if this is when facilitator logs on for first time or not
+			update['isFirstTime'] = isFirstTime;
 
-				let name = server.openSockets[p].user.username;
-				
-				updatedResources[name] = {
-					location : players[p]['currentLocation'],
-					coords : players[p]['currentCoords'],
-					resources : players[p]['resources']
+			//object of all players and resources
+			var playerStatuses = {};
+
+			for (playerID in players) {
+
+				playerStatuses[playerID] = {
+					username : players[playerID].username,
+					location : players[playerID]['currentLocation'],
+					resources : players[playerID]['resources']
 				}
+				
 				
 			}
 
-			server.emit(facilitatorID, "updated player status", updatedResources, null);
+			update['players'] = playerStatuses;
+
+			console.log('holla');
+			console.log(update);
+
+			server.emit(facilitatorID, "updated player status", update, null);
 		}
 	};
 	

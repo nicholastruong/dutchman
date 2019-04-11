@@ -36,7 +36,7 @@ module.exports = function(socket, server, game, config){
 		}
 
 		//send all updated player status to facilitator
-		server.trigger['server update player states'](gameID, currentGame['facilitatorID']);
+		server.trigger['server update player states'](gameID, false);
 		server.trigger['update server weather'](gameID, currentGame['facilitatorID'])
 		
 	});

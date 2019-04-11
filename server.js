@@ -147,7 +147,8 @@ io.on("connection", function(socket) {
 			}
 		}
 		else { 
-			//TODO: update facilitator with new method
+			//sends true because first time updating player states
+			trigger['server update player states'](gameID, true);
 		}	
 	}
 });
