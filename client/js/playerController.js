@@ -185,6 +185,10 @@ PlayerController.prototype = {
       }, true);
     });
 
+    socket.on('server send tradeCanceled', function(d){
+      customAlert("Trade was cancelled.");
+    })
+
     socket.on('out of resources', function(d){
       console.log('out of resources');
 

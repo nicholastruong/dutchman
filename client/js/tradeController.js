@@ -1,6 +1,6 @@
 var myObj = new Object();
 var amountBuy = new Object();
-
+var targetID="";
 var amountSell = new Object();
 var constMapOfValues = {
     "supplies": 20, 
@@ -241,7 +241,7 @@ function subtractItemBuy(tradeType, resourceName){ //RIGHT Table
 function initiateTeamTrade(){
     let socket = this.socket;
     let id = socket.io.engine.id;
-    let targetID = $('#teamPickerTitle').find(":selected").text();
+    targetID = $('#teamPickerTitle').find(":selected").text();
     
     let trade = {
         proposerID : id,
@@ -267,7 +267,7 @@ function initiateTeamTrade(){
 }
 
 function cancelTrade(){
-    socket.emit('player send cancelTrade', )
+    socket.emit('player send cancelTrade', {proposerID: socket.engine.io.id, targetID: targetID});
 }
 
 function finishProvTrade(){
