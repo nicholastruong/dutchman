@@ -116,8 +116,13 @@ FacilitatorController.prototype = {
     
     socket.on('player ready', function(d){
       console.log(d);
-      $('#messages').append($('<li>').text("Team " + d['username'] + " is ready for the next day"));
-      console.log("player is ready");
+      if ($("#day").text() == "Planning Period") {
+        $('#messages').append($('<li>').text("Team " + d['username'] + " is ready to begin the game"));
+      }
+      else {
+        $('#messages').append($('<li>').text("Team " + d['username'] + " is ready for the next day"));
+      } 
+      // console.log("player is ready");
 
     });
 

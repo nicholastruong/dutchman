@@ -10,6 +10,6 @@ module.exports = function(socket, server, game){
 		
 		game.addResource(gameID, userID, "cave");
 		server.trigger['update resources'](gameID, userID);
-		server.trigger['server send updateFacilitator']();
+		// server.trigger['server send updateFacilitator']();
 	});
 }

@@ -199,6 +199,10 @@
  		
  		//returns true if has enough resources, returns false otherwise
  		updateResources: function(gameID, userID, day) { //TODO: why does this need day? it really doesnt
+ 			if (day == 1) {
+ 				return true;
+ 			}
+
  			let scope = this;
  			let game = scope.games[gameID];
 

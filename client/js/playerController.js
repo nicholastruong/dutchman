@@ -35,12 +35,6 @@ var offerObj = new Object();
 
 $(document).ready(function(){
   console.log("documentReady called");
-  
-    $('#cancelTradeModal').modal({
-      show: false,
-      backdrop: 'static',
-      keyboard: false
-    });
 
   $('#teamTradeModal')
     .on('show.bs.modal', function (e) {
@@ -116,7 +110,7 @@ PlayerController.prototype = {
         forecastAvailable = false; 
       }
 
-      if (d['resourcesExpended'] != undefined) { 
+      if (d['resourcesExpended'] != undefined && curr_day != 1) { 
         updateAlert(d['weather'], d['resourcesExpended'], curr_day); 
       }
 
@@ -193,7 +187,7 @@ PlayerController.prototype = {
       }, true);
     });
 
-    socket.on('server send tradeCancelled', function(d){
+    socket.on('server send tradeCanceled', function(d){
       customAlert("Trade was cancelled.");
       console.log("yo the trade was cancelled");
     })
@@ -245,9 +239,8 @@ PlayerController.prototype = {
 
     var readyButton = document.getElementById("ready");
     readyButton.addEventListener('click', function(){
-      // var reallyReady = false;
       if (hasMadeMove) {
-         reallyReady();
+        customConfirm("Are you sure you're finished with your turn?", reallyReady);
       }
       else {
          if (curr_space == 0) {
@@ -333,7 +326,9 @@ function reallyReady() {
     customConfirm("Do you wish to activate your Turbos?", function() { 
       hasTurbos = true; 
       onModal = false;
-      $('#turbo').text($('#turbo').text() + " (IN USE)");
+      
+      this.resources["turbo"] -= 1;
+      socket.emit('server send updateResources', {resources: this.resources});
     });
   } 
 }
@@ -346,8 +341,10 @@ function watchVideo(video) {
     customConfirm("Are you sure you want to stay another day?", function() {
       $("#tortillaflatsButton").attr("disabled", true);
       $("#turboRow").attr("hidden", false);
-      socket.emit('add turbo');
+      // socket.emit('add turbo');
       customAlert("You received 3 turbos!");
+      this.resources["turbo"] += 3;
+      socket.emit('server send updateResources', {resources: this.resources});
 
       enableMove = false;
       stayDay2 = stayDay1;
@@ -362,8 +359,10 @@ function watchVideo(video) {
     customConfirm("Are you sure you want to stay another day?", function() {
       $("#goldmineButton").attr("disabled", true);
       $("#caveRow").attr("hidden", false);
-      socket.emit('add cave');
+      // socket.emit('add cave');
       customAlert("You received 12 caves!");
+      this.resources["caves"] += 12;
+      socket.emit('server send updateResources', {resources: this.resources});
 
       enableMove = false;
       stayDay2 = stayDay1;
@@ -433,7 +432,10 @@ function updateResources(resources) {
    $('#cash').text("$" + resources['cash'] + " Cash");
    $('#batteries').text(resources['batteries'] + " Batteries");
    $('#caves').text(resources['caves'] + " Caves");
-   $('#turbo').text(resources['turbo'] + " Turbos");
+   // $('#turbo').text(resources['turbo'] + " Turbos");
+   if (hasTurbos) { $('#turbo').text(resources['turbo'] + " Turbos (IN USE)"); }
+   else { $('#turbo').text(resources['turbo'] + " Turbos"); }
+
    $('#tents').text(resources['tents'] + " Tents");
    $('#gold').text(resources['gold'] + " Gold");
 }
