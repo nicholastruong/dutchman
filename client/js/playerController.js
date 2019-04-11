@@ -98,6 +98,10 @@ PlayerController.prototype = {
     });
 
     socket.on('server send updateDay', function(d) {
+      console.log("server send updateDay");
+      $('.modal').modal('hide');
+      onModal = false; // janky code to force-hide all displayed modals when the facilitator moves to new day
+
       curr_day = d['day'];
       if (curr_day >= 1) {
         $("#weatherdetails").attr("hidden", false);
@@ -150,7 +154,7 @@ PlayerController.prototype = {
         console.log("trade cancelled.");
         $('#cancelTradeModal').modal('hide');
         bootbox.hideAll();
-        dialog.modal('hide');
+        // dialog.modal('hide');
         customAlert("The trade was declined.");
       }
     });
