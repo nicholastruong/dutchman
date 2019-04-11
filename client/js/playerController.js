@@ -84,6 +84,7 @@ PlayerController.prototype = {
 
     socket.on('facilitator broadcast', function(msg) {
       $('#messages').append($('<li>').text(msg));
+      scrollToBottom();
     });
 
     socket.on('day zero', function(d) {
@@ -382,6 +383,11 @@ function watchVideo(video) {
       }
     });
   }
+}
+
+function scrollToBottom() {
+   var message = document.getElementById('messages');
+   message.scrollTop = message.scrollHeight;
 }
 
 

@@ -46,7 +46,8 @@ FacilitatorController.prototype = {
       console.log('New player connected');
       name = d['username'];
       playerNames[d['userID']] = name;
-      $('#messages').append($('<li>').text(name + " has connected :)"));
+      $('#messages').append($('<li>').text(name + " has connected."));
+      scrollToBottom();
 
       generateTeamTable(name, d['resources']);
 
@@ -57,6 +58,7 @@ FacilitatorController.prototype = {
     });
     
     socket.on('player ready', function(d){
+
       console.log(d);
       if ($("#day").text() == "Planning Period") {
         $('#messages').append($('<li>').text("Team " + d['username'] + " is ready to begin the game"));
@@ -64,7 +66,8 @@ FacilitatorController.prototype = {
       else {
         $('#messages').append($('<li>').text("Team " + d['username'] + " is ready for the next day"));
       } 
-      // console.log("player is ready");
+      
+      scrollToBottom();
 
     });
 
@@ -128,6 +131,8 @@ FacilitatorController.prototype = {
       socket.emit('facilitator send broadcast', $('#m').val());
       $('#messages').append($('<li>').text($('#m').val()));  
       $('#m').val('');
+
+      scrollToBottom();
           
       return false;
     });
@@ -310,6 +315,13 @@ function updateResources(teamname, resources) {
     var gold = document.getElementById('gold' + teamname);
     gold.innerHTML = resources['gold'];
 }
+
+  function scrollToBottom() {
+     var message = document.getElementById('messages');
+     message.scrollTop = message.scrollHeight;
+  }
+
+
 
 
 function endGame() {
