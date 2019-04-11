@@ -14,7 +14,6 @@ const eventID = "player send tradeResponse";
 module.exports = function(socket, server, game) {
 	socket.on(eventID, function(params, response) {
 		console.log("player send tradeResponse");
-		// TODO: remove trade from game.js
 		// TODO: send information to facilitator as well
 		let gameID = socket.user.gameID; 
 		let accepted = params.accepted;
@@ -22,7 +21,12 @@ module.exports = function(socket, server, game) {
 
 		console.log(params.trade);
 
-		if (accepted == true) {
+		// Look up trade in game
+		let tradeExists = game.checkTradeExists(gameID, params.trade.proposerID);
+		if (tradeExists == false) {
+			return;
+		}
+		else if (accepted == true) {
 			// Update resources
 			game.commitTrade(gameID, params.trade);
 

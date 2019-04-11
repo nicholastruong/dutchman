@@ -31,9 +31,6 @@ module.exports = function(server, game) {
 
 			update['players'] = playerStatuses;
 
-			console.log('holla');
-			console.log(update);
-
 			server.emit(facilitatorID, "updated player status", update, null);
 		}
 	};

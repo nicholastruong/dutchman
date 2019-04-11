@@ -7,6 +7,10 @@ var FacilitatorController = function()
   let token = getUrlVars()['token'];
 
   let socket = scope.socket = io(document.location.hostname + ":3000?token=" + token);
+  if (socket['connected'] == false) {
+    //window.location.href = '/';
+  }
+
 
   scope._RegisterSocketHandlers();
   scope._RegisterOutgoing();
@@ -31,6 +35,12 @@ FacilitatorController.prototype = {
     let socket = this.socket;
 
 
+    socket.on('disconnect', function() {
+      console.log("i have disconnected");
+      window.location.href = '/';
+    });
+
+
     socket.on('new player connection', function(d){
       console.log('New player connected');
       name = d['username'];
@@ -47,8 +57,13 @@ FacilitatorController.prototype = {
     
     socket.on('player ready', function(d){
       console.log(d);
-      $('#messages').append($('<li>').text("Team " + d['username'] + " is ready for the next day"));
-      console.log("player is ready");
+      if ($("#day").text() == "Planning Period") {
+        $('#messages').append($('<li>').text("Team " + d['username'] + " is ready to begin the game"));
+      }
+      else {
+        $('#messages').append($('<li>').text("Team " + d['username'] + " is ready for the next day"));
+      } 
+      // console.log("player is ready");
 
     });
 
