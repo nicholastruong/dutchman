@@ -64,17 +64,28 @@ http.listen(3000, function(){
 app.use(express.static(__dirname + '/client')); // need to do this to give server access to all files in a folder
 
 app.get('/', function(req, res){
+  console.log("setting destination");
   res.sendFile(__dirname + '/client/login.html');
 });
 
 app.get('/player', function(req, res){
-  //let token = req.query.token;
-  //TODO: redirect if bad
-  res.sendFile(__dirname + '/client/player.html');
-})
+  //redirect if no token
+  if (!req.query.token) {
+  	//console.log("no token found");
+  	res.sendFile(__dirname + '/client/login.html');
+  } else {
+  	res.sendFile(__dirname + '/client/player.html');
+  }
+});
 
 app.get('/facilitator', function(req, res){
-  res.sendFile(__dirname + '/client/facilitator.html');
+  //redirect if no token
+  if (!req.query.token) {
+  	//console.log("no ftoken found");
+  	res.sendFile(__dirname + '/client/login.html');
+  } else {
+  	res.sendFile(__dirname + '/client/facilitator.html');
+  }
 });
 
 // Authenticate clients
@@ -170,6 +181,7 @@ const incomingEventsPath = "./events/incoming";
 
 function loadEvents(path, outgoing)
 {
+	console.log("loading events");
 	fs.readdir(path, function(err, files) {
 		if (err) {
 			console.error("Error loading events: " + err.stack); // non-fatal
