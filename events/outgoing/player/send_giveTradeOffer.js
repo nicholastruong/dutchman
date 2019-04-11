@@ -12,6 +12,7 @@ module.exports = function(server, game)
 			server.emit(trade.targetID, eventID,
 				{
 					proposerID: trade.proposerID,
+					proposer: trade.proposer,
 					targetID: trade.targetID,
 					offered_resources: trade.offered_resources,
 					requested_resources: trade.requested_resources

@@ -183,7 +183,7 @@ PlayerController.prototype = {
       }
 */
 
-      let alertMsg = "Team " + d['proposerID'] + " wants to trade with you! Would you like to give:<br>" 
+      let alertMsg = d['proposer'] + " wants to trade with you! Would you like to give:<br>" 
         + request 
         + "<br>in exchange for:<br>" 
         + offer;
