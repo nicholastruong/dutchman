@@ -18,6 +18,7 @@ var PlayerController = function()
 weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]};
 
 var weatherForecast;
+var forecastAvailable = false;
 var teamname = "";
 var stayDay1 = false;
 var stayDay2 = false;
@@ -28,6 +29,7 @@ var alert_queue = [];
 var socket;
 var reqObj = new Object();
 var offerObj = new Object();
+
 
 $(document).ready(function(){
   console.log("documentReady called");
@@ -58,25 +60,12 @@ $(document).ready(function(){
     })
     .on('hidden.bs.modal', function (e) {
       onModal = false;
+
     });
 
   $('#forecastModal')
     .on('shown.bs.modal', function (e) {
        onModal = true;
-       // console.log(document.getElementById("low_forecast_txt0"));
-
-       if (weatherForecast != null && curr_day % 5 == 0) {
-          for (i = 0; i < 5; i++) {
-             $('#low_forecast' + i).text("Day " + (curr_day + i));
-             $('#high_forecast' + i).text("Day " + (curr_day + i));
-
-             $('#low_forecast_txt' + i).text(weather[weatherForecast[i]['low']][0]);
-             $('#high_forecast_txt' + i).text(weather[weatherForecast[i]['high']][0]);
-
-             $('#low_forecast_img' + i).attr("src", "assets/weather/" + weather[weatherForecast[i]['low']][1] + ".png");
-             $('#high_forecast_img' + i).attr("src", "assets/weather/" + weather[weatherForecast[i]['high']][1] + ".png");
-          }
-       }  
     })
     .on('hidden.bs.modal', function (e) {
        onModal = false;
@@ -99,26 +88,28 @@ PlayerController.prototype = {
     });
 
     socket.on('day zero', function(d) {
-      $('#day').text("Day: " + '0');
-        
       teamname = d['username'];
       $('#team_name').text("Team " + teamname);
-
       enableMove = false;
       colocated_players = d['colocated_players'];
-      updateWeather(['no weather']);
     });
 
     socket.on('server send updateDay', function(d) {
       curr_day = d['day'];
+      if (curr_day == 1) {
+        $("#weatherdetails").attr("hidden", false);
+        $("#canyonstatus").attr("hidden", false);
+      }
       
       colocated_players = d['colocated_players'];
       $('#day').text("Day: " + d['day']);
 
-      $("#videoTurboButton").attr("disabled", (curr_day != 0));
+      if (curr_day % 5 == 0) { 
+        forecastAvailable = false; 
+      }
 
-      if (d['resourcesExpended'] != undefined) {
-        updateAlert(d['weather'], d['resourcesExpended'], curr_day);
+      if (d['resourcesExpended'] != undefined) { 
+        updateAlert(d['weather'], d['resourcesExpended'], curr_day); 
       }
 
       updateWeather(d['weather']);
@@ -127,20 +118,22 @@ PlayerController.prototype = {
 
 
       hasMadeMove = false;
-      // console.log("curr_day:" + curr_day + " stayDay1:" + stayDay1 + " stayDay2:" + stayDay2);
       enableMove = !((curr_day == 1 && stayDay1) || (curr_day == 2 && stayDay2))
       $('#readybutton').prop('disabled', false);
     });
 
     socket.on('server send forecast', function(d) {
       weatherForecast = d['forecast'];
-
     });
 
     socket.on('update resources', function(d) {
       resources = d;
+      if (curr_day != 0 && !forecastAvailable) { // disables the weather forecast button if not enough batteries available
+        $("#forecastButton").attr("disabled", resources['batteries'] < 1 || curr_day % 5 != 0);
+      }
       updateResources(d);
     }); 
+
 
     socket.on('server send giveTradeResults', function(d){
       console.log(d['tradeResults']);
@@ -152,6 +145,7 @@ PlayerController.prototype = {
         customAlert("The trade was declined.");
       }
     });
+
 
     socket.on('server send giveTradeOffer', function(d){
       
@@ -214,10 +208,31 @@ PlayerController.prototype = {
 
   },
 
+
+
   _RegisterOutgoing: function() 
   {
     let scope = this;
     socket = this.socket;
+
+    var forecastButton = document.getElementById("forecastButton");
+    forecastButton.addEventListener('click', function() {
+      if (forecastAvailable) {
+        $('#forecastModal').modal('show');
+      }
+      else {
+        customConfirm("Do you want to use one of your batteries to get the weather forecast?", function() {
+          if (weatherForecast != null) { updateWeatherForecast(); }
+
+          // update number of batteries available
+          this.resources["batteries"] -= 1;
+          socket.emit('server send updateResources', {resources: this.resources});
+         
+          forecastAvailable = true;
+          $('#forecastModal').modal('show');
+        });
+      }
+    });
 
     var readyButton = document.getElementById("ready");
     readyButton.addEventListener('click', function(){
@@ -261,14 +276,6 @@ PlayerController.prototype = {
         "Rules</br>1. Your team may not return to Apache Junction on the same path that you took to the mine.</br>" + 
         "2. Your team receives one gold for each day you are able to stay at the mine before returning.");
     });
-
-    // var videoTurboButton = document.getElementById("videoTurboButton");
-    // videoTurboButton.addEventListener('click', function(){
-    //   // customAlert("You received 3 turbos");
-    //   socket.emit('add turbo');
-    // });
-
-
   }
 };
 
@@ -300,10 +307,12 @@ function updateResourceTrading(add, subtract){
 }
 
 function reallyReady() {
-  $('#readybutton').prop('disabled', true)
+  if (curr_day == 0) { $("#videoTurboButton").attr("disabled", true); }
+  if (curr_day % 5 == 0 && !forecastAvailable) { $("#forecastButton").attr("disabled", true); }
+  $('#readybutton').prop('disabled', true);
   enableMove = false;
   onModal = false;
-  console.log("curr_space: " + curr_space + " car: " + car.x + "," + car.y);
+
   socket.emit('ready', 
     {
        currentSpace: curr_space,
@@ -319,6 +328,7 @@ function reallyReady() {
     });
   } 
 }
+
 
 function watchVideo(video) {
   $('#videoModal').modal('hide');
@@ -388,18 +398,26 @@ function updateAlert(weatherData, changedResources, day) {
 
 function updateWeather(weatherData) {
   if (weatherData[0] !== 'no weather') {
-
-   $('#weatherimg').attr("src", "assets/weather/" + weather[weatherData[0]][1] + ".png");
-
-   $('#canyonstatus').text("Canyon is " + weatherData[1]);
+    $('#weatherimg').attr("src", "assets/weather/" + weather[weatherData[0]][1] + ".png");
+    $('#canyonstatus').text("Canyon is " + weatherData[1]);
   }
   $('#weathertext').text(weatherData[0]);
-   
+}
+
+function updateWeatherForecast() {
+  for (i = 0; i < 5; i++) {
+     $('#low_forecast' + i).text("Day " + (curr_day + i));
+     $('#high_forecast' + i).text("Day " + (curr_day + i));
+
+     $('#low_forecast_txt' + i).text(weather[weatherForecast[i]['low']][0]);
+     $('#high_forecast_txt' + i).text(weather[weatherForecast[i]['high']][0]);
+
+     $('#low_forecast_img' + i).attr("src", "assets/weather/" + weather[weatherForecast[i]['low']][1] + ".png");
+     $('#high_forecast_img' + i).attr("src", "assets/weather/" + weather[weatherForecast[i]['high']][1] + ".png");
+  }
 }
 
 function updateResources(resources) {
-
-  console.log(resources);
    $('#fuel').text(resources['fuel'] + " Fuel");
    $('#supplies').text(resources['supplies'] + " Supplies");
    $('#tires').text(resources['tires'] + " Spare Tires");
@@ -433,11 +451,13 @@ function customAlert(message) {
       }
       else {
         onModal = false;
+        // console.log("customAlert - onModal is false");
       }
    });
 
    if (!onModal) {
       onModal = true;
+      // console.log("customAlert - onModal is true");
       alertBox.modal('show');
    }
    else {
@@ -468,20 +488,20 @@ function customConfirm(message, callbackFunc, ifTrade) {
          else if (ifTrade != undefined && ifTrade){
            callbackFunc(result);
          }
+
+         if (alert_queue.length > 0) {
+            alert_queue.shift().modal('show');
+         }
          else {
             onModal = false;
-            console.log("onModal is false");
+            // console.log("customConfirm - onModal is false");
          }
       },
       show: false
    });
 
-   // confirmBox.on('hidden.bs.modal', function () {
-   //    onModal = false;
-   //    console.log("onModal is false");
-   // });
-
    onModal = true;
+   // console.log("customConfirm - onModal is true");
    confirmBox.modal('show');
 }
 
