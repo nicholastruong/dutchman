@@ -221,11 +221,13 @@ function addItemSell(tradeType, resourceName){ //LEFT Table offerTable or sellTa
     let myObj = this.resources;
     var type=1;
     if (tradeType=="offerTable"){type=2}
-    
     if (amountSell[resourceName] < myObj[resourceName]){
-   amountSell[resourceName]++;
-   var tableContainer = document.getElementById(tradeType);
-    tableContainer.innerHTML= sellTableBuilder(type); 
+
+        if (resourceName=="cash") { amountSell[resourceName] += 10; }
+        else { amountSell[resourceName]++; }
+   
+        var tableContainer = document.getElementById(tradeType);
+        tableContainer.innerHTML= sellTableBuilder(type); 
     }
 }
 
@@ -233,17 +235,20 @@ function subtractItemSell(tradeType, resourceName){ //LEFT Table
     var type=1;
     if (tradeType=="offerTable"){type=2}
     if (amountSell[resourceName] > 0){
-    amountSell[resourceName]--;
-    
-    var tableContainer = document.getElementById(tradeType);
-    tableContainer.innerHTML= sellTableBuilder(type); 
+        if (resourceName=="cash") { amountSell[resourceName] -= 10; }
+        else { amountSell[resourceName]--; }
+        
+        var tableContainer = document.getElementById(tradeType);
+        tableContainer.innerHTML= sellTableBuilder(type); 
     }
 }
 
 function addItemBuy(tradeType, resourceName){ //RIGHT requestTable or buyTable
    var type=1;
     if (tradeType=="requestTable"){type=2}
-    amountBuy[resourceName]++;
+    
+    if (resourceName=="cash") { amountBuy[resourceName] += 10; }
+    else { amountBuy[resourceName]++; }
     
     var tableContainer = document.getElementById(tradeType);
     tableContainer.innerHTML= buyTableBuilder(type);
@@ -253,10 +258,11 @@ function subtractItemBuy(tradeType, resourceName){ //RIGHT Table
     var type=1;
     if (tradeType=="requestTable"){type=2}
     if (amountBuy[resourceName] > 0){
-        amountBuy[resourceName]--;
+        if (resourceName=="cash") { amountBuy[resourceName] -= 10; }
+        else { amountBuy[resourceName]--; }
     
-    var tableContainer = document.getElementById(tradeType);
-    tableContainer.innerHTML= buyTableBuilder(type); 
+        var tableContainer = document.getElementById(tradeType);
+        tableContainer.innerHTML= buyTableBuilder(type); 
     
     }
 }
@@ -306,7 +312,7 @@ function finishProvTrade(){
             myObj[buy] -=amountSell[buy];
             myObj[buy] +=amountBuy[buy];
         }
-       
+
         socket.emit('server send updateResources', {resources: myObj});
         
         socket.on('connect', function(){
