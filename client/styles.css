@@ -171,6 +171,7 @@ html {
 /*VIDEO MODAL*/
 .modal-md {
 	width: 40%;
+	height: 10px;
 	padding-top: 4%;
 }
 
@@ -190,7 +191,7 @@ html {
 }
 
 .videoImage {
-	height: 185%;
+	height: 12.5vw;
 	width: 100%;
 	margin-bottom: 20px;
 }
@@ -303,7 +304,7 @@ html {
 
 #messages li { 
 	padding: 5px 10px; 
-	font-size: 15px;
+	font-size: 1vw;
 }
 
 /*#messages li:nth-child(odd) { 

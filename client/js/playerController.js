@@ -17,11 +17,12 @@ var PlayerController = function()
 weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]};
 
 var weatherForecast;
+var confirmBox;
 var forecastAvailable = false;
 var hasTurbos = false;
 var teamname = "";
-var stayDay1 = false;
-var stayDay2 = false;
+var stay1Day = false;
+var stay2Day = false;
 var curr_day = 0;
 var resources = new Object();
 var colocated_players = [];
@@ -99,7 +100,7 @@ PlayerController.prototype = {
 
     socket.on('server send updateDay', function(d) {
       console.log("server send updateDay");
-      $('.modal').modal('hide');
+      confirmBox.modal('hide');
       onModal = false; // janky code to force-hide all displayed modals when the facilitator moves to new day
 
       curr_day = d['day'];
@@ -107,12 +108,12 @@ PlayerController.prototype = {
         $("#weatherdetails").attr("hidden", false);
         $("#canyonstatus").attr("hidden", false);
         $("#readybutton").text("Ready for Next Day");
-        $("#videoTurboButton").attr("disabled", true);
       }
       
       $('#day').text("Day: " + d['day']);
       colocated_players = d['colocated_players'];
       $("#teamTradeButton").attr("disabled", colocated_players.length < 1);
+      $("#provTradeButton").attr("disabled", !(trading_posts.includes(curr_space)));
 
       if (curr_day % 5 == 0) { 
         forecastAvailable = false; 
@@ -127,7 +128,8 @@ PlayerController.prototype = {
       }
 
       hasMadeMove = false;
-      enableMove = !((curr_day == 1 && stayDay1) || (curr_day == 2 && stayDay2))
+      enableMove = !stay1Day && !stay2Day;
+      console.log("enableMove is " + enableMove);
       $('#readybutton').prop('disabled', false);
     });
 
@@ -261,7 +263,7 @@ PlayerController.prototype = {
             if (curr_day == 0) {
               customConfirm("Are you ready to begin the game?", reallyReady);
             }
-            else if ((curr_day == 1 && stayDay1) || (curr_day == 2 && stayDay2)) {
+            else if (stay1Day || stay2Day) {
               customConfirm("Are you sure you're finished with your turn?", reallyReady);
             }
             else {
@@ -323,12 +325,17 @@ function updateResourceTrading(add, subtract){
 }
 
 function reallyReady() {
-  // if (curr_day == 0) { $("#videoTurboButton").attr("disabled", true); }
-  $("#videoTurboButton").attr("disabled", true);
   if (curr_day % 5 == 0 && !forecastAvailable) { $("#forecastButton").attr("disabled", true); }
   $('#readybutton').attr('disabled', true);
   enableMove = false;
   onModal = false;
+
+  if (curr_day > 0 && stay2Day) { 
+    stay2Day = false; 
+  }
+  else if (curr_day > 0 && stay1Day) { 
+    stay1Day = false; 
+  }
 
   socket.emit('ready', 
     {
@@ -338,13 +345,10 @@ function reallyReady() {
   );
 
   if (curr_space == 4 && !$("#turboRow").attr("hidden") && $('#turbo').text() != "0 Turbo Boost") {
-    customConfirm("Do you wish to activate your Turbos?", function() { 
-      hasTurbos = true; 
-      onModal = false;
-      
-      this.resources["turbo"] -= 1;
-      socket.emit('server send updateResources', {resources: this.resources});
-    });
+    customAlert("Your turbos have been activated!");
+    hasTurbos = true;
+    resources["turbo"] -= 1;
+    socket.emit('server send updateResources', {resources: resources});
   } 
 }
 
@@ -356,14 +360,13 @@ function watchVideo(video) {
     customConfirm("Are you sure you want to stay another day?", function() {
       $("#tortillaflatsButton").attr("disabled", true);
       $("#turboRow").attr("hidden", false);
-      // socket.emit('add turbo');
-      customAlert("You received 3 turbos!");
+      customAlert("Go see the Expedition Leader regarding the video you selected!");
       this.resources["turbo"] += 3;
       socket.emit('server send updateResources', {resources: this.resources});
 
       enableMove = false;
-      stayDay2 = stayDay1;
-      stayDay1 = true;
+      stay2Day = stay1Day;
+      stay1Day = true;
       $("#videoExplaination").text("You can watch the remaining video, but you will have to stay in Apache Junction until day 3.");
       if ($("#goldmineButton").attr("disabled")) {
         $("#videoExplaination").text("You have watched both of the videos already.");
@@ -374,14 +377,13 @@ function watchVideo(video) {
     customConfirm("Are you sure you want to stay another day?", function() {
       $("#goldmineButton").attr("disabled", true);
       $("#caveRow").attr("hidden", false);
-      // socket.emit('add cave');
-      customAlert("You received 12 caves!");
+      customAlert("Go see the Expedition Leader regarding the video you selected!");
       this.resources["caves"] += 12;
       socket.emit('server send updateResources', {resources: this.resources});
 
       enableMove = false;
-      stayDay2 = stayDay1;
-      stayDay1 = true;
+      stay2Day = stay1Day;
+      stay1Day = true;
       $("#videoExplaination").text("You can watch the remaining video, but you will have to stay in Apache Junction until day 3.");
       if ($("#tortillaflatsButton").attr("disabled")) {
         $("#videoExplaination").text("You have watched both of the videos already.");

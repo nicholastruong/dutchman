@@ -102,23 +102,30 @@ function attachClickListener(physics, graphic, index) {
    
    graphic.on('pointerdown', function(pointer) {
       if (!onModal) {
-        if ((curr_day == 1 || curr_day == 2) && stayDay2) {
-          customAlert("You watched both videos so you must stay in Apache Junction until day 3");
+        if (curr_space == index) {
+          customAlert(getColocatedPlayers());
         }
-        else if (curr_day == 1 && stayDay1) {
-          customAlert("You watched one of the videos so you must stay in Apache Junction until day 2");
+        else {
+          if (stay1Day && stay2Day) {
+            customAlert("You watched both videos so you must stay in Apache Junction for another 2 days.");
+          }
+          else if (stay2Day) {
+            customAlert("You watched both videos so you must stay in Apache Junction for another day");
+          }
+          else if (stay1Day) {
+            customAlert("You watched a video so you must stay in Apache Junction for another day");
+          }
         }
 
         if (enableMove) {
           if (flooded && ((curr_space == 21 && index == 22) || (curr_space == 22 && index == 21))) {
             customAlert("You cannot cross the canyon while it is flooded");
           }
-          else if (checkMove(index)) {
+          else if (curr_space != index && checkMove(index)) {
             destx = icon_spot[index][0];
             desty = icon_spot[index][1];
             physics.moveTo(car, destx, desty, 200);
-            $("#videoTurboButton").attr("disabled", (index != 0 || curr_day != 1));
-            $("#provTradeButton").attr("disabled", !(trading_posts.includes(curr_space)));
+            $("#videoTurboButton").attr("disabled", index != 0);
           }
         }
       }
@@ -198,13 +205,6 @@ function checkMove(i) { // checks if space i is a valid move
       if (i != curr_space) {
          customAlert("You have already moved this day");
       }
-      return false;
-   }
-
-   if (i == curr_space) {
-      // customAlert("You can move to a new space");
-      // console.log(colocated_players);
-      customAlert(getColocatedPlayers());
       return false;
    }
 
