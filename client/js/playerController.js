@@ -140,16 +140,21 @@ PlayerController.prototype = {
       console.log(d['tradeResults']);
       if (d['tradeResults']['accepted']){
         customAlert("The trade was accepted!");
+        $('#cancelTradeModal').modal('hide');
         console.log(d['tradeResults']);
         updateResources(d['tradeResults']['resources']);
       } else {
+        console.log("trade cancelled.");
+        $('#cancelTradeModal').modal('hide');
+        bootbox.hideAll();
+        dialog.modal('hide');
         customAlert("The trade was declined.");
       }
     });
 
 
     socket.on('server send giveTradeOffer', function(d){
-      
+      $('#teamTradeModal').modal('hide');
       
       var reqObj = d['requested_resources'];
       var offerObj = d['offered_resources'];
@@ -159,10 +164,12 @@ PlayerController.prototype = {
 
       for (let resource in reqObj) {
         if ( reqObj[resource] > 0){
-          request += String(reqObj[resource]) + " " + String(resource) + ", ";
+          request += "&nbsp&nbsp&nbsp&nbsp" + String(reqObj[resource]) + " " + String(resource) + "\n";
+          //request += String(reqObj[resource]) + " " + String(resource) + ", ";
         }
         if ( offerObj[resource] > 0){
-          offer += String(offerObj[resource]) + " " + String(resource) + ", ";
+          offer += "&nbsp&nbsp&nbsp&nbsp" + String(offerObj[resource]) + " " + String(resource) + "\n";
+          //offer += String(offerObj[resource]) + " " + String(resource) + ", ";
         }
       }
       /*
@@ -174,8 +181,10 @@ PlayerController.prototype = {
       }
 */
 
-      let alertMsg = "Hey " + d['proposerID'] + " wants to trade with you! Do you want to give " +
-      request + "in exchange for " + offer + " ?"
+      let alertMsg = "Team " + d['proposerID'] + " wants to trade with you! Would you like to give:<br>" 
+        + request 
+        + "<br>in exchange for:<br>" 
+        + offer;
       customConfirm(alertMsg, function(r){
         if (checkTrade(reqObj)){
           socket.emit('player send tradeResponse', {accepted: r, trade: d});
