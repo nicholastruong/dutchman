@@ -294,6 +294,7 @@ function initiateTeamTrade(){
 
         $('#teamTradeModal').modal('hide');
         $('#cancelTradeModal').modal('show');
+        $('#cancelTradeButton').attr("disabled", true);
 
         var tableContainerBuy = document.getElementById("requestTable");
         tableContainerBuy.innerHTML= buyTableBuilder(2); 
