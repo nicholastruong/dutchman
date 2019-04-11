@@ -118,6 +118,11 @@ h2 {
 	max-height: 95%;
 }
 
+#teamPickerContainer {
+	min-width: 100%;
+	background-color: #edce70;
+}
+
 .modal-yellow .modal-backdrop {
 	background-color: #edce70;
   }
