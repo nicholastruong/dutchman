@@ -23,7 +23,15 @@
   <script>
     window.onload = function () {
       window.controller = new PlayerController();
+      
     }
+    $(function(){
+      
+      document.getElementById("provTradeButton").onclick = function () { 
+        $("#provisionerModal").load("provTradeModal.html"); 
+        provTradeManager() };
+    });
+
 
   </script>
 
@@ -130,16 +138,9 @@
 
 
         <!--PROVISIONER TRADE MODAL-->
-        <a href="/provTradeModal.html" data-target="#provTradeModal" data-toggle="modal">
-          <button class="btn btn-primary leftColButton" id="provTradeButton" style="">Provisioner Trade</button>
-        </a>
-        <div class="modal modal-yellow" id="provTradeModal" tabindex="-1" role="dialog">
-          <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-              
-            </div>
-          </div>
-        </div>
+        
+          <button class="btn btn-primary leftColButton" onclick="provTradeManager()" id="provTradeButton" style="">Provisioner Trade</button>
+        <div id = "provisionerModal"></div>
 
         <!-- <button class="btn btn-primary leftColButton" id ="videoTurboButton" style="">Watch Video</button> -->
         <a href="/videoModal.html" data-target="#videoModal" data-toggle="modal">
