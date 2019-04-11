@@ -21,7 +21,7 @@ function sellTableBuilder(tableType){
     var buttonClickParam = "";
     if (tableType ==2){
         buttonClickParam = "offerTable"
-    } else { buttonClickParam = "sellTable"}
+    } else { buttonClickParam = "sellTable" }
 
 var table = `<thead>
               <tr>
@@ -266,9 +266,9 @@ function initiateTeamTrade(){
     let id = socket.io.engine.id;
     targetID = $('#teamPickerTitle').find(":selected").val();
     if (this.sellTotal <= 0) {
-        $("#tradeWarning").html("You must offer something!");
+        $("#teamTradeWarning").html("You must offer something!");
     } else if (this.buyTotal <= 0) {
-        $("#tradeWarning").html("You must request something!");
+        $("#teamTradeWarning").html("You must request something!");
     } else {
         let trade = {
             proposerID : id,
