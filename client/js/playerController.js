@@ -102,7 +102,7 @@ PlayerController.prototype = {
         forecastAvailable = false; 
       }
 
-      if (d['resourcesExpended'] != undefined) { 
+      if (d['resourcesExpended'] != undefined && curr_day != 1) { 
         updateAlert(d['weather'], d['resourcesExpended'], curr_day); 
       }
 
