@@ -98,6 +98,7 @@ PlayerController.prototype = {
       if (curr_day == 1) {
         $("#weatherdetails").attr("hidden", false);
         $("#canyonstatus").attr("hidden", false);
+        $("#readybutton").text("Ready for Next Day");
       }
       
       $('#day').text("Day: " + d['day']);
@@ -204,7 +205,29 @@ PlayerController.prototype = {
 
     socket.on('end game', function(d){
       $('#messages').append($('<li>').text("Game has ended!"));
-      //Disable buttons and movement here
+      // disable buttons and movement
+      $("#teamTradeButton").attr('disabled', true);
+      $("#provTradeButton").attr('disabled', true);
+      $("#videoTurboButton").attr('disabled', true);
+      $("#forecastButton").attr('disabled', true);
+      $("#readybutton").attr('disabled', true);
+      enableMove = false;
+
+      //Popup of amount of gold
+      if (curr_space == 0) {
+        if (resources['gold'] > 0) {
+          customAlert("<h2>Congratulations!</h2><br><br>You reached the end of the game and you made it back to Apache Junction " +
+            "and mined <h2>" + resources['gold'] + "</h2> gold!");
+        }
+        else {
+          customAlert("You reached the end of the game and you made it back to Apache Junction! " +
+            "But unfortunately you did not manage to mine any gold...");
+        }
+      }
+      else {
+        customAlert("You reached the end of the game and unfortunately " +
+          "you did not make it back to Apache Junction in time...");
+      }
     });
 
   },
@@ -309,7 +332,7 @@ function updateResourceTrading(add, subtract){
 function reallyReady() {
   if (curr_day == 0) { $("#videoTurboButton").attr("disabled", true); }
   if (curr_day % 5 == 0 && !forecastAvailable) { $("#forecastButton").attr("disabled", true); }
-  $('#readybutton').prop('disabled', true);
+  $('#readybutton').attr('disabled', true);
   enableMove = false;
   onModal = false;
 
@@ -383,12 +406,14 @@ function updateAlert(weatherData, changedResources, day) {
     alert += "Because of the mud on the low country path, you used more resources than normal...<br><br>";
   }
 
-  if (curr_space == 20) {
-    alert += "You got 1 gold resource from the mine!<br><br>And you used the following resources:<br>";
-  }
-  else {
-    alert += "You used the following resources on day " + (day - 1) + ":<br>";
-  }
+  alert += "You got <br><br><h2><b>1 GOLD</b></h2><br> resource from the mine!<br><br>And you used the following resources:<br>";
+
+  // if (curr_space == 20) {
+  //   alert += "You got <br><h2><b>1 GOLD</b></h2><br> resource from the mine!<br><br>And you used the following resources:<br>";
+  // }
+  // else {
+  //   alert += "You used the following resources on day " + (day - 1) + ":<br>";
+  // }
 
   for (resource in changedResources) {
     if (changedResources[resource] < 0) {
