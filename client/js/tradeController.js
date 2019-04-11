@@ -167,7 +167,7 @@ document.getElementById("buyTable").innerHTML += buyTable;
 
 function teamTradeManager(){
 let colocated_players = this.colocated_players;
-let myMap = this.resources;
+let myObj = this.resources;
 let teamHTML = "<select>";
 
 for ( n in colocated_players){
@@ -179,7 +179,7 @@ for ( n in colocated_players){
 }
 teamHTML += "</select>";
 document.getElementById("teamPickerTitle").innerHTML += teamHTML;
-    for ( let r in myMap){
+    for ( let r in myObj){
         amountSell[r] = 0;
         amountBuy[r] =0;
     }
@@ -189,17 +189,17 @@ document.getElementById("teamPickerTitle").innerHTML += teamHTML;
 
 document.getElementById("offerTable").innerHTML += offerTable;
 document.getElementById("requestTable").innerHTML += requestTable
-
+$('#cancelTradeModal').modal('hide');
 }
 
 //FUNCTIONS THAT HANDLE BUTTON LOGIC IN TABLES
 
 function addItemSell(tradeType, resourceName){ //LEFT Table offerTable or sellTable
-    let myMap = this.resources;
+    let myObj = this.resources;
     var type=1;
     if (tradeType=="offerTable"){type=2}
     
-    if (amountSell[resourceName] < myMap[resourceName]){
+    if (amountSell[resourceName] < myObj[resourceName]){
    amountSell[resourceName]++;
    var tableContainer = document.getElementById(tradeType);
     tableContainer.innerHTML= sellTableBuilder(type); 
@@ -251,22 +251,29 @@ function initiateTeamTrade(){
         
     socket.emit('player send tradeOffer', {trade: trade}, function(){
         //REVERT ALL OBJs HOLDING RESOURCE STATUS TO 0
-    let myObj = this.resources;
+    
     Object.keys(amountBuy).forEach(v => myObj[v] = 0);
     Object.keys(amountSell).forEach(v => myObj[v] = 0);
     });
+
+    $('#teamTradeModal').modal('hide');
+    $('#cancelTradeModal').modal('show');
 
     var tableContainerBuy = document.getElementById("requestTable");
     tableContainerBuy.innerHTML= buyTableBuilder(2); 
     var tableContainerSell = document.getElementById("offerTable");
     tableContainerSell.innerHTML= sellTableBuilder(2); 
-    $('#teamTradeModal').modal('hide');
+    
+}
+
+function cancelTrade(){
+    socket.emit('player send cancelTrade', )
 }
 
 function finishProvTrade(){
     let socket = this.socket;
-    let myMap = this.resources;
-    for ( let buy in myMap){
+    let myObj = this.resources;
+    for ( let buy in myObj){
         myObj[buy] -=amountSell[buy];
         myObj[buy] +=amountBuy[buy];
     }
