@@ -21,6 +21,7 @@ weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "a
 
 var weatherForecast;
 var forecastAvailable = false;
+var hasTurbos = false;
 var teamname = "";
 var stayDay1 = false;
 var stayDay2 = false;
