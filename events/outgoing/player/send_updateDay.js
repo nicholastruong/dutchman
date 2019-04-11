@@ -20,7 +20,7 @@ module.exports = function(server, game)
 			var hasEnoughResources = game.updateResources(gameID, playerUserID, currentGame['day']); //0 is gameID
 			var newResources = players[playerUserID]['resources'];
 
-			var resourcesExpended = calculateExpendedResources();
+			var resourcesExpended = calculateExpendedResources(oldResources, newResources);
 			var weather = '';
 			if (currentGame['day'] <= 20) {
 				weather = game.getWeather(currentLocation, currentGame['day']);
