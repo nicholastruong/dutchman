@@ -434,6 +434,17 @@
  				}
  			}
 
+ 		},
+
+ 		clearTrades: function(gameID) {
+ 			let scope = this;
+ 			let game = scope.games[gameID];
+ 			var trades = game['trades'];
+
+ 			for (t in trades) {
+ 				delete game['trades'][t];
+ 			}
+
  		}
 
  	};

@@ -12,6 +12,8 @@ module.exports = function(socket, server, game, config){
 
 		var playersOutOfResources = [];
 
+		game.clearTrades(gameID);
+
 		for (playerUserID in players) {
 	
 			var hasEnoughResources = server.trigger['server send updateDay'](gameID, playerUserID);
