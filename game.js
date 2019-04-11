@@ -265,7 +265,8 @@
 
  		commitTrade: function (gameID, trade) {
  			let scope = this;
- 			let game = scope.games[gameID];
+			 let game = scope.games[gameID];
+			 console.log(game.players[trade.proposerID]);
  			let proposer = game.players[trade.proposerID]['resources'];
  			let target = game.players[trade.targetID]['resources'];
 			
