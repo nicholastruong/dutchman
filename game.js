@@ -372,8 +372,11 @@
 
 			for (var key in game.players) {
 				if (key == playerID) continue;
+				let otherLocation = game.players[key]['currentLocation'];
 
-				if (game.players[key]['currentLocation'] == currentLocation) {
+				if (otherLocation == currentLocation
+					|| (currentLocation == 12 && [21, 22].includes(otherLocation))
+						|| ([21, 22].includes(currentLocation) && otherLocation == 12)) {
 					colocatedPlayers.push({
 						playerName: game.players[key]['username']
 					});
