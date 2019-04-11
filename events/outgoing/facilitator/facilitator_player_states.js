@@ -8,17 +8,19 @@ module.exports = function(server, game) {
 			//array of players in the game
 			let currentGame = game['games'][gameID];
 			let players = currentGame['players'];
-
+			
 			var updatedResources = {};
 
 			for (p in players) {
-				if (p !== facilitatorID){
-					updatedResources[p] = {
-						location : players[p]['currentLocation'],
-						coords : players[p]['currentCoords'],
-						resources : players[p]['resources']
-					}
+
+				let name = server.openSockets[p].user.username;
+				
+				updatedResources[name] = {
+					location : players[p]['currentLocation'],
+					coords : players[p]['currentCoords'],
+					resources : players[p]['resources']
 				}
+				
 			}
 
 			server.emit(facilitatorID, "updated player status", updatedResources, null);

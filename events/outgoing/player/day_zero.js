@@ -7,7 +7,7 @@ module.exports = function(server, game)
 		id: eventID,
 		func: function(gameID, userID) {
 
-			var colocatedPlayers = game.getColocatedPlayers(gameID, userID)
+			var colocatedPlayers = game.getColocatedPlayers(gameID, userID);
 			let socket = server.openSockets[userID];
 
 			server.emit(userID, eventID, 

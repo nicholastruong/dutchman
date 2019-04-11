@@ -149,6 +149,7 @@
  			//this is hardcoded
  			game.id = 0;
  			game.day = 0;
+ 			game.trades = {};
 
  			//map of players (socket IDs) to player state
  			game.players = {};
@@ -263,6 +264,36 @@
  			return true;
  		},
 
+ 		// When a user requests a trade, create an entry in the game object
+ 		createTradeRequest: function(gameID, trade) {
+ 			let scope = this;
+ 			let game = scope.games[gameID];
+
+ 			let proposer = trade.proposerID;
+ 			let target = trade.targetID;
+
+ 			game.trades[proposer] = target;
+ 		},
+
+ 		cancelTrade: function(gameID, proposerID) {
+ 			let scope = this;
+ 			let game = scope.games[gameID];
+
+ 			if (game['trades'].hasOwnProperty(proposerID)) {
+				delete game['trades'][proposerID];
+			}
+ 		},
+
+ 		checkTradeExists: function(gameID, proposerID) {
+ 			let scope = this;
+ 			let game = scope.games[gameID];
+
+ 			if (game['trades'].hasOwnProperty(proposerID)) {
+ 				return true;
+ 			}
+ 			else return false;
+ 		},
+
  		commitTrade: function (gameID, trade) {
  			let scope = this;
 			let game = scope.games[gameID];
@@ -279,7 +310,8 @@
  				proposer[resource] += trade.requested_resources[resource];
  				target[resource] -= trade.requested_resources[resource];
  			}
- 			//TODO: is it moddifying?
+
+ 			delete game['trades'][trade.proposerID];
  		},
 
  		// Will set up initial resources for a new connecting player
@@ -339,10 +371,12 @@
 
 				if (game.players[key]['currentLocation'] == currentLocation) {
 					colocatedPlayers.push({
-						playerID: key
+						playerName: game.players[key]['username']
 					});
 				}
 			} 
+			console.log('playerssss');
+			console.log(colocatedPlayers);
 			return colocatedPlayers;	
  		},
 
