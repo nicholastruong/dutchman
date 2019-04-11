@@ -39,7 +39,7 @@ var table = `<thead>
 sellTotal = 0;
 var myObj = this.resources;
 for ( let r in myObj){
-    if ( r =="turbo"){
+    if ( r =="turbo" || r == "caves"){ // no trading caves and turbos for now
     } else{
     table+= `
             <tr>
@@ -109,7 +109,7 @@ function buyTableBuilder(tableType){
             `
             
     for (let r in constMapOfValues){
-        if ( r =="turbo"){
+        if ( r =="turbo" || r == "caves"){ // hiding caves and turbos for now
         } else{
                 table += `<tr>
                 <th scope="row">
