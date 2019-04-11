@@ -24,6 +24,8 @@
     window.onload = function () {
       window.controller = new PlayerController();
       $("#provisionerModal").load("provTradeModal.html"); 
+      $("#teamTradingModal").load("teamTradeModal.html");
+      $("#teamTradeModal").modal('hide');
       $("#provTradeModal").modal('hide');
     }
     $(function(){
@@ -31,6 +33,10 @@
       document.getElementById("provTradeButton").onclick = function () { 
         provClicked = true;
         provTradeManager() };
+        document.getElementById("teamTradeButton").onclick = function () { 
+        teamClicked = true;
+        teamTradeManager() };
+
     });
 
 
@@ -108,16 +114,9 @@
         </div>
 
         <!--TEAM TRADE MODAL-->
-        <a href="/teamTradeModal.html" data-target="#teamTradeModal" data-toggle="modal">
-          <button class="btn btn-primary leftColButton" id="teamTradeButton" style="">Team Trade</button>
-        </a>
-        <div class="modal modal-yellow" id="teamTradeModal" tabindex="-1" role="dialog">
-          <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-              </div>
-            </div>
-          </div>
-        </br>
+        
+          <button class="btn btn-primary leftColButton" id="teamTradeButton" onclick = "teamTradeManager()" style="">Team Trade</button>
+        <div id = "teamTradingModal"></div>
 
         <div class="modal" id="cancelTradeModal" tabindex="-1" role="dialog">
           <div class="modal-dialog" role="document">
