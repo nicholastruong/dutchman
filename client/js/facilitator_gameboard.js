@@ -102,7 +102,7 @@ function create() {
 
 
 function attachClickListener(physics, graphic, index, locations) {
-   graphic.on('pointerdown', function(pointer) {
+   graphic.on('pointerdown', function(pointer) { // details all of the players in the selected space
       if (!onModal) {
          var players = "The following players are in this space:<br><br>";
          var empty = true;
