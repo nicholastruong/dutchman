@@ -12,6 +12,9 @@ var constMapOfValues = {
     "caves": 0,
     "turbo": 0,
     "gold": 0};
+var buyTotal = 0;
+var sellTotal=0;
+var showCave = false;
 
 function sellTableBuilder(tableType){
     var buttonClickParam = "";
@@ -32,9 +35,11 @@ var table = `<thead>
             </thead>
             <tbody>`
 
-var total = 0;
+sellTotal = 0;
 var myObj = this.resources;
 for ( let r in myObj){
+    if ( r =="turbo"){
+    } else{
     table+= `
             <tr>
                 <th scope="row">
@@ -63,7 +68,8 @@ for ( let r in myObj){
     var itemTot = amountSell[r] * constMapOfValues[r];
     table += String(itemTot);
     table += `</td></tr>`;
-    total += itemTot;
+    sellTotal += itemTot;
+    }
 }
 
 table += `<tr>
@@ -72,10 +78,10 @@ table += `<tr>
             <td></td>
             <td></td>
             <td></td>
-            <td>Total $ Trading</td>
-            <td>$`
+            <td id = colorCol>Total $ Trading</td>
+            <td id = colorCol>$`
 
-table += total;
+table += sellTotal;
 table += `</td>
             </tr>
             </tbody>`
@@ -87,7 +93,7 @@ function buyTableBuilder(tableType){
     if (tableType ==2){
         buttonClickParam = "requestTable"
     } else { buttonClickParam = "buyTable"}
-    var total =0;
+    buyTotal =0;
     var table = `<thead>
               <tr>
                 <th scope="col">Resource</th>
@@ -102,6 +108,8 @@ function buyTableBuilder(tableType){
             `
             
     for (let r in constMapOfValues){
+        if ( r =="turbo"){
+        } else{
                 table += `<tr>
                 <th scope="row">
                 `
@@ -129,8 +137,8 @@ function buyTableBuilder(tableType){
                 `
                 var itemTot = amountBuy[r] * constMapOfValues[r];
                 table += String(itemTot); //tOtal Value
-                total += itemTot;
-            
+                buyTotal += itemTot;
+        }
     }
 
     table += `<tr>
@@ -138,10 +146,10 @@ function buyTableBuilder(tableType){
             <td></td>
             <td></td>
             <td></td>
-            <td>Total $ Buying</td>
-            <td>$`
+            <td id = colorCol>Total $ Buying</td>
+            <td id = colorCol>$`
 
-    table += total;
+    table += buyTotal;
 
 table += `</td>
             </tr>
@@ -161,8 +169,17 @@ for ( let r in myObj){
 sellTable = sellTableBuilder(1);
 buyTable = buyTableBuilder(1);
 
-document.getElementById("sellTable").innerHTML += sellTable;
-document.getElementById("buyTable").innerHTML += buyTable;
+if ( document.getElementById("sellTable") != null){
+    document.getElementById("sellTable").innerHTML = sellTable;
+}
+if ( document.getElementById("buyTable") != null){
+    document.getElementById("buyTable").innerHTML = buyTable;
+}
+
+document.getElementById("buyTable").innerHTML = buyTable;
+
+$('#provTradeModal').modal('show');
+
 }
 
 function teamTradeManager(){
@@ -274,12 +291,12 @@ function cancelTrade(){
 function finishProvTrade(){
     let socket = this.socket;
     let myObj = this.resources;
+    if (this.buyTotal <= this.sellTotal && (sellTotal> 0) && (buyTotal>0)){
     for ( let buy in myObj){
         myObj[buy] -=amountSell[buy];
         myObj[buy] +=amountBuy[buy];
     }
    
-
     socket.emit('server send updateResources', {resources: myObj});
     
     socket.on('connect', function(){
@@ -295,7 +312,14 @@ function finishProvTrade(){
     tableContainerBuy.innerHTML= buyTableBuilder(1); 
     var tableContainerSell = document.getElementById("sellTable");
     tableContainerSell.innerHTML= sellTableBuilder(1); 
-    $('#provTradeModal').modal('hide');
+    $('#provTradeModal').modal('hide');}
+    else if (sellTotal == 0){
+        $("#tradeWarning").html("You must trade something!");
+    }
+    else{
+        $("#tradeWarning").html("Amount selling must be equal or greater than amount buying.");
+    }
 }
+
 
 
