@@ -7,7 +7,7 @@ module.exports = function(server, game)
 {
 	return {
 		id: eventID,
-		func: function(userID, tradeResults) {
+		func: function(gameID, userID, tradeResults) {
 			console.log("server send giveTradeResults");
 			server.emit(userID, eventID,
 				{
@@ -15,6 +15,7 @@ module.exports = function(server, game)
 				},
 				null
 			);
+			server.trigger['update resources'](gameID, userID);
 		}
 	};
 }

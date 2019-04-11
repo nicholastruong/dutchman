@@ -26,7 +26,7 @@ module.exports = function(socket, server, game, config){
 				console.log(playerUserID +  ' out of resources');
 
 				var beaconResources = calculateNewResources(players[playerUserID]['resources']);
-				console.log(beaconResources);
+				
 				game.setResources(gameID, playerUserID, beaconResources);
 				server.trigger['update resources'](gameID, playerUserID);
 				

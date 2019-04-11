@@ -135,6 +135,10 @@ FacilitatorController.prototype = {
       }
     });
 
+    socket.on('update player resource', function(d) {
+      updateResources(playerNames[d['userID']], d['resources']);
+    });
+
   },
 
   _RegisterOutgoing: function() 

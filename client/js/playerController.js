@@ -146,7 +146,6 @@ PlayerController.prototype = {
         customAlert("The trade was accepted!");
         $('#cancelTradeModal').modal('hide');
         console.log(d['tradeResults']);
-        updateResources(d['tradeResults']['resources']);
       } else {
         console.log("trade cancelled.");
         $('#cancelTradeModal').modal('hide');
