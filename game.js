@@ -129,7 +129,12 @@
 		 			'low' : 'sunny',
 		 			'high' : 'sunny',
 		 			'canyon' : 'normal'
-		 	   }
+		 	   },
+		 	21: {
+		 			'low' : 'sunny',
+		 			'high' : 'sunny',
+		 			'canyon' : 'normal'
+		 		}
 		},
 
  		test: function(){

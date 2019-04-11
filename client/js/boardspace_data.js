@@ -93,6 +93,8 @@ var lowCountry_path = [11, 12, 13, 14, 21, 22];
 
 var trading_posts = [0, 5, 10, 13];
 
+var hasNormalized = false;
+
 // [588, 690], [722, 572]
 
 // [540, 566,  542, 768,  673, 766,  661, 753,  660, 749,  652, 737,  647, 720,  647, 703,  652, 687,  640, 665,  628, 648,  604, 616,  577, 590,  540, 566],
@@ -101,19 +103,23 @@ var trading_posts = [0, 5, 10, 13];
 
 
 function normalize(boardwidth, boardheight) {
-    for (i = 0; i < spaces.length; i++) {
-      for (j = 0; j < spaces[i].length; j++) {
-         if (j % 2 == 0) {
-            spaces[i][j] = spaces[i][j] * boardwidth / 800;
-         }
-         else {
-            spaces[i][j] = spaces[i][j] * boardheight / 795;
+   if (!hasNormalized) {
+      for (i = 0; i < spaces.length; i++) {
+         for (j = 0; j < spaces[i].length; j++) {
+            if (j % 2 == 0) {
+               spaces[i][j] = spaces[i][j] * boardwidth / 800;
+            }
+            else {
+               spaces[i][j] = spaces[i][j] * boardheight / 795;
+            }
          }
       }
-   }
-   for (i = 0; i < icon_spot.length; i++) {
-      icon_spot[i][0] = icon_spot[i][0] * boardwidth / 800;
-      icon_spot[i][1] = icon_spot[i][1] * boardheight / 795;
+      for (i = 0; i < icon_spot.length; i++) {
+         icon_spot[i][0] = icon_spot[i][0] * boardwidth / 800;
+         icon_spot[i][1] = icon_spot[i][1] * boardheight / 795;
+      }
+
+      hasNormalized = true;
    }
 }
 

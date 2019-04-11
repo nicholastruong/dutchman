@@ -19,6 +19,7 @@ var FacilitatorController = function()
 weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]}
 
 var playerNames = {};
+var endGameAlert;
 
 $(document).ready(function(){
    console.log("documentReady called");
@@ -77,18 +78,8 @@ FacilitatorController.prototype = {
          $("#readybutton").text("Start Next Day");
        }
 
-       $('#lowweathertext').text(d['weather']['low']); 
-       $('#lowweatherimg').attr("src", "assets/weather/" + weather[d['weather']['low']][1] + ".png");
-       
-       $('#highweathertext').text(d['weather']['high']);
-       $('#highweatherimg').attr("src", "assets/weather/" + weather[d['weather']['high']][1] + ".png");
-
-       $('#canyonstatus').text("Canyon is " + d['weather']['canyon']);
-       if (d['weather']['canyon'] == "flooded") {
-         makeMuddy(true);
-       }
-       else {
-         makeMuddy(false);
+       if (d['weather'] != undefined) {
+         updateWeather(d['weather']);
        }
     }); 
 
@@ -150,12 +141,29 @@ FacilitatorController.prototype = {
     instructionButton.addEventListener('click', function(){
       // alert("Instructions for facilitator");
 
-      socket.emit('reset game');
-
       customAlert("Instructions for Facilitator</p> - Click any game space to find out which teams" + 
         " are currently located there.</p> - Send messages to all the teams by using the dialog in" + 
         " the bottom right.</p> - View the resources of all the teams in the window on the left.</p>" +
         " - Press the 'Start Next Day' to advance the game for all the teams when they are ready.");
+    });
+
+    endGameAlert = bootbox.dialog({
+      message: "You have reached the end of the game!",
+      title: '',
+      backdrop: true,
+      onEscape: true,
+      buttons: {
+         ok: {
+            label: "Okay",
+            className: 'alertButton',
+            callback: function(){
+               endGameAlert.modal("hide");
+               socket.emit('reset game'); // called on endgame
+               resetGame();
+            }
+         },
+      },
+      show: false
     });
   }
   
@@ -265,6 +273,22 @@ function customAlert(message) {
    alertBox.modal('show');
 };
 
+function updateWeather(weatherData) {
+  $('#lowweathertext').text(weatherData['low']); 
+  $('#lowweatherimg').attr("src", "assets/weather/" + weather[weatherData['low']][1] + ".png");
+
+  $('#highweathertext').text(weatherData['high']);
+  $('#highweatherimg').attr("src", "assets/weather/" + weather[weatherData['high']][1] + ".png");
+
+  $('#canyonstatus').text("Canyon is " + weatherData['canyon']);
+  if (weatherData['canyon'] == "flooded") {
+   makeMuddy(true);
+  }
+  else {
+   makeMuddy(false);
+  }
+}
+
 function updateResources(teamname, resources) {
     //console.log("update " + teamname + " resources " + resources['supplies'] + resources['fuel']);
     var supplies = document.getElementById('supplies' + teamname);
@@ -290,8 +314,24 @@ function updateResources(teamname, resources) {
 
 function endGame() {
   $('#messages').append($('<li>').text("Game has ended"));
-  $("#readybutton").attr('disabled', true);
-  customAlert("Game is over!");
+  // $("#readybutton").attr('disabled', true);
   // endgame popup/modal
+
+  // show endGameAlert
+  onModal = true;
+  endGameAlert.modal('show');
+}
+
+function resetGame() {
+  onModal = false;
+  $("#messages").empty();
+  $(".weather").attr("hidden", true);
+  $("#canyonstatus").attr("hidden", true);
+  $("#readybutton").text("Start Game");
+  $("#day").text("Planning Period");
+  $("#resourceblock").empty();
+  $("#board").empty();
+
+  resetGameBoard();
 }
 

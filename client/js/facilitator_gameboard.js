@@ -2,31 +2,33 @@ $(document).ready(function(){
    boardWidth = (950 / 1680 * window.innerWidth);
    boardHeight = (941 / 1680 * window.innerWidth);
 
-   console.log(window.innerWidth);
-
-   var config = {
-      type: Phaser.AUTO,
-      width: boardWidth,
-      height: boardHeight - 1,
-      parent: 'board',
-      backgroundColor: 0xedce70,
-      scale: {
-         mode: Phaser.Scale.FIT,
-         autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
-      },
-      physics: {
-         default: 'arcade',
-         arcade: { debug: false }
-      },
-      scene: {
-         preload: preload,
-         create: create,
-         update: update
-      },
-   };
-
-    game = new Phaser.Game(config);
+   configAndStart();
 });
+
+function configAndStart() {
+  var config = {
+    type: Phaser.AUTO,
+    width: boardWidth,
+    height: boardHeight - 1,
+    parent: 'board',
+    backgroundColor: 0xedce70,
+    scale: {
+       mode: Phaser.Scale.FIT,
+       autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
+    },
+    physics: {
+       default: 'arcade',
+       arcade: { debug: false }
+    },
+    scene: {
+       preload: preload,
+       create: create,
+       update: update
+    },
+  };
+
+  game = new Phaser.Game(config);
+}
 
 
 // list of global variables
@@ -104,6 +106,7 @@ function create() {
 function attachClickListener(physics, graphic, index, locations) {
    graphic.on('pointerdown', function(pointer) { // details all of the players in the selected space
       if (!onModal) {
+         console.log(locations);
          var players = "The following players are in this space:<br><br>";
          var empty = true;
          for (id in locations) {
@@ -131,8 +134,6 @@ function attachClickListener(physics, graphic, index, locations) {
 function attachPolygonListeners(scene, graphic, polygon, index) {
    graphic.on('pointerover', function () {
       if (!onModal) {
-         // console.log("pointerover on index " + index);
-
          graphic.fillStyle(0xffffff, 0.5);
          graphic.fillPoints(polygon.points, true);
       }
@@ -206,9 +207,7 @@ function addNewBoardIcon(userID) {
 }
 
 function updateDestinations(userID, location) {
-  console.log(locations[userID] + " " + dests[userID]);
   if (location != undefined && locations[userID] != undefined) {
-    console.log("updating " + userID + " to location " + location);
     locations[userID] = location;
     dests[userID] = icon_spot[location];
     global_physics.moveTo(cars[userID], dests[userID][0], dests[userID][1], 200);
@@ -227,4 +226,18 @@ function makeMuddy(isMuddy) {
       shape_graphics[21].visible = false;
       shape_graphics[22].visible = false;
    }
+}
+
+
+function resetGameBoard() {
+  for (var id in cars) {
+    cars[id].destroy();
+  }
+  cars = {};
+  dests = {};
+  locations = {};
+
+  var shape_graphics = [];
+
+  configAndStart();
 }

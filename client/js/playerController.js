@@ -534,12 +534,12 @@ function endGame() {
         "and mined <h2>" + resources['gold'] + "</h2> gold!");
     }
     else {
-      customAlert("You reached the end of the game and you made it back to Apache Junction! " +
+      customAlert("You reached the end of the game and you made it back to Apache Junction! <br><br>" +
         "But unfortunately you did not manage to mine any gold...");
     }
   }
   else {
-    customAlert("You reached the end of the game and unfortunately " +
+    customAlert("You reached the end of the game but unfortunately " +
       "you did not make it back to Apache Junction in time...");
   }
 }
