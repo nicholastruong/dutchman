@@ -7,7 +7,10 @@ module.exports = function(server, game) {
 		func: function(gameID, facilitatorID) {
 			//array of players in the game
 			let currentGame = game['games'][gameID];
-			var weatherReport = game.weather[currentGame['day']];
+			var weatherReport = '';
+			if (currentGame['day'] <= 20){
+				weatherReport = game.weather[currentGame['day']];
+			}		
 
 			var report = {
 				day: currentGame['day'],
