@@ -100,7 +100,7 @@
 
         <!--TEAM TRADE MODAL-->
         <a href="/teamTradeModal.html" data-target="#teamTradeModal" data-toggle="modal">
-          <button class="btn btn-primary leftColButton" style="">Team Trade</button>
+          <button class="btn btn-primary leftColButton" id="teamTradeButton" style="">Team Trade</button>
         </a>
       
         <div class="modal modal-yellow" id="teamTradeModal" tabindex="-1" role="dialog">
@@ -113,7 +113,7 @@
 
         <!--PROVISIONER TRADE MODAL-->
         <a href="/provTradeModal.html" data-target="#provTradeModal" data-toggle="modal">
-          <button class="btn btn-primary leftColButton" style="">Provisioner Trade</button>
+          <button class="btn btn-primary leftColButton" id="provTradeButton" style="">Provisioner Trade</button>
         </a>
         <div class="modal modal-yellow" id="provTradeModal" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-lg" role="document">
@@ -135,12 +135,12 @@
           </div>
         </div>
         
-        <a data-target="#forecastModal" data-toggle="modal" id="forecastButton">
-          <button class="btn btn-primary leftColButton" id="forecastButton">Weather Forecast</button>
-          <span class="resourcetext" style="margin-left:80px; margin-top: 10px; padding-left: 5px; background-color: rgba(155, 97, 43, 1);">
-            Use batteries to see the weather forecast for the next five days.
-          </span>
-        </a>
+        <!-- <a data-target="#forecastModal" data-toggle="modal" id="forecastButton"> -->
+        <button class="btn btn-primary leftColButton" id="forecastButton" disabled="true">Weather Forecast</button>
+        <span class="resourcetext" style="margin-left:80px; margin-top: 10px; padding-left: 5px; background-color: rgba(155, 97, 43, 1);">
+          Use batteries to see the weather forecast for the next five days.
+        </span>
+        <!-- </a> -->
 
       </div>
 
@@ -152,14 +152,14 @@
       </div>
       <div class="col-sm-3" id="right">
         <div id="weatherblock" class="rightcol">
-          <h2 id="day" style="font-size:2.5vw; font-family:EdmundsFont; color: white">Day 1</h2>
+          <h2 id="day" style="font-size:2.5vw; font-family:EdmundsFont; color: white">Planning Period</h2>
 
-          <div class="weather">
+          <div class="weather" id="weatherdetails" hidden="true">
             <img id="weatherimg" class="weatherimg" src="assets/weather/sunny.png" height="20%" width="20%">
             <p id="weathertext" class="weathertext">sunny and cool</p>
           </div>
 
-          <h2 id="canyonstatus" class="weatherlabel" style="margin-top: 10px;">
+          <h2 id="canyonstatus" class="weatherlabel" style="margin-top: 10px;" hidden="true">
             Canyon is Normal
           </h2>
         </div>
@@ -177,8 +177,6 @@
     </div>
   </div>
 </body>
-
-
 
 
 

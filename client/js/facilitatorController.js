@@ -115,14 +115,16 @@ FacilitatorController.prototype = {
       $('#messages').append($('<li>').text("Player is ready for the next day"));
       console.log("player is ready");
 
-
-
     });
 
 
     socket.on('facilitator weather report', function(d) {
        console.log(d);
        $('#day').text("Day: " + d['day']);
+       if (d['day'] == 1) {
+         $(".weather").attr("hidden", false);
+         $("#canyonstatus").attr("hidden", false);
+       }
 
        $('#lowweathertext').text(d['weather']['low']); 
        $('#lowweatherimg').attr("src", "assets/weather/" + weather[d['weather']['low']][1] + ".png");
