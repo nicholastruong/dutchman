@@ -38,7 +38,7 @@
 						<div class="input-group-prepend">
 							<span class="input-group-text"><i class="fas fa-key"></i></span>
 						</div>
-						<input type="password" class="form-control" id="password" placeholder="Password" required>
+						<input type="password" class="form-control" onkeypress="if (event.keyCode == 13){submitLogin();}" id="password" placeholder="Password" required>
 					</div>
 					<div class="row align-items-center remember">
 						<span id="errormsg"></span>

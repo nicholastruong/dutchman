@@ -195,6 +195,13 @@ html {
 	margin-bottom: 20px;
 }
 
+.beaconImage {
+	height: 30%;
+	width: 45%;
+	margin-bottom:10px;
+	margin-top: 10px;
+}
+
 
 #right {
 	/*height: 100%;*/
