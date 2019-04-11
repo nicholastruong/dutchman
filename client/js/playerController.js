@@ -76,9 +76,6 @@ $(document).ready(function(){
        onModal = false;
     });
 
-  teamname = "Team 1";
-  $('#team_name').text(teamname);
-
 });
 
 
@@ -97,6 +94,10 @@ PlayerController.prototype = {
 
     socket.on('day zero', function(d) {
       $('#day').text("Day: " + '0');
+        
+      teamname = d['username'];
+      $('#team_name').text("Team " + teamname);
+
       enableMove = false;
       colocated_players = d['colocated_players'];
       updateWeather(['no weather']);
