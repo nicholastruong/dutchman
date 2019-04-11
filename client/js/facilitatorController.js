@@ -35,6 +35,12 @@ FacilitatorController.prototype = {
     let socket = this.socket;
     var teamcount = 1;
 
+    socket.on('disconnect', function() {
+      console.log("i have disconnected");
+      window.location.href = '/';
+    });
+
+
     socket.on('new player connection', function(d){
       console.log('New player connected');
       name = "Team " + d['username'];

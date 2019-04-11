@@ -7,9 +7,6 @@ var PlayerController = function()
   //open socket
   let socket = scope.socket = io(document.location.hostname + ":3000?token=" + token);
   console.log(socket);
-  if (socket['connected'] == false) {
-    //window.location.href = '/';
-  }
 
   scope._RegisterSocketHandlers();
   scope._RegisterOutgoing();
@@ -79,8 +76,8 @@ PlayerController.prototype = {
     let scope = this;
     let socket = this.socket;
 
-    socket.on('redirect', function() {
-      console.log("hey im redirecting");
+    socket.on('disconnect', function() {
+      console.log("i have disconnected");
       window.location.href = '/';
     });
 

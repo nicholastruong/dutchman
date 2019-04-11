@@ -104,7 +104,7 @@ io.use(function(socket, next)
 		socket.user = authenticatedUsers[token];
 		if (socket.user == undefined) { //TODO
 			console.log("i'm not authenticated");
-			socket.emit('redirect');
+			socket.disconnect(true);
 			return next(new Error("authenticationFailure"));
 		}
 		else {
