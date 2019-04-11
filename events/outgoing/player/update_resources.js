@@ -7,9 +7,18 @@ module.exports = function(server, game)
 		id: eventID,
 		func: function(gameID, userID) {
 			let currentGame = game['games'][gameID];
-			let resources = currentGame['players'][userID]['resources'];
-
+			let players = currentGame['players'];
+			let resources =  players[userID]['resources'];
+			//update the player
 			server.emit(userID, eventID, resources, null);
+
+			var playerResource = {
+				userID : userID,
+				resources : resources
+			}
+
+			//update the facilitator
+			server.emit(currentGame.facilitatorID, "update player resource", playerResource, null);
 		}
 	};
 }

@@ -83,7 +83,9 @@ PlayerController.prototype = {
     });
 
     socket.on('facilitator broadcast', function(msg) {
-      $('#messages').append($('<li>').text(msg));
+      var d = new Date();
+      var time = d.getHours() + ":" + d.getMinutes() + " ";
+      $('#messages').append($('<li>').text(time + msg));
       scrollToBottom();
     });
 
@@ -144,7 +146,6 @@ PlayerController.prototype = {
         customAlert("The trade was accepted!");
         $('#cancelTradeModal').modal('hide');
         console.log(d['tradeResults']);
-        updateResources(d['tradeResults']['resources']);
       } else {
         console.log("trade cancelled.");
         $('#cancelTradeModal').modal('hide');
