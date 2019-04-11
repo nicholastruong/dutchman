@@ -13,6 +13,13 @@ module.exports = function(server, game)
 			let currentLocation = players[userID]['currentLocation'];
 			var colocatedPlayers = game.getColocatedPlayers(gameID, userID);
 
+			//deep copy of old resources
+			var oldResources = JSON.parse(JSON.stringify(players[playerUserID]['resources']));
+			
+			//updates resources, and notifies if doesn't have enough resources
+			var hasEnoughResources = game.updateResources(gameID, playerUserID, currentGame['day']); //0 is gameID
+			var newResources = players[playerUserID]['resources'];
+
 			var resourcesExpended = calculateExpendedResources();
 			var weather = '';
 			if (currentGame['day'] <= 20) {
@@ -29,14 +36,10 @@ module.exports = function(server, game)
   				null
   			);
 
+  			return hasEnoughResources;
 
-  			function calculateExpendedResources() {
-  				//deep copy of old resources
-				var oldResources = JSON.parse(JSON.stringify(players[playerUserID]['resources']));
-				
-				//updates resources, and notifies if doesn't have enough resources
-				var hasEnoughResources = game.updateResources(gameID, playerUserID, currentGame['day']); //0 is gameID
-				var newResources = players[playerUserID]['resources'];
+
+  			function calculateExpendedResources(oldResources, newResources) {
 
 				var resourcesExpended = {};
 				for (r in newResources) {

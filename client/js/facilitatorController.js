@@ -129,6 +129,8 @@ FacilitatorController.prototype = {
       var time = date.getHours() + ":" + date.getMinutes() + " : ";
       for (player in d){
         $('#messages').append($('<li>').text(time + player + " is out of resources"));
+        $('#messages').append($('<li>').text("Adding more resources to " + player + "'s inventory"));
+
         scrollToBottom();
       }
     });
@@ -343,7 +345,7 @@ function updateResources(teamname, resources) {
 
 function endGame() {
   var date = new Date();
-  var time = d.getHours() + ":" + d.getMinutes() + " : ";
+  var time = date.getHours() + ":" + date.getMinutes() + " : ";
   $('#messages').append($('<li>').text(time + "Game has ended"));
   scrollToBottom();
   // $("#readybutton").attr('disabled', true);

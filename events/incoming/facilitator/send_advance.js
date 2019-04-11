@@ -14,19 +14,26 @@ module.exports = function(socket, server, game, config){
 
 		for (playerUserID in players) {
 	
-			server.trigger['server send updateDay'](gameID, playerUserID);
+			var hasEnoughResources = server.trigger['server send updateDay'](gameID, playerUserID);
 			server.trigger['update resources'](gameID, playerUserID);
 
 			if (true) { // currentGame['day'] == 5 || currentGame['day'] == 10 || currentGame['day'] == 15) { // sends weather info everday for debugging
 				server.trigger['server send forecast'](gameID, playerUserID);
 			}
-			/*
+			
 			//notifies player and facilitator that they are out of resources
 			if(!hasEnoughResources) {
+				console.log(playerUserID +  ' out of resources');
+
+				var beaconResources = calculateNewResources(players[playerUserID]['resources']);
+				console.log(beaconResources);
+				game.setResources(gameID, playerUserID, beaconResources);
+				server.trigger['update resources'](gameID, playerUserID);
+				
 				server.trigger['out of resources'](playerUserID);
 				playersOutOfResources.push(playerUserID);
 			}
-			*/
+			
 		}
 		server.trigger['update server player out of resources'](gameID, playersOutOfResources);
 
@@ -35,6 +42,13 @@ module.exports = function(socket, server, game, config){
 		server.trigger['update server weather'](gameID, currentGame['facilitatorID']);
 		if(currentGame['day'] === 21) {
 			server.trigger['end game'](gameID);
+		}
+
+		function calculateNewResources(oldResources) {
+			for (r in oldResources) {
+				oldResources[r] += 5;
+ 			}
+ 			return oldResources;
 		}
 		
 		
