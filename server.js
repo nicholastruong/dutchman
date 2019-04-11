@@ -135,15 +135,14 @@ io.on("connection", function(socket) {
 			let currentGame = game['games'][gameID];
 
 			//TODO: implement better facilitator front end
-			trigger['new player connection'](currentGame, userID); 
+			trigger['new player connection'](gameID, userID); 
 			trigger['update resources'](gameID, userID);
 
 			// When a new player connects, update everyone else's co-location
 			if (currentGame.day === 0) {
 				let players = currentGame['players'];
-				for (p in players) { 
-					// "p" corresponds to user.id of player
-					trigger['day zero'](p, game.getColocatedPlayers(gameID, p));
+				for (userID in players) { 
+					trigger['day zero'](gameID, userID);
 				}
 			}
 		}
@@ -160,15 +159,15 @@ game.loadAll(function() {
 
 
 // Export an event emitting infrastructure
-module.exports.emit = function(socketID, eventID, data, callback, isBroadcast)
+module.exports.emit = function(userID, eventID, data, callback)
 {
-	console.log(socketID);
-	if (socketID){
-		let socket = openSockets[socketID];
+	console.log(userID);
+	if (userID){
+		let socket = openSockets[userID];
 		socket.emit(eventID, data, callback);
 	}
 	
-	//temporary broadcast if to no one
+	//temporary broadcast if to no user specified
 	else {
 		io.emit(eventID, data);
 	}

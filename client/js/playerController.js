@@ -76,9 +76,6 @@ $(document).ready(function(){
        onModal = false;
     });
 
-  teamname = "Team 1";
-  $('#team_name').text(teamname);
-
 });
 
 
@@ -91,32 +88,16 @@ PlayerController.prototype = {
     let scope = this;
     let socket = this.socket;
 
-    /*
-    // INFO: THIS IS TEMP CODE for testing trading backend (melanie)
-    socket.on('connect', function(){
-      var id = socket.io.engine.id
-      let trade = {
-        proposerID: id,
-        targetID: id,
-        offered_resources: {'fuel': 10},
-        requested_resources: {'supplies': 10}
-      };
-      console.log(trade);
-      socket.emit('player send tradeOffer', {trade: trade});
-    });
-
-    socket.on('server send giveTradeOffer', function(trade) {
-      console.log("hey someone sent us a trade, that's kinda cool");
-      console.log(trade);
-      socket.emit('player send tradeResponse', {trade: trade, accepted: true});
-    }); */
-
     socket.on('facilitator broadcast', function(msg) {
       $('#messages').append($('<li>').text(msg));
     });
 
     socket.on('day zero', function(d) {
       $('#day').text("Day: " + '0');
+        
+      teamname = d['username'];
+      $('#team_name').text("Team " + teamname);
+
       enableMove = false;
       colocated_players = d['colocated_players'];
       updateWeather(['no weather']);
@@ -160,6 +141,7 @@ PlayerController.prototype = {
       if (d['tradeResults']['accepted']){
         customAlert("The trade was accepted!");
         console.log(d['tradeResults']);
+        updateResources(d['tradeResults']['resources']);
       } else {
         customAlert("The trade was declined.");
       }
@@ -167,14 +149,13 @@ PlayerController.prototype = {
 
     socket.on('server send giveTradeOffer', function(d){
       
-      var requestResource = new Map(JSON.parse(d['requested_resources']));
-      var offerResource = new Map(JSON.parse(d['offered_resources']));
+      
+      var reqObj = d['requested_resources'];
+      var offerObj = d['offered_resources'];
+      
       var request = "";
       var offer = "";
 
-      requestResource.forEach ((v,k) => { reqObj[k] = v });
-      offerResource.forEach ((v,k) => { offerObj[k] = v });
-     
       for (let resource in reqObj) {
         if ( reqObj[resource] > 0){
           request += String(reqObj[resource]) + " " + String(resource) + ", ";
@@ -183,23 +164,23 @@ PlayerController.prototype = {
           offer += String(offerObj[resource]) + " " + String(resource) + ", ";
         }
       }
-      
+      /*
       let trade = {
         proposerID : d['proposerID'],
         targetID : d['targetID'],
         offered_resources : JSON.stringify(Array.from(offerResource)),
         requested_resources : JSON.stringify(Array.from(requestResource))
       }
-
+*/
 
       let alertMsg = "Hey " + d['proposerID'] + " wants to trade with you! Do you want to give " +
       request + "in exchange for " + offer + " ?"
       customConfirm(alertMsg, function(r){
         if (checkTrade(reqObj)){
-          socket.emit('player send tradeResponse', {accepted: r, trade: trade});
+          socket.emit('player send tradeResponse', {accepted: r, trade: d});
         } else {
           customAlert("Trade could not be completed due to insufficient funds.")
-          socket.emit('player send tradeResponse', {accepted: false, trade: trade});
+          socket.emit('player send tradeResponse', {accepted: false, trade: d});
         }
       }, true);
     });
