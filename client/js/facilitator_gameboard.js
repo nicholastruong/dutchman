@@ -194,19 +194,23 @@ function update() {
 }
 
 
-function addNewBoardIcon(socketID) {
-  newCar = global_physics.add.image(icon_spot[0][0], icon_spot[0][1], colors[colorSelector++]);
-  colorSelector = (colorSelector) % colors.length;
-  cars[socketID] = newCar
-  locations[socketID] = 0;
+function addNewBoardIcon(userID) {
+
+  if (global_physics) {
+    newCar = global_physics.add.image(icon_spot[0][0], icon_spot[0][1], colors[colorSelector++]);
+    colorSelector = (colorSelector) % colors.length;
+    cars[userID] = newCar
+    locations[userID] = 0;
+  }
+  
 }
 
-function updateDestinations(socketID, location) {
+function updateDestinations(userID, location) {
   // console.log("updating " + socketID + " to location " + location);
-  if (location != undefined) {
-    locations[socketID] = location;
-    dests[socketID] = icon_spot[location];
-    global_physics.moveTo(cars[socketID], dests[socketID][0], dests[socketID][1], 200);
+  if (location != undefined && locations[userID]) {
+    locations[userID] = location;
+    dests[userID] = icon_spot[location];
+    global_physics.moveTo(cars[userID], dests[userID][0], dests[userID][1], 200);
   }
 }
 
