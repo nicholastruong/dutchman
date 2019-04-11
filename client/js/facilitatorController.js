@@ -34,7 +34,7 @@ FacilitatorController.prototype = {
     socket.on('new player connection', function(d){
       console.log('New player connected');
       name = "Team " + d['username'];
-      playerNames[d["socketID"]] = name;
+      playerNames[d['username']] = name;
       $('#messages').append($('<li>').text(name + " has connected :)"));
 
       var resources = d['resources'];
@@ -143,7 +143,6 @@ FacilitatorController.prototype = {
 
     socket.on('updated player status', function(d) {
       console.log("updated player status");
-      console.log(d);
 
       for (player in d) {
         updateDestinations(playerNames[player], d[player]['location'])
