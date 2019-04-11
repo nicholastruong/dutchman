@@ -33,7 +33,7 @@ FacilitatorController.prototype = {
   {
     let scope = this;
     let socket = this.socket;
-    var teamcount = 1;
+
 
     socket.on('disconnect', function() {
       console.log("i have disconnected");
@@ -43,80 +43,15 @@ FacilitatorController.prototype = {
 
     socket.on('new player connection', function(d){
       console.log('New player connected');
-      name = "Team " + d['username'];
-      playerNames[d['username']] = name;
+      name = d['username'];
+      playerNames[d['userID']] = name;
       $('#messages').append($('<li>').text(name + " has connected :)"));
 
-      var resources = d['resources'];
-
-      var newtable = document.createElement("TABLE");
-      newtable.setAttribute("id", "teamtable");
-      document.getElementById("resourceblock").appendChild(newtable);
-
-       var table = document.getElementById("teamtable");
-       var row = table.insertRow(0);
-       var cell1 = row.insertCell(0);
-       cell1.innerHTML = name;
-       cell1.setAttribute("style","font-size:1.75vw; font-weight: bold; background-color: #492300;");
-       var srow = table.insertRow(1);
-       var slabel = srow.insertCell(0);
-       slabel.innerHTML = "Supplies";
-       var sunits = srow.insertCell(1);
-       sunits.setAttribute("id", "supplies" + name);
-       sunits.innerHTML = resources['supplies'];
-       var frow = table.insertRow(2);
-       var flabel = frow.insertCell(0);
-       flabel.innerHTML = "Fuel";
-       var funits = frow.insertCell(1);
-       funits.setAttribute("id", "fuel" + name);
-       funits.innerHTML = resources['fuel'];
-       var trow = table.insertRow(3);
-       var tlabel = trow.insertCell(0);
-       tlabel.innerHTML = "Tents";
-       var tunits = trow.insertCell(1);
-       tunits.setAttribute("id", "tents" + name);
-       tunits.innerHTML = resources['tents'];
-       var brow = table.insertRow(4);
-       var blabel = brow.insertCell(0);
-       blabel.innerHTML = "Batteries";
-       var bunits = brow.insertCell(1);
-       bunits.setAttribute("id", "batteries" + name);
-       bunits.innerHTML = resources['batteries'];
-       var strow = table.insertRow(5);
-       var stlabel = strow.insertCell(0);
-       stlabel.innerHTML = "Spare Tires";
-       var stunits = strow.insertCell(1);
-       stunits.setAttribute("id", "tires" + name);
-       stunits.innerHTML = resources['tires'];
-       var crow = table.insertRow(6);
-       var clabel = crow.insertCell(0);
-       clabel.innerHTML = "Cash";
-       var cunits = crow.insertCell(1);
-       cunits.setAttribute("id", "cash" + name);
-       cunits.innerHTML = resources['cash'];
-       var cvrow = table.insertRow(7);
-       var cvlabel = cvrow.insertCell(0);
-       cvlabel.innerHTML = "Caves";
-       var cvunits = cvrow.insertCell(1);
-       cvunits.setAttribute("id", "caves" + name);
-       cvunits.innerHTML = resources['caves'];
-       var tbrow = table.insertRow(8);
-       var tblabel = tbrow.insertCell(0);
-       tblabel.innerHTML = "Turbo Boost";
-       var tbunits = tbrow.insertCell(1);
-       tbunits.setAttribute("id", "turbo" + name);
-       tbunits.innerHTML = resources['turbo'];
-       var grow = table.insertRow(9);
-       var glabel = grow.insertCell(0);
-       glabel.innerHTML = "Gold";
-       var gunits = grow.insertCell(1);
-       gunits.setAttribute("id", "gold" + name);
-       gunits.innerHTML = resources['gold'];
-       teamcount++;
+      generateTeamTable(name, d['resources']);
 
       console.log(d); 
 
-      addNewBoardIcon(name)
+      addNewBoardIcon(name);
 
     });
     
@@ -159,10 +94,24 @@ FacilitatorController.prototype = {
     socket.on('updated player status', function(d) {
       console.log("updated player status");
 
-      for (player in d) {
-        updateDestinations(playerNames[player], d[player]['location'])
-        updateResources(playerNames[player], d[player]['resources']);
+
+      //if first time loading table:
+      if (d['isFirstTime']) {
+        for (userID in d['players']) {
+          name = d['players'][userID]['username'];
+          generateTeamTable(name, d['players'][userID]['resources']);
+          playerNames[userID] = name;
+          $('#messages').append($('<li>').text(name + " has connected :)"));
+          addNewBoardIcon(name);
+        }
       }
+      else {
+        for (userID in d['players']) {
+          updateDestinations(playerNames[userID], d['players'][userID]['location'])
+          updateResources(playerNames[userID], d['players'][userID]['resources']);
+        }
+      }
+      
     });
 
     socket.on('end game', function(d){
@@ -215,6 +164,74 @@ function getUrlVars() {
         vars[key] = value;
     });
     return vars;
+}
+
+function generateTeamTable(name, resources){
+  var newtable = document.createElement("TABLE");
+  newtable.setAttribute("id", "teamtable");
+  document.getElementById("resourceblock").appendChild(newtable);
+
+   var table = document.getElementById("teamtable");
+   var row = table.insertRow(0);
+   var cell1 = row.insertCell(0);
+   cell1.innerHTML = name;
+   cell1.setAttribute("style","font-size:1.75vw; font-weight: bold; background-color: #492300;");
+   var srow = table.insertRow(1);
+   var slabel = srow.insertCell(0);
+   slabel.innerHTML = "Supplies";
+   var sunits = srow.insertCell(1);
+   sunits.setAttribute("id", "supplies" + name);
+   sunits.innerHTML = resources['supplies'];
+   var frow = table.insertRow(2);
+   var flabel = frow.insertCell(0);
+   flabel.innerHTML = "Fuel";
+   var funits = frow.insertCell(1);
+   funits.setAttribute("id", "fuel" + name);
+   funits.innerHTML = resources['fuel'];
+   var trow = table.insertRow(3);
+   var tlabel = trow.insertCell(0);
+   tlabel.innerHTML = "Tents";
+   var tunits = trow.insertCell(1);
+   tunits.setAttribute("id", "tents" + name);
+   tunits.innerHTML = resources['tents'];
+   var brow = table.insertRow(4);
+   var blabel = brow.insertCell(0);
+   blabel.innerHTML = "Batteries";
+   var bunits = brow.insertCell(1);
+   bunits.setAttribute("id", "batteries" + name);
+   bunits.innerHTML = resources['batteries'];
+   var strow = table.insertRow(5);
+   var stlabel = strow.insertCell(0);
+   stlabel.innerHTML = "Spare Tires";
+   var stunits = strow.insertCell(1);
+   stunits.setAttribute("id", "tires" + name);
+   stunits.innerHTML = resources['tires'];
+   var crow = table.insertRow(6);
+   var clabel = crow.insertCell(0);
+   clabel.innerHTML = "Cash";
+   var cunits = crow.insertCell(1);
+   cunits.setAttribute("id", "cash" + name);
+   cunits.innerHTML = resources['cash'];
+   var cvrow = table.insertRow(7);
+   var cvlabel = cvrow.insertCell(0);
+   cvlabel.innerHTML = "Caves";
+   var cvunits = cvrow.insertCell(1);
+   cvunits.setAttribute("id", "caves" + name);
+   cvunits.innerHTML = resources['caves'];
+   var tbrow = table.insertRow(8);
+   var tblabel = tbrow.insertCell(0);
+   tblabel.innerHTML = "Turbo Boost";
+   var tbunits = tbrow.insertCell(1);
+   tbunits.setAttribute("id", "turbo" + name);
+   tbunits.innerHTML = resources['turbo'];
+   var grow = table.insertRow(9);
+   var glabel = grow.insertCell(0);
+   glabel.innerHTML = "Gold";
+   var gunits = grow.insertCell(1);
+   gunits.setAttribute("id", "gold" + name);
+   gunits.innerHTML = resources['gold'];
+
+   
 }
 
 function customAlert(message) {

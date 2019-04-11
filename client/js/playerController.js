@@ -91,7 +91,6 @@ PlayerController.prototype = {
       $('#team_name').text("Team " + teamname);
       enableMove = false;
       colocated_players = d['colocated_players'];
-      console.log(colocated_players);
     });
 
     socket.on('server send updateDay', function(d) {
@@ -101,8 +100,9 @@ PlayerController.prototype = {
         $("#canyonstatus").attr("hidden", false);
       }
       
-      colocated_players = d['colocated_players'];
       $('#day').text("Day: " + d['day']);
+      colocated_players = d['colocated_players'];
+      $("#teamTradeButton").attr("disabled", colocated_players.length < 1);
 
       if (curr_day % 5 == 0) { 
         forecastAvailable = false; 
