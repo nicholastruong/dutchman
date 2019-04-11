@@ -378,7 +378,8 @@
 					|| (currentLocation == 12 && [21, 22].includes(otherLocation))
 						|| ([21, 22].includes(currentLocation) && otherLocation == 12)) {
 					colocatedPlayers.push({
-						username: game.players[key]['username']
+						username: game.players[key]['username'],
+						userID: key
 					});
 				}
 			} 
