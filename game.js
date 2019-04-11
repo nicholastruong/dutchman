@@ -371,10 +371,12 @@
 
 				if (game.players[key]['currentLocation'] == currentLocation) {
 					colocatedPlayers.push({
-						playerID: key
+						playerName: game.players[key]['username']
 					});
 				}
 			} 
+			console.log('playerssss');
+			console.log(colocatedPlayers);
 			return colocatedPlayers;	
  		},
 

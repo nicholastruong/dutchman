@@ -34,7 +34,7 @@ FacilitatorController.prototype = {
     socket.on('new player connection', function(d){
       console.log('New player connected');
       name = "Team " + d['username'];
-      playerNames[d["socketID"]] = name;
+      playerNames[d['username']] = name;
       $('#messages').append($('<li>').text(name + " has connected :)"));
 
       var resources = d['resources'];
@@ -115,14 +115,16 @@ FacilitatorController.prototype = {
       $('#messages').append($('<li>').text("Team " + d['username'] + " is ready for the next day"));
       console.log("player is ready");
 
-
-
     });
 
 
     socket.on('facilitator weather report', function(d) {
        console.log(d);
        $('#day').text("Day: " + d['day']);
+       if (d['day'] == 1) {
+         $(".weather").attr("hidden", false);
+         $("#canyonstatus").attr("hidden", false);
+       }
 
        $('#lowweathertext').text(d['weather']['low']); 
        $('#lowweatherimg').attr("src", "assets/weather/" + weather[d['weather']['low']][1] + ".png");
@@ -141,7 +143,6 @@ FacilitatorController.prototype = {
 
     socket.on('updated player status', function(d) {
       console.log("updated player status");
-      console.log(d);
 
       for (player in d) {
         updateDestinations(playerNames[player], d[player]['location'])

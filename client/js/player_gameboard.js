@@ -120,6 +120,7 @@ function attachClickListener(physics, graphic, index) {
             desty = icon_spot[index][1];
             physics.moveTo(car, destx, desty, 200);
             $("#videoTurboButton").attr("disabled", (index != 0 || curr_day != 1));
+            $("#provTradeButton").attr("disabled", !(trading_posts.includes(curr_space)));
           }
         }
       }
