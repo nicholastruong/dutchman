@@ -267,7 +267,7 @@ function initiateTeamTrade(){
 }
 
 function cancelTrade(){
-    socket.emit('player send cancelTrade', {proposerID: socket.engine.io.id, targetID: targetID});
+    socket.emit('player send cancelTrade', {proposerID: socket.io.engine.id, targetID: targetID});
 }
 
 function finishProvTrade(){
