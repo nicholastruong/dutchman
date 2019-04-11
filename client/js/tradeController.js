@@ -189,9 +189,9 @@ let teamHTML = "<select>";
 
 for ( n in colocated_players){
     teamHTML += "<option value ='";
-    teamHTML += colocated_players[n].playerID;
+    teamHTML += colocated_players[n].username;
     teamHTML += "'>";
-    teamHTML += String(colocated_players[n].playerID);
+    teamHTML += String(colocated_players[n].username);
     teamHTML += "</option>";
 }
 teamHTML += "</select>";

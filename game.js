@@ -199,6 +199,10 @@
  		
  		//returns true if has enough resources, returns false otherwise
  		updateResources: function(gameID, userID, day) { //TODO: why does this need day? it really doesnt
+ 			if (day == 1) {
+ 				return true;
+ 			}
+
  			let scope = this;
  			let game = scope.games[gameID];
 
@@ -368,15 +372,16 @@
 
 			for (var key in game.players) {
 				if (key == playerID) continue;
+				let otherLocation = game.players[key]['currentLocation'];
 
-				if (game.players[key]['currentLocation'] == currentLocation) {
+				if (otherLocation == currentLocation
+					|| (currentLocation == 12 && [21, 22].includes(otherLocation))
+						|| ([21, 22].includes(currentLocation) && otherLocation == 12)) {
 					colocatedPlayers.push({
-						playerName: game.players[key]['username']
+						username: game.players[key]['username']
 					});
 				}
 			} 
-			console.log('playerssss');
-			console.log(colocatedPlayers);
 			return colocatedPlayers;	
  		},
 

@@ -9,7 +9,8 @@ module.exports = function(server, game)
 
 			var colocatedPlayers = game.getColocatedPlayers(gameID, userID);
 			let socket = server.openSockets[userID];
-
+			console.log("ppp");
+			console.log(colocatedPlayers);
 			server.emit(userID, eventID, 
 				{
 					username: socket.user.username,

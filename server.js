@@ -98,20 +98,19 @@ io.use(function(socket, next)
 	let token = socket.handshake.query.token;
 
 	if (noAuth) {
-		return next(); // continue without authentication
+		return next(); // continue without authentication to allow login
 	}
 	else {
 		socket.user = authenticatedUsers[token];
-		//if (socket.user == undefined) { //TODO
-			//return next(new Error("authenticationFailure"));
-		//}
-		//else {
-		//	return next();
-		//}
+		if (socket.user == undefined) { //TODO
+			console.log("i'm not authenticated");
+			socket.disconnect(true);
+			return next(new Error("authenticationFailure"));
+		}
+		else {
+			return next();
+		}
 	}
-
-	console.log("No auth" + noAuth); 
-	return next();
 });
 
 io.on("connection", function(socket) {
@@ -147,7 +146,8 @@ io.on("connection", function(socket) {
 			}
 		}
 		else { 
-			//TODO: update facilitator with new method
+			//sends true because first time updating player states
+			trigger['server update player states'](gameID, true);
 		}	
 	}
 });

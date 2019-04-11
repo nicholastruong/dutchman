@@ -40,7 +40,6 @@ var onModal;
 var enableMove;
 var hasMadeMove;
 var flooded;
-var hasTurbos;
 
 var destx = boardWidth / 2; 
 var desty = boardHeight / 2;
@@ -69,7 +68,6 @@ function create() {
    onModal = false;
    enableMove = false;
    hasMadeMove = false;
-   hasTurbos = false;
 
    for (i = 0; i < spaces.length; i++) {
       graphic = this.add.graphics();
@@ -204,7 +202,9 @@ function checkMove(i) { // checks if space i is a valid move
    }
 
    if (i == curr_space) {
-      customAlert("You can move to a new space");
+      // customAlert("You can move to a new space");
+      // console.log(colocated_players);
+      customAlert(getColocatedPlayers());
       return false;
    }
 
@@ -235,6 +235,19 @@ function checkExtendedConnections(i) {
    return false;
 }
 
+
+function getColocatedPlayers() {
+  if (colocated_players.length == 0) {
+    return "There are no other players colocated with you.";
+  }
+  console.log(colocated_players);
+
+  var players = "The following players are in this space:<br><br>";
+  for (player in colocated_players) {
+    players += colocated_players[player]['playerName'] + ", ";
+  }
+  return players.substring(0, players.length - 2);
+}
 
 function floodCanyon(isFlooded) {
    if (shape_graphics.length == 0) {
