@@ -83,7 +83,9 @@ PlayerController.prototype = {
     });
 
     socket.on('facilitator broadcast', function(msg) {
-      $('#messages').append($('<li>').text(msg));
+      var d = new Date();
+      var time = d.getHours() + ":" + d.getMinutes() + " ";
+      $('#messages').append($('<li>').text(time + msg));
       scrollToBottom();
     });
 

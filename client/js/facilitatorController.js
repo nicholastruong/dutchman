@@ -46,7 +46,11 @@ FacilitatorController.prototype = {
       console.log('New player connected');
       name = d['username'];
       playerNames[d['userID']] = name;
-      $('#messages').append($('<li>').text(name + " has connected."));
+
+      var date = new Date();
+      var time = date.getHours() + ":" + date.getMinutes() + " : ";
+
+      $('#messages').append($('<li>').text(time + name + " has connected."));
       scrollToBottom();
 
       generateTeamTable(name, d['resources']);
@@ -60,11 +64,14 @@ FacilitatorController.prototype = {
     socket.on('player ready', function(d){
 
       console.log(d);
+      var date = new Date();
+      var time = date.getHours() + ":" + date.getMinutes() + " : ";
+
       if ($("#day").text() == "Planning Period") {
-        $('#messages').append($('<li>').text("Team " + d['username'] + " is ready to begin the game"));
+        $('#messages').append($('<li>').text(time + "Team " + d['username'] + " is ready to begin the game"));
       }
       else {
-        $('#messages').append($('<li>').text("Team " + d['username'] + " is ready for the next day"));
+        $('#messages').append($('<li>').text(time + "Team " + d['username'] + " is ready for the next day"));
       } 
       
       scrollToBottom();
@@ -89,6 +96,9 @@ FacilitatorController.prototype = {
     socket.on('updated player status', function(d) {
       console.log("updated player status");
 
+      var date = new Date();
+      var time = date.getHours() + ":" + date.getMinutes() + " : ";
+
 
       //if first time loading table:
       if (d['isFirstTime']) {
@@ -96,7 +106,8 @@ FacilitatorController.prototype = {
           name = d['players'][userID]['username'];
           generateTeamTable(name, d['players'][userID]['resources']);
           playerNames[userID] = name;
-          $('#messages').append($('<li>').text(name + " has connected :)"));
+          $('#messages').append($('<li>').text(time + name + " has connected."));
+          scrollToBottom();
           addNewBoardIcon(name);
         }
       }
@@ -114,8 +125,11 @@ FacilitatorController.prototype = {
     });
 
     socket.on('out of resources', function(d) {
+      var date = new Date();
+      var time = date.getHours() + ":" + date.getMinutes() + " : ";
       for (player in d){
-        $('#messages').append($('<li>').text(player + " is out of resources"));
+        $('#messages').append($('<li>').text(time + player + " is out of resources"));
+        scrollToBottom();
       }
     });
 
@@ -127,9 +141,12 @@ FacilitatorController.prototype = {
     let socket = this.socket;
 
     $('form').submit(function(e){
+      var date = new Date();
+      var time = date.getHours() + ":" + date.getMinutes() + " : ";
+
       e.preventDefault(); // prevents page reloading
       socket.emit('facilitator send broadcast', $('#m').val());
-      $('#messages').append($('<li>').text($('#m').val()));  
+      $('#messages').append($('<li>').text(time + $('#m').val()));  
       $('#m').val('');
 
       scrollToBottom();
@@ -325,7 +342,10 @@ function updateResources(teamname, resources) {
 
 
 function endGame() {
-  $('#messages').append($('<li>').text("Game has ended"));
+  var date = new Date();
+  var time = d.getHours() + ":" + d.getMinutes() + " : ";
+  $('#messages').append($('<li>').text(time + "Game has ended"));
+  scrollToBottom();
   // $("#readybutton").attr('disabled', true);
   // endgame popup/modal
 
