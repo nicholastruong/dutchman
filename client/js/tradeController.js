@@ -21,7 +21,7 @@ function sellTableBuilder(tableType){
     var buttonClickParam = "";
     if (tableType ==2){
         buttonClickParam = "offerTable"
-    } else { buttonClickParam = "sellTable"}
+    } else { buttonClickParam = "sellTable" }
 
 var table = `<thead>
               <tr>
@@ -265,28 +265,32 @@ function initiateTeamTrade(){
     let socket = this.socket;
     let id = socket.io.engine.id;
     targetID = $('#teamPickerTitle').find(":selected").val();
-    console.log(targetID);
-    let trade = {
-        proposerID : id,
-        targetID : targetID,
-        offered_resources: this.amountSell,
-        requested_resources: this.amountBuy}
+    if (this.sellTotal <= 0) {
+        $("#teamTradeWarning").html("You must offer something!");
+    } else if (this.buyTotal <= 0) {
+        $("#teamTradeWarning").html("You must request something!");
+    } else {
+        let trade = {
+            proposerID : id,
+            targetID : targetID,
+            offered_resources: this.amountSell,
+            requested_resources: this.amountBuy}
+            
+        socket.emit('player send tradeOffer', {trade: trade}, function(){
+            //REVERT ALL OBJs HOLDING RESOURCE STATUS TO 0
         
-    socket.emit('player send tradeOffer', {trade: trade}, function(){
-        //REVERT ALL OBJs HOLDING RESOURCE STATUS TO 0
-    
-        Object.keys(amountBuy).forEach(v => myObj[v] = 0);
-        Object.keys(amountSell).forEach(v => myObj[v] = 0);
-    });
+            Object.keys(amountBuy).forEach(v => myObj[v] = 0);
+            Object.keys(amountSell).forEach(v => myObj[v] = 0);
+        });
 
-    $('#teamTradeModal').modal('hide');
-    $('#cancelTradeModal').modal('show');
+        $('#teamTradeModal').modal('hide');
+        $('#cancelTradeModal').modal('show');
 
-    var tableContainerBuy = document.getElementById("requestTable");
-    tableContainerBuy.innerHTML= buyTableBuilder(2); 
-    var tableContainerSell = document.getElementById("offerTable");
-    tableContainerSell.innerHTML= sellTableBuilder(2); 
-    
+        var tableContainerBuy = document.getElementById("requestTable");
+        tableContainerBuy.innerHTML= buyTableBuilder(2); 
+        var tableContainerSell = document.getElementById("offerTable");
+        tableContainerSell.innerHTML= sellTableBuilder(2); 
+    }
 }
 
 function cancelTrade(){
@@ -298,27 +302,27 @@ function finishProvTrade(){
     let socket = this.socket;
     let myObj = this.resources;
     if (this.buyTotal <= this.sellTotal && (sellTotal> 0) && (buyTotal>0)){
-    for ( let buy in myObj){
-        myObj[buy] -=amountSell[buy];
-        myObj[buy] +=amountBuy[buy];
-    }
-   
-    socket.emit('server send updateResources', {resources: myObj});
-    
-    socket.on('connect', function(){
-        var id = this.id;
-    socket.emit(id, 'server send updateResources', myObj);
-    });
+        for ( let buy in myObj){
+            myObj[buy] -=amountSell[buy];
+            myObj[buy] +=amountBuy[buy];
+        }
+       
+        socket.emit('server send updateResources', {resources: myObj});
+        
+        socket.on('connect', function(){
+            var id = this.id;
+        socket.emit(id, 'server send updateResources', myObj);
+        });
 
-    //REVERT ALL MAPS HOLDING RESOURCE STATUS TO 0
-    Object.keys(amountBuy).forEach(v => myObj[v] = 0);
-    Object.keys(amountSell).forEach(v => myObj[v] = 0);
+        //REVERT ALL MAPS HOLDING RESOURCE STATUS TO 0
+        Object.keys(amountBuy).forEach(v => myObj[v] = 0);
+        Object.keys(amountSell).forEach(v => myObj[v] = 0);
 
-    var tableContainerBuy = document.getElementById("buyTable");
-    tableContainerBuy.innerHTML= buyTableBuilder(1); 
-    var tableContainerSell = document.getElementById("sellTable");
-    tableContainerSell.innerHTML= sellTableBuilder(1); 
-    $("#provTradeModal").modal("hide");}
+        var tableContainerBuy = document.getElementById("buyTable");
+        tableContainerBuy.innerHTML= buyTableBuilder(1); 
+        var tableContainerSell = document.getElementById("sellTable");
+        tableContainerSell.innerHTML= sellTableBuilder(1); 
+        $("#provTradeModal").modal("hide");}
     else if (sellTotal == 0){
         $("#tradeWarning").html("You must trade something!");
     }
