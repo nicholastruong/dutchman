@@ -130,9 +130,8 @@ io.on("connection", function(socket) {
 			// When a new player connects, update everyone else's co-location
 			if (currentGame.day === 0) {
 				let players = currentGame['players'];
-				for (p in players) { 
-					// "p" corresponds to user.id of player
-					trigger['day zero'](p, game.getColocatedPlayers(gameID, p));
+				for (userID in players) { 
+					trigger['day zero'](gameID, userID);
 				}
 			}
 		}

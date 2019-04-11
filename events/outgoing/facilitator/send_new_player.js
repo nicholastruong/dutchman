@@ -8,6 +8,7 @@ module.exports = function(server, game) {
 			console.log("new player connection");
 			let currentGame = game['games'][gameID];
 			let newPlayer = currentGame['players'][userID];
+
 			let facilitatorID = currentGame.facilitatorID;
 
 			var newPlayerInfo = {

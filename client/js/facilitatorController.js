@@ -33,7 +33,7 @@ FacilitatorController.prototype = {
 
     socket.on('new player connection', function(d){
       console.log('New player connected');
-      name = "Team " + d['userID'];
+      name = "Team " + d['username'];
       playerNames[d["socketID"]] = name;
       $('#messages').append($('<li>').text(name + " has connected :)"));
 
@@ -112,7 +112,7 @@ FacilitatorController.prototype = {
     
     socket.on('player ready', function(d){
       console.log(d);
-      $('#messages').append($('<li>').text("Player is ready for the next day"));
+      $('#messages').append($('<li>').text("Team " + d['username'] + " is ready for the next day"));
       console.log("player is ready");
 
 

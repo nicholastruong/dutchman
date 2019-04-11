@@ -5,11 +5,13 @@ module.exports = function(server, game) {
 	
 	return {
 		id: eventId,
-		func: function(gameID) {
+		func: function(gameID, userID) {
 			let currentGame = game['games'][gameID];
 			let facilitatorID = currentGame.facilitatorID;
 
-			server.emit(facilitatorID, "player ready", {}, null);
+			let username = server.openSockets[userID].user.username; 
+
+			server.emit(facilitatorID, "player ready", {username: username}, null);
 		}
 	};
 	
