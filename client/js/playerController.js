@@ -181,6 +181,7 @@ PlayerController.prototype = {
 
     socket.on('server send tradeCanceled', function(d){
       customAlert("Trade was cancelled.");
+      console.log("yo the trade was cancelled");
     })
 
     socket.on('out of resources', function(d){
