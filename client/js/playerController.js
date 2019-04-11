@@ -8,7 +8,7 @@ var PlayerController = function()
   let socket = scope.socket = io(document.location.hostname + ":3000?token=" + token);
   console.log(socket);
   if (socket['connected'] == false) {
-    window.location.href = '/';
+    //window.location.href = '/';
   }
 
   scope._RegisterSocketHandlers();
