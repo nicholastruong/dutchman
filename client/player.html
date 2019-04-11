@@ -23,12 +23,13 @@
   <script>
     window.onload = function () {
       window.controller = new PlayerController();
-      
+      $("#provisionerModal").load("provTradeModal.html"); 
+      $("#provTradeModal").modal('hide');
     }
     $(function(){
       
       document.getElementById("provTradeButton").onclick = function () { 
-        $("#provisionerModal").load("provTradeModal.html"); 
+        provClicked = true;
         provTradeManager() };
     });
 

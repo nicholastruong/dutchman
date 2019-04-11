@@ -28,16 +28,15 @@ module.exports = function(socket, server, game, config){
 			}
 			*/
 		}
-
 		server.trigger['update server player out of resources'](gameID, playersOutOfResources);
-
-		if(currentGame['day'] === 20) {
-			server.trigger['end game'](gameID, userID);
-		}
 
 		//send all updated player status to facilitator
 		server.trigger['server update player states'](gameID, false);
-		server.trigger['update server weather'](gameID, currentGame['facilitatorID'])
+		server.trigger['update server weather'](gameID, currentGame['facilitatorID']);
+		if(currentGame['day'] === 21) {
+			server.trigger['end game'](gameID);
+		}
+		
 		
 	});
 }

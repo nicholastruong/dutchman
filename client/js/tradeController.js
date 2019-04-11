@@ -15,6 +15,7 @@ var constMapOfValues = {
 var buyTotal = 0;
 var sellTotal=0;
 var showCave = false;
+var provClicked = false;
 
 function sellTableBuilder(tableType){
     var buttonClickParam = "";
@@ -177,8 +178,9 @@ if ( document.getElementById("buyTable") != null){
 }
 
 document.getElementById("buyTable").innerHTML = buyTable;
-
+if (provClicked){
 $('#provTradeModal').modal('show');
+}
 
 }
 
