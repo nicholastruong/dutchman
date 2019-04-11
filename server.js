@@ -170,7 +170,6 @@ const incomingEventsPath = "./events/incoming";
 
 function loadEvents(path, outgoing)
 {
-	console.log("loading events");
 	fs.readdir(path, function(err, files) {
 		if (err) {
 			console.error("Error loading events: " + err.stack); // non-fatal

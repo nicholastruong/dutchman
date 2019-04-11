@@ -57,7 +57,7 @@ module.exports = function(socket, server, game, config) {
 					}
 					else // Invalid login
 					{ 
-						return response({ success: false, error: "Invalid login."});
+						return response({ success: false, error: "Invalid password."});
 					}
 				}
 			}
