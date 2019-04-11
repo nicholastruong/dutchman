@@ -7,7 +7,7 @@ CREATE TABLE users (
 	username varchar(64) NOT NULL,
 	password char(64) NOT NULL, 
 	salt char(16) NOT NULL,
-	is_admin bool DEFAULT(0),
+	is_admin bool DEFAULT 0,
 	PRIMARY KEY(user_id),
 	UNIQUE(username)
 );
@@ -17,7 +17,7 @@ CREATE TABLE games (
 	game_id int NOT NULL AUTO_INCREMENT,
 	room_name varchar(32) NOT NULL,
 	facilitator_id int NOT NULL, #TODO: make this foreign key
-	day int NOT NULL DEFAULT(1),
+	day int NOT NULL DEFAULT 1,
 	PRIMARY KEY(game_id)
 );
 
@@ -25,19 +25,19 @@ DROP TABLE IF EXISTS team_states;
 CREATE TABLE team_states (
 	user_id int NOT NULL,
 	game_id int NOT NULL,
-	current_location int NOT NULL DEFAULT(0),
-	cash int DEFAULT(0),
-	supplies int DEFAULT(0),
-	fuel int DEFAULT(0),
-	tents int DEFAULT(0),
-	batteries int DEFAULT(0),
-	spare_tires int DEFAULT(0),
-	caves int DEFAULT(0),
-	turbos int DEFAULT(0),
-	is_ready bool DEFAULT(0),
-	gold_vid bool DEFAULT(0),
-	turbo_vid bool DEFAULT(0),
-	has_returned bool DEFAULT(0),
+	current_location int NOT NULL DEFAULT 0,
+	cash int DEFAULT 0,
+	supplies int DEFAULT 0,
+	fuel int DEFAULT 0,
+	tents int DEFAULT 0,
+	batteries int DEFAULT 0,
+	spare_tires int DEFAULT 0,
+	caves int DEFAULT 0,
+	turbos int DEFAULT 0,
+	is_ready bool DEFAULT 0,
+	gold_vid bool DEFAULT 0,
+	turbo_vid bool DEFAULT 0,
+	has_returned bool DEFAULT 0,
 	PRIMARY KEY(user_id, game_id),
 	FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE,
 	FOREIGN KEY(game_id) REFERENCES games(game_id) ON DELETE CASCADE,

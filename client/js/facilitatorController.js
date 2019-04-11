@@ -144,7 +144,7 @@ FacilitatorController.prototype = {
       console.log(d);
 
       for (player in d) {
-        updateDestinations(playerNames[player], d[player]['location'], d[player]['coords'])
+        updateDestinations(playerNames[player], d[player]['location'])
         updateResources(playerNames[player], d[player]['resources']);
       }
     });

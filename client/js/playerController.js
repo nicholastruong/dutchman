@@ -21,9 +21,10 @@ var weatherForecast;
 var teamname = "";
 var stayDay1 = false;
 var stayDay2 = false;
-var curr_day = 1;
+var curr_day = 0;
 var resources = new Object();
 var colocated_players = [];
+var alert_queue = [];
 var socket;
 var reqObj = new Object();
 var offerObj = new Object();
@@ -58,7 +59,7 @@ $(document).ready(function(){
        onModal = true;
        // console.log(document.getElementById("low_forecast_txt0"));
 
-       if (weatherForecast != null && curr_day % 5 == 0) { // sends weather forecast everyday for debugging
+       if (weatherForecast != null && curr_day % 5 == 0) {
           for (i = 0; i < 5; i++) {
              $('#low_forecast' + i).text("Day " + (curr_day + i));
              $('#high_forecast' + i).text("Day " + (curr_day + i));
@@ -75,13 +76,6 @@ $(document).ready(function(){
        onModal = false;
     });
 
-  // teamname = prompt("Enter a team name of less than 10 characters long:", "Team Awesome");
-  // if (teamname == null || teamname == "") {
-  //    teamname = "Team null";
-  // } 
-  // if (teamname.length > 10) {
-  //    teamname = teamname.substring(0, 10)
-  // }
   teamname = "Team 1";
   $('#team_name').text(teamname);
 
@@ -126,7 +120,6 @@ PlayerController.prototype = {
       enableMove = false;
       colocated_players = d['colocated_players'];
       updateWeather(['no weather']);
-
     });
 
     socket.on('server send updateDay', function(d) {
@@ -135,10 +128,10 @@ PlayerController.prototype = {
       colocated_players = d['colocated_players'];
       $('#day').text("Day: " + d['day']);
 
-      $("#videoTurboButton").attr("disabled", (curr_day != 1));
+      $("#videoTurboButton").attr("disabled", (curr_day != 0));
 
       if (d['resourcesExpended'] != undefined) {
-        updateAlert(d['weather'], d['resourcesExpended']);
+        updateAlert(d['weather'], d['resourcesExpended'], curr_day);
       }
 
       updateWeather(d['weather']);
@@ -147,9 +140,8 @@ PlayerController.prototype = {
 
 
       hasMadeMove = false;
-      console.log("curr_day:" + curr_day + " stayDay1:" + stayDay1 + " stayDay2:" + stayDay2);
+      // console.log("curr_day:" + curr_day + " stayDay1:" + stayDay1 + " stayDay2:" + stayDay2);
       enableMove = !((curr_day == 1 && stayDay1) || (curr_day == 2 && stayDay2))
-      // enableMove = true;
       $('#readybutton').prop('disabled', false);
     });
 
@@ -244,7 +236,10 @@ PlayerController.prototype = {
       }
       else {
          if (curr_space == 0) {
-            if ((curr_day == 1 && stayDay1) || (curr_day == 2 && stayDay2)) {
+            if (curr_day == 0) {
+              customConfirm("Are you ready to begin the game?", reallyReady);
+            }
+            else if ((curr_day == 1 && stayDay1) || (curr_day == 2 && stayDay2)) {
               customConfirm("Are you sure you're finished with your turn?", reallyReady);
             }
             else {
@@ -317,14 +312,15 @@ function reallyReady() {
   $('#readybutton').prop('disabled', true)
   enableMove = false;
   onModal = false;
+  console.log("curr_space: " + curr_space + " car: " + car.x + "," + car.y);
   socket.emit('ready', 
     {
        currentSpace: curr_space,
-       currentCoords: [car.x, car.y]
+       currentCoords: [0,0]
     }
   );
 
-  if (curr_space == 4 && $('#turbo').text() != "0 Turbo Boost") {
+  if (curr_space == 4 && !$("#turboRow").attr("hidden") && $('#turbo').text() != "0 Turbo Boost") {
     customConfirm("Do you wish to activate your Turbos?", function() { 
       hasTurbos = true; 
       onModal = false;
@@ -371,7 +367,7 @@ function watchVideo(video) {
 }
 
 
-function updateAlert(weatherData, changedResources) {
+function updateAlert(weatherData, changedResources, day) {
   var alert = "";
   if (weatherData[0] == "arctic blast") {
     alert += "Because of the cold weather, you used more resources than normal...<br><br>";
@@ -384,7 +380,7 @@ function updateAlert(weatherData, changedResources) {
     alert += "You got 1 gold resource from the mine!<br><br>And you used the following resources:<br>";
   }
   else {
-    alert += "You used the following resources:<br>";
+    alert += "You used the following resources on day " + (day - 1) + ":<br>";
   }
 
   for (resource in changedResources) {
@@ -441,11 +437,21 @@ function customAlert(message) {
    });
 
    alertBox.on('hidden.bs.modal', function () {
-      onModal = false;
+      if (alert_queue.length > 0) {
+        alert_queue.shift().modal('show');
+      }
+      else {
+        onModal = false;
+      }
    });
 
-   onModal = true;
-   alertBox.modal('show');
+   if (!onModal) {
+      onModal = true;
+      alertBox.modal('show');
+   }
+   else {
+      alert_queue.push(alertBox);
+   }
 };
 
 function customConfirm(message, callbackFunc, ifTrade) {
@@ -485,7 +491,6 @@ function customConfirm(message, callbackFunc, ifTrade) {
    // });
 
    onModal = true;
-   console.log("onModal is true");
    confirmBox.modal('show');
 }
 

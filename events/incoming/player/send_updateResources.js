@@ -8,6 +8,6 @@ module.exports = function(socket, server, game){
 		let userID = socket.user.userID;
 
 		game.setResources(gameID, userID, data['resources']);
-		server.trigger['update resources'](userID);
+		server.trigger['update resources'](gameID, userID);
 	});
 }
