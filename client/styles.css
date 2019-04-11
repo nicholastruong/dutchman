@@ -141,8 +141,13 @@ h2 {
 	background-color: rgba(155, 97, 43, 1);
 }
 .modal-open {
+	margin-right: 0 !important;
     padding-right: 0px !important;
 }
+html {
+  overflow-y: scroll !important;
+}
+
 
 .modal-lg {
 	width: 80%;
