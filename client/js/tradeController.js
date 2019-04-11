@@ -312,7 +312,7 @@ function finishProvTrade(){
     tableContainerBuy.innerHTML= buyTableBuilder(1); 
     var tableContainerSell = document.getElementById("sellTable");
     tableContainerSell.innerHTML= sellTableBuilder(1); 
-    $('#provTradeModal').modal('hide');}
+    $("#provTradeModal").modal("hide");}
     else if (sellTotal == 0){
         $("#tradeWarning").html("You must trade something!");
     }
