@@ -19,6 +19,8 @@ var FacilitatorController = function()
 weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]}
 
 var playerNames = {};
+var readyPlayers = 0;
+var numPlayers = 0;
 var endGameAlert;
 
 $(document).ready(function(){
@@ -58,12 +60,11 @@ FacilitatorController.prototype = {
       console.log(d); 
 
       addNewBoardIcon(name);
-
+      numPlayers++;
     });
     
     socket.on('player ready', function(d){
-
-      console.log(d);
+      // console.log(d);
       var date = new Date();
       var time = date.getHours() + ":" + date.getMinutes() + " : ";
 
@@ -75,6 +76,17 @@ FacilitatorController.prototype = {
       } 
       
       scrollToBottom();
+
+      readyPlayers++;
+      console.log(readyPlayers + " are ready out of " + numPlayers);
+      if (readyPlayers >= numPlayers) {
+        if ($("#day").text() == "Planning Period") {
+          customAlert("All players are ready to begin the game!");
+        }
+        else {
+          customAlert("All players are ready for the next day!");
+        }
+      }
 
     });
 
@@ -162,6 +174,7 @@ FacilitatorController.prototype = {
 
     var nextDayButton = document.getElementById("readybutton");
     nextDayButton.addEventListener('click', function(){
+      readyPlayers = 0;
       socket.emit('facilitator next day'); 
     });
 

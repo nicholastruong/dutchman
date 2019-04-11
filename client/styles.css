@@ -303,6 +303,7 @@ html {
 
 #messages li { 
 	padding: 5px 10px; 
+	font-size: 15px;
 }
 
 /*#messages li:nth-child(odd) { 
