@@ -204,7 +204,8 @@ function checkMove(i) { // checks if space i is a valid move
    }
 
    if (i == curr_space) {
-      customAlert("You can move to a new space");
+      // customAlert("You can move to a new space");
+      console.log(colocated_players);
       return false;
    }
 
