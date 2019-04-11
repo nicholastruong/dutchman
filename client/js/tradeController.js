@@ -18,7 +18,7 @@ var table = `<thead>
                 <th scope="col"></th>
                 <th scope="col"></th>
                 <th scope="col">Current Amount</th>
-                <th scope="col">Amount Trading</th>
+                <th scope="col" class = "colorCol">Amount Trading</th>
                 <th scope="col">Value</th>
                 <th scope="col">Value Trading</th>
               </tr>
@@ -48,7 +48,7 @@ for ( let r in myMap){
                 <td>
             `;
     table += myMap[r]; //Current Amount
-    table += `</td><td>`;
+    table += `</td><td class = "colorCol">`;
     table += String(amountSell.get(r)); //Amount Trading
     table += `</td><td>$`;
     table += String(constMapOfValues.get(r));
@@ -86,7 +86,7 @@ function buyTableBuilder(tableType){
                 <th scope="col">Resource</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
-                <th scope="col">Amount Buying</th>
+                <th class = "colorCol" scope="col">Amount Buying</th>
                 <th scope="col">Value</th>
                 <th scope="col">Total Value</th>
               </tr>
@@ -110,7 +110,7 @@ function buyTableBuilder(tableType){
                 table += "','";
                 table+= String(r);
                 table+=`')">-</button></td>
-                <td>`
+                <td class = "colorCol">`
                 table += String(amountBuy.get(r));//amount
                 table += `</td>
                 <td>
