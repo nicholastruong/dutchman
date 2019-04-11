@@ -7,6 +7,10 @@ var FacilitatorController = function()
   let token = getUrlVars()['token'];
 
   let socket = scope.socket = io(document.location.hostname + ":3000?token=" + token);
+  if (socket['connected'] == false) {
+    window.location.href = '/';
+  }
+
 
   scope._RegisterSocketHandlers();
   scope._RegisterOutgoing();
