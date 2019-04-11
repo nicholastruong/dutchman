@@ -140,16 +140,21 @@ PlayerController.prototype = {
       console.log(d['tradeResults']);
       if (d['tradeResults']['accepted']){
         customAlert("The trade was accepted!");
+        $('#cancelTradeModal').modal('hide');
         console.log(d['tradeResults']);
         updateResources(d['tradeResults']['resources']);
       } else {
+        console.log("trade cancelled.");
+        $('#cancelTradeModal').modal('hide');
+        bootbox.hideAll();
+        dialog.modal('hide');
         customAlert("The trade was declined.");
       }
     });
 
 
     socket.on('server send giveTradeOffer', function(d){
-      
+      $('#teamTradeModal').modal('hide');
       
       var reqObj = d['requested_resources'];
       var offerObj = d['offered_resources'];
