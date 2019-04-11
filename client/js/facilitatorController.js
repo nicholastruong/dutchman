@@ -74,6 +74,7 @@ FacilitatorController.prototype = {
        if (d['day'] == 1) {
          $(".weather").attr("hidden", false);
          $("#canyonstatus").attr("hidden", false);
+         $("#readybutton").text("Start Next Day");
        }
 
        $('#lowweathertext').text(d['weather']['low']); 
@@ -116,6 +117,9 @@ FacilitatorController.prototype = {
 
     socket.on('end game', function(d){
       $('#messages').append($('<li>').text("Game has ended"));
+      $("#ready").attr('disabled', true);
+      customAlert("Game is over!");
+      // endgame popup/modal
     });
 
     socket.on('out of resources', function(d) {
@@ -140,7 +144,7 @@ FacilitatorController.prototype = {
       return false;
     });
 
-    var nextDayButton = document.getElementById("ready");
+    var nextDayButton = document.getElementById("readybutton");
     nextDayButton.addEventListener('click', function(){
       socket.emit('facilitator next day'); 
     });
