@@ -31,6 +31,12 @@ var offerObj = new Object();
 
 $(document).ready(function(){
   console.log("documentReady called");
+  
+    $('#cancelTradeModal').modal({
+      show: false,
+      backdrop: 'static',
+      keyboard: false
+    });
 
   $('#teamTradeModal')
     .on('show.bs.modal', function (e) {
@@ -185,7 +191,7 @@ PlayerController.prototype = {
       }, true);
     });
 
-    socket.on('server send tradeCanceled', function(d){
+    socket.on('server send tradeCancelled', function(d){
       customAlert("Trade was cancelled.");
     })
 
