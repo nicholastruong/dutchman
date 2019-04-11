@@ -14,7 +14,10 @@ module.exports = function(server, game)
 			var colocatedPlayers = game.getColocatedPlayers(gameID, userID);
 
 			var resourcesExpended = calculateExpendedResources();
-			var weather = game.getWeather(currentLocation, currentGame['day']);
+			var weather = '';
+			if (currentGame['day'] <= 20) {
+				weather = game.getWeather(currentLocation, currentGame['day']);
+			} 
 
 			server.emit(userID, eventID, 
 				{

@@ -16,7 +16,7 @@ var buyTotal = 0;
 var sellTotal=0;
 var showCave = false;
 var provClicked = false;
-
+var teamClicked = false;
 function sellTableBuilder(tableType){
     var buttonClickParam = "";
     if (tableType ==2){
@@ -187,7 +187,7 @@ $('#provTradeModal').modal('show');
 function teamTradeManager(){
 let colocated_players = this.colocated_players;
 let myObj = this.resources;
-let teamHTML = "<select>";
+let teamHTML = "What team would you like to offer a trade to?   Team <select>";
 
 for ( n in colocated_players){
     teamHTML += "<option value ='";
@@ -198,7 +198,7 @@ for ( n in colocated_players){
     console.log(teamHTML);
 }
 teamHTML += "</select>";
-document.getElementById("teamPickerTitle").innerHTML += teamHTML;
+document.getElementById("teamPickerTitle").innerHTML = teamHTML;
     for ( let r in myObj){
         amountSell[r] = 0;
         amountBuy[r] =0;
@@ -207,8 +207,11 @@ document.getElementById("teamPickerTitle").innerHTML += teamHTML;
     offerTable = sellTableBuilder(2);
     requestTable = buyTableBuilder(2);
 
-document.getElementById("offerTable").innerHTML += offerTable;
-document.getElementById("requestTable").innerHTML += requestTable
+document.getElementById("offerTable").innerHTML = offerTable;
+document.getElementById("requestTable").innerHTML = requestTable
+if (teamClicked){
+    $('#teamTradeModal').modal('show');
+}
 $('#cancelTradeModal').modal('hide');
 }
 
