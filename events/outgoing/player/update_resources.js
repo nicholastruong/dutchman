@@ -9,7 +9,7 @@ module.exports = function(server, game)
 			let currentGame = game['games'][gameID];
 			let resources = currentGame['players'][userID]['resources'];
 
-			server.emit(userID, eventID, resources, false, false);
+			server.emit(userID, eventID, resources, null);
 		}
 	};
 }

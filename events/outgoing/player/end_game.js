@@ -12,8 +12,7 @@ module.exports = function(server, game) {
 			for (playerID in players) {
 				server.emit(playerID, eventID, 
 					{},
-	  				null,
-	  				false
+	  				null
 	  			);
 			}
 			

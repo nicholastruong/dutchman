@@ -33,7 +33,7 @@ FacilitatorController.prototype = {
 
     socket.on('new player connection', function(d){
       console.log('New player connected');
-      name = "Team " + teamcount;
+      name = "Team " + d['userID'];
       playerNames[d["socketID"]] = name;
       $('#messages').append($('<li>').text(name + " has connected :)"));
 
