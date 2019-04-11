@@ -271,6 +271,7 @@ function initiateTeamTrade(){
     let socket = this.socket;
     let id = socket.io.engine.id;
     targetID = $('#teamPickerTitle').find(":selected").val();
+    // console.log("proposer:" + $('#team_name').text() + ", target:" + $('#teamPickerTitle').find(":selected").text());
     if (this.sellTotal <= 0) {
         $("#teamTradeWarning").html("You must offer something!");
     } else if (this.buyTotal <= 0) {
@@ -278,7 +279,9 @@ function initiateTeamTrade(){
     } else {
         let trade = {
             proposerID : id,
+            proposer: $("#team_name").text(),
             targetID : targetID,
+            target: "Team " + $('#teamPickerTitle').find(":selected").text(),
             offered_resources: this.amountSell,
             requested_resources: this.amountBuy}
             
