@@ -4,11 +4,10 @@ const eventId = "server update player states";
 module.exports = function(server, game) {
 	return {
 		id: eventId,
-		func: function(gameID) {
+		func: function(gameID, facilitatorID) {
 			//array of players in the game
 			let currentGame = game['games'][gameID];
 			let players = currentGame['players'];
-			let facilitatorID = currentGame.facilitatorID;
 
 			var updatedResources = {};
 
@@ -22,7 +21,7 @@ module.exports = function(server, game) {
 				}
 			}
 
-			server.emit(facilitatorID, "updated player status", updatedResources, null, true);
+			server.emit(facilitatorID, "updated player status", updatedResources, null);
 		}
 	};
 	

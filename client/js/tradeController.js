@@ -1,10 +1,17 @@
-var myMap = new Map();
-var amountBuy = new Map();
+var myObj = new Object();
+var amountBuy = new Object();
 
-var amountSell = new Map();
-var constMapOfValues = new Map([["supplies", 20],["fuel", 10], ["batteries", 10], ["tents", 10], ["tires", 30], ["cash", 1], ["caves", 0], ["turbo", 0], ["gold", 0]]);
-
-
+var amountSell = new Object();
+var constMapOfValues = {
+    "supplies": 20, 
+    "fuel": 10, 
+    "batteries": 10,
+    "tents": 10, 
+    "tires": 30,
+    "cash": 1,
+    "caves": 0,
+    "turbo": 0,
+    "gold": 0};
 
 function sellTableBuilder(tableType){
     var buttonClickParam = "";
@@ -18,7 +25,7 @@ var table = `<thead>
                 <th scope="col"></th>
                 <th scope="col"></th>
                 <th scope="col">Current Amount</th>
-                <th scope="col">Amount Trading</th>
+                <th scope="col" class = "colorCol">Amount Trading</th>
                 <th scope="col">Value</th>
                 <th scope="col">Value Trading</th>
               </tr>
@@ -26,8 +33,8 @@ var table = `<thead>
             <tbody>`
 
 var total = 0;
-var myMap = this.resources;
-for ( let r in myMap){
+var myObj = this.resources;
+for ( let r in myObj){
     table+= `
             <tr>
                 <th scope="row">
@@ -47,13 +54,13 @@ for ( let r in myMap){
     table += `')">-</button></td>
                 <td>
             `;
-    table += myMap[r]; //Current Amount
-    table += `</td><td>`;
-    table += String(amountSell.get(r)); //Amount Trading
+    table += myObj[r]; //Current Amount
+    table += `</td><td class = "colorCol">`;
+    table += String(amountSell[r]); //Amount Trading
     table += `</td><td>$`;
-    table += String(constMapOfValues.get(r));
+    table += String(constMapOfValues[r]);
     table += `</td><td>`;
-    var itemTot = amountSell.get(r) * constMapOfValues.get(r);
+    var itemTot = amountSell[r] * constMapOfValues[r];
     table += String(itemTot);
     table += `</td></tr>`;
     total += itemTot;
@@ -86,7 +93,7 @@ function buyTableBuilder(tableType){
                 <th scope="col">Resource</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
-                <th scope="col">Amount Buying</th>
+                <th class = "colorCol" scope="col">Amount Buying</th>
                 <th scope="col">Value</th>
                 <th scope="col">Total Value</th>
               </tr>
@@ -94,7 +101,7 @@ function buyTableBuilder(tableType){
             <tbody>
             `
             
-    for (let [r,a] of constMapOfValues){
+    for (let r in constMapOfValues){
                 table += `<tr>
                 <th scope="row">
                 `
@@ -110,17 +117,17 @@ function buyTableBuilder(tableType){
                 table += "','";
                 table+= String(r);
                 table+=`')">-</button></td>
-                <td>`
-                table += String(amountBuy.get(r));//amount
+                <td class = "colorCol">`
+                table += String(amountBuy[r]);//amount
                 table += `</td>
                 <td>
                 `
-                table += "$" + String(a); // value
+                table += "$" + String(constMapOfValues[r]); // value
                 
                 table += `</td>
                 <td>
                 `
-                var itemTot = amountBuy.get(r) * constMapOfValues.get(r);
+                var itemTot = amountBuy[r] * constMapOfValues[r];
                 table += String(itemTot); //tOtal Value
                 total += itemTot;
             
@@ -145,10 +152,10 @@ table += `</td>
 }
 function provTradeManager(){
 //INITIALIZE amountAdded map
-let myMap = this.resources;
-for ( let r in myMap){
-    amountSell.set(String(r), 0);
-    amountBuy.set(String(r), 0);
+let myObj = this.resources;
+for ( let r in myObj){
+    amountSell[r]= 0;
+    amountBuy[r]= 0;
 }
 
 sellTable = sellTableBuilder(1);
@@ -173,8 +180,8 @@ for ( n in colocated_players){
 teamHTML += "</select>";
 document.getElementById("teamPickerTitle").innerHTML += teamHTML;
     for ( let r in myMap){
-        amountSell.set(String(r), 0);
-        amountBuy.set(String(r), 0);
+        amountSell[r] = 0;
+        amountBuy[r] =0;
     }
     
     offerTable = sellTableBuilder(2);
@@ -192,8 +199,8 @@ function addItemSell(tradeType, resourceName){ //LEFT Table offerTable or sellTa
     var type=1;
     if (tradeType=="offerTable"){type=2}
     
-    if (amountSell.get(resourceName) < myMap[resourceName]){
-   amountSell.set(resourceName, amountSell.get(resourceName) + 1);
+    if (amountSell[resourceName] < myMap[resourceName]){
+   amountSell[resourceName]++;
    var tableContainer = document.getElementById(tradeType);
     tableContainer.innerHTML= sellTableBuilder(type); 
     }
@@ -202,8 +209,8 @@ function addItemSell(tradeType, resourceName){ //LEFT Table offerTable or sellTa
 function subtractItemSell(tradeType, resourceName){ //LEFT Table
     var type=1;
     if (tradeType=="offerTable"){type=2}
-    if (amountSell.get(resourceName) > 0){
-    amountSell.set(resourceName, amountSell.get(resourceName) - 1);
+    if (amountSell[resourceName] > 0){
+    amountSell[resourceName]--;
     
     var tableContainer = document.getElementById(tradeType);
     tableContainer.innerHTML= sellTableBuilder(type); 
@@ -213,7 +220,7 @@ function subtractItemSell(tradeType, resourceName){ //LEFT Table
 function addItemBuy(tradeType, resourceName){ //RIGHT requestTable or buyTable
    var type=1;
     if (tradeType=="requestTable"){type=2}
-    amountBuy.set(resourceName, amountBuy.get(resourceName) + 1);
+    amountBuy[resourceName]++;
     
     var tableContainer = document.getElementById(tradeType);
     tableContainer.innerHTML= buyTableBuilder(type);
@@ -222,8 +229,8 @@ function addItemBuy(tradeType, resourceName){ //RIGHT requestTable or buyTable
 function subtractItemBuy(tradeType, resourceName){ //RIGHT Table
     var type=1;
     if (tradeType=="requestTable"){type=2}
-    if (amountBuy.get(resourceName) > 0){
-        amountBuy.set(resourceName, amountBuy.get(resourceName) - 1);
+    if (amountBuy[resourceName] > 0){
+        amountBuy[resourceName]--;
     
     var tableContainer = document.getElementById(tradeType);
     tableContainer.innerHTML= buyTableBuilder(type); 
@@ -239,16 +246,14 @@ function initiateTeamTrade(){
     let trade = {
         proposerID : id,
         targetID : targetID,
-        offered_resources: JSON.stringify(Array.from(this.amountSell)),
-        requested_resources: JSON.stringify(Array.from(this.amountBuy))}
+        offered_resources: this.amountSell,
+        requested_resources: this.amountBuy}
         
     socket.emit('player send tradeOffer', {trade: trade}, function(){
-        //REVERT ALL MAPS HOLDING RESOURCE STATUS TO 0
-    let myMap = this.resources;
-    for ( let r in myMap){
-        amountSell.set(String(r), 0);
-        amountBuy.set(String(r), 0);
-    }
+        //REVERT ALL OBJs HOLDING RESOURCE STATUS TO 0
+    let myObj = this.resources;
+    Object.keys(amountBuy).forEach(v => myObj[v] = 0);
+    Object.keys(amountSell).forEach(v => myObj[v] = 0);
     });
 
     var tableContainerBuy = document.getElementById("requestTable");
@@ -262,23 +267,22 @@ function finishProvTrade(){
     let socket = this.socket;
     let myMap = this.resources;
     for ( let buy in myMap){
-        myMap[buy] -=amountSell.get(buy);
-        myMap[buy] +=amountBuy.get(buy);
+        myObj[buy] -=amountSell[buy];
+        myObj[buy] +=amountBuy[buy];
     }
    
 
-    socket.emit('server send updateResources', {resources: myMap});
+    socket.emit('server send updateResources', {resources: myObj});
     
     socket.on('connect', function(){
         var id = this.id;
-    socket.emit(id, 'server send updateResources', myMap);
+    socket.emit(id, 'server send updateResources', myObj);
     });
+
     //REVERT ALL MAPS HOLDING RESOURCE STATUS TO 0
-    for ( let r in myMap){
-        amountSell.set(String(r), 0);
-        amountBuy.set(String(r), 0);
-    }
-    console.log(amountSell);
+    Object.keys(amountBuy).forEach(v => myObj[v] = 0);
+    Object.keys(amountSell).forEach(v => myObj[v] = 0);
+
     var tableContainerBuy = document.getElementById("buyTable");
     tableContainerBuy.innerHTML= buyTableBuilder(1); 
     var tableContainerSell = document.getElementById("sellTable");

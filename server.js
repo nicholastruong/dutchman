@@ -10,7 +10,7 @@ const mysql = require("mysql");
 let db_config = {
 	host: 'localhost',
 	user: 'root',
-	password: 'friend',
+	password: 'root',
 	database: 'lost_dutchman'
 };
 
@@ -64,17 +64,28 @@ http.listen(3000, function(){
 app.use(express.static(__dirname + '/client')); // need to do this to give server access to all files in a folder
 
 app.get('/', function(req, res){
+  console.log("setting destination");
   res.sendFile(__dirname + '/client/login.html');
 });
 
 app.get('/player', function(req, res){
-  //let token = req.query.token;
-  //TODO: redirect if bad
-  res.sendFile(__dirname + '/client/player.html');
-})
+  //redirect if no token
+  if (!req.query.token) {
+  	//console.log("no token found");
+  	res.sendFile(__dirname + '/client/login.html');
+  } else {
+  	res.sendFile(__dirname + '/client/player.html');
+  }
+});
 
 app.get('/facilitator', function(req, res){
-  res.sendFile(__dirname + '/client/facilitator.html');
+  //redirect if no token
+  if (!req.query.token) {
+  	//console.log("no ftoken found");
+  	res.sendFile(__dirname + '/client/login.html');
+  } else {
+  	res.sendFile(__dirname + '/client/facilitator.html');
+  }
 });
 
 // Authenticate clients
@@ -124,15 +135,14 @@ io.on("connection", function(socket) {
 			let currentGame = game['games'][gameID];
 
 			//TODO: implement better facilitator front end
-			trigger['new player connection'](currentGame, userID); 
+			trigger['new player connection'](gameID, userID); 
 			trigger['update resources'](gameID, userID);
 
 			// When a new player connects, update everyone else's co-location
 			if (currentGame.day === 0) {
 				let players = currentGame['players'];
-				for (p in players) { 
-					// "p" corresponds to user.id of player
-					trigger['day zero'](p, game.getColocatedPlayers(gameID, p));
+				for (userID in players) { 
+					trigger['day zero'](gameID, userID);
 				}
 			}
 		}
@@ -149,15 +159,15 @@ game.loadAll(function() {
 
 
 // Export an event emitting infrastructure
-module.exports.emit = function(socketID, eventID, data, callback, isBroadcast)
+module.exports.emit = function(userID, eventID, data, callback)
 {
-	console.log(socketID);
-	if (socketID){
-		let socket = openSockets[socketID];
+	console.log(userID);
+	if (userID){
+		let socket = openSockets[userID];
 		socket.emit(eventID, data, callback);
 	}
 	
-	//temporary broadcast if to no one
+	//temporary broadcast if to no user specified
 	else {
 		io.emit(eventID, data);
 	}

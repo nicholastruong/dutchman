@@ -118,6 +118,11 @@ h2 {
 	max-height: 95%;
 }
 
+#teamPickerContainer {
+	min-width: 100%;
+	background-color: #edce70;
+}
+
 .modal-yellow .modal-backdrop {
 	background-color: #edce70;
   }
@@ -136,13 +141,30 @@ h2 {
 	background-color: rgba(155, 97, 43, 1);
 }
 .modal-open {
+	margin-right: 0 !important;
     padding-right: 0px !important;
 }
+html {
+  overflow-y: scroll !important;
+}
+
 
 .modal-lg {
 	width: 80%;
 	margin: auto;
 	padding-top: 1.25%;
+}
+
+.btn-light {
+	color: black;
+}
+
+.colorCol {
+	background-color: #9B612A;
+}
+
+#teamPickerTitle {
+	font-size: 30px;
 }
 
 
@@ -321,6 +343,8 @@ table {
   color: white;
 }
 
+
+
 th {
   font-size: 1.5vw;
   border: 1px solid #dddddd;
@@ -446,7 +470,7 @@ input:focus{
 	color: red;
 	width: 50vw;
 	height: 20px;
-	font-size: 3vh;
+	font-size: 1.5vw;
 	margin-left: 15px;
 	margin-right: 5px;
 }

@@ -16,8 +16,7 @@ module.exports = function(server, game)
 					offered_resources: trade.offered_resources,
 					requested_resources: trade.requested_resources
 				},
-				null,
-				false
+				null
 			);
 		}
 	};

@@ -13,8 +13,7 @@ module.exports = function(server, game)
 				{
 					tradeResults: tradeResults
 				},
-				null,
-				false
+				null
 			);
 		}
 	};
