@@ -71,7 +71,7 @@ FacilitatorController.prototype = {
     socket.on('facilitator weather report', function(d) {
        console.log(d);
        $('#day').text("Day: " + d['day']);
-       if (d['day'] == 1) {
+       if (d['day'] >= 1) {
          $(".weather").attr("hidden", false);
          $("#canyonstatus").attr("hidden", false);
          $("#readybutton").text("Start Next Day");
@@ -116,10 +116,7 @@ FacilitatorController.prototype = {
     });
 
     socket.on('end game', function(d){
-      $('#messages').append($('<li>').text("Game has ended"));
-      $("#ready").attr('disabled', true);
-      customAlert("Game is over!");
-      // endgame popup/modal
+      endGame();
     });
 
     socket.on('out of resources', function(d) {
@@ -286,5 +283,13 @@ function updateResources(teamname, resources) {
     turbo.innerHTML = resources['turbo'];
     var gold = document.getElementById('gold' + teamname);
     gold.innerHTML = resources['gold'];
+}
+
+
+function endGame() {
+  $('#messages').append($('<li>').text("Game has ended"));
+  $("#readybutton").attr('disabled', true);
+  customAlert("Game is over!");
+  // endgame popup/modal
 }
 

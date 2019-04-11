@@ -206,8 +206,9 @@ function addNewBoardIcon(userID) {
 }
 
 function updateDestinations(userID, location) {
-  // console.log("updating " + socketID + " to location " + location);
-  if (location != undefined && locations[userID]) {
+  console.log(locations[userID] + " " + dests[userID]);
+  if (location != undefined && locations[userID] != undefined) {
+    console.log("updating " + userID + " to location " + location);
     locations[userID] = location;
     dests[userID] = icon_spot[location];
     global_physics.moveTo(cars[userID], dests[userID][0], dests[userID][1], 200);

@@ -91,11 +91,12 @@ PlayerController.prototype = {
       $('#team_name').text("Team " + teamname);
       enableMove = false;
       colocated_players = d['colocated_players'];
+      $("#teamTradeButton").attr("disabled", colocated_players.length < 1);
     });
 
     socket.on('server send updateDay', function(d) {
       curr_day = d['day'];
-      if (curr_day == 1) {
+      if (curr_day >= 1) {
         $("#weatherdetails").attr("hidden", false);
         $("#canyonstatus").attr("hidden", false);
         $("#readybutton").text("Ready for Next Day");
@@ -113,10 +114,9 @@ PlayerController.prototype = {
         updateAlert(d['weather'], d['resourcesExpended'], curr_day); 
       }
 
-      updateWeather(d['weather']);
-      
-      floodCanyon(d['weather'][1] == "flooded");
-
+      if (d['weather'] != undefined) {
+        updateWeather(d['weather']);
+      }
 
       hasMadeMove = false;
       enableMove = !((curr_day == 1 && stayDay1) || (curr_day == 2 && stayDay2))
@@ -204,30 +204,7 @@ PlayerController.prototype = {
     });
 
     socket.on('end game', function(d){
-      $('#messages').append($('<li>').text("Game has ended!"));
-      // disable buttons and movement
-      $("#teamTradeButton").attr('disabled', true);
-      $("#provTradeButton").attr('disabled', true);
-      $("#videoTurboButton").attr('disabled', true);
-      $("#forecastButton").attr('disabled', true);
-      $("#readybutton").attr('disabled', true);
-      enableMove = false;
-
-      //Popup of amount of gold
-      if (curr_space == 0) {
-        if (resources['gold'] > 0) {
-          customAlert("<h2>Congratulations!</h2><br><br>You reached the end of the game and you made it back to Apache Junction " +
-            "and mined <h2>" + resources['gold'] + "</h2> gold!");
-        }
-        else {
-          customAlert("You reached the end of the game and you made it back to Apache Junction! " +
-            "But unfortunately you did not manage to mine any gold...");
-        }
-      }
-      else {
-        customAlert("You reached the end of the game and unfortunately " +
-          "you did not make it back to Apache Junction in time...");
-      }
+      endGame();
     });
 
   },
@@ -406,14 +383,12 @@ function updateAlert(weatherData, changedResources, day) {
     alert += "Because of the mud on the low country path, you used more resources than normal...<br><br>";
   }
 
-  alert += "You got <br><br><h2><b>1 GOLD</b></h2><br> resource from the mine!<br><br>And you used the following resources:<br>";
-
-  // if (curr_space == 20) {
-  //   alert += "You got <br><h2><b>1 GOLD</b></h2><br> resource from the mine!<br><br>And you used the following resources:<br>";
-  // }
-  // else {
-  //   alert += "You used the following resources on day " + (day - 1) + ":<br>";
-  // }
+  if (curr_space == 20) {
+    alert += "You got <br><br><h2><b>1 GOLD</b></h2><br> resource from the mine!<br><br>And you used the following resources:<br>";
+  }
+  else {
+    alert += "You used the following resources on day " + (day - 1) + ":<br>";
+  }
 
   for (resource in changedResources) {
     if (changedResources[resource] < 0) {
@@ -433,6 +408,8 @@ function updateWeather(weatherData) {
     $('#canyonstatus').text("Canyon is " + weatherData[1]);
   }
   $('#weathertext').text(weatherData[0]);
+
+  floodCanyon(weatherData[1] == "flooded");
 }
 
 function updateWeatherForecast() {
@@ -537,5 +514,33 @@ function customConfirm(message, callbackFunc, ifTrade) {
    onModal = true;
    // console.log("customConfirm - onModal is true");
    confirmBox.modal('show');
+}
+
+
+function endGame() {
+  $('#messages').append($('<li>').text("Game has ended!"));
+  // disable buttons and movement
+  $("#teamTradeButton").attr('disabled', true);
+  $("#provTradeButton").attr('disabled', true);
+  $("#videoTurboButton").attr('disabled', true);
+  $("#forecastButton").attr('disabled', true);
+  $("#readybutton").attr('disabled', true);
+  enableMove = false;
+
+  //Popup of amount of gold
+  if (curr_space == 0) {
+    if (resources['gold'] > 0) {
+      customAlert("<h2>Congratulations!</h2><br><br>You reached the end of the game and you made it back to Apache Junction " +
+        "and mined <h2>" + resources['gold'] + "</h2> gold!");
+    }
+    else {
+      customAlert("You reached the end of the game and you made it back to Apache Junction! " +
+        "But unfortunately you did not manage to mine any gold...");
+    }
+  }
+  else {
+    customAlert("You reached the end of the game and unfortunately " +
+      "you did not make it back to Apache Junction in time...");
+  }
 }
 
