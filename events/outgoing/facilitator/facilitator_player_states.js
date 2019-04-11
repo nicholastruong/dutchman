@@ -21,7 +21,7 @@ module.exports = function(server, game) {
 				}
 			}
 
-			server.emit(facilitatorID, "updated player status", updatedResources, null, true);
+			server.emit(facilitatorID, "updated player status", updatedResources, null);
 		}
 	};
 	
