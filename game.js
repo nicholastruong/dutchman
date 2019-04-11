@@ -375,7 +375,8 @@
 
 				if (game.players[key]['currentLocation'] == currentLocation) {
 					colocatedPlayers.push({
-						username: game.players[key]['username']
+						username: game.players[key]['username'],
+						userID: key
 					});
 				}
 			} 

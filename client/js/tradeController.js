@@ -172,10 +172,11 @@ let teamHTML = "<select>";
 
 for ( n in colocated_players){
     teamHTML += "<option value ='";
-    teamHTML += colocated_players[n].username;
+    teamHTML += colocated_players[n].userID;
     teamHTML += "'>";
     teamHTML += String(colocated_players[n].username);
     teamHTML += "</option>";
+    console.log(teamHTML);
 }
 teamHTML += "</select>";
 document.getElementById("teamPickerTitle").innerHTML += teamHTML;
@@ -241,8 +242,8 @@ function subtractItemBuy(tradeType, resourceName){ //RIGHT Table
 function initiateTeamTrade(){
     let socket = this.socket;
     let id = socket.io.engine.id;
-    targetID = $('#teamPickerTitle').find(":selected").text();
-    
+    targetID = $('#teamPickerTitle').find(":selected").val();
+    console.log(targetID);
     let trade = {
         proposerID : id,
         targetID : targetID,
@@ -252,8 +253,8 @@ function initiateTeamTrade(){
     socket.emit('player send tradeOffer', {trade: trade}, function(){
         //REVERT ALL OBJs HOLDING RESOURCE STATUS TO 0
     
-    Object.keys(amountBuy).forEach(v => myObj[v] = 0);
-    Object.keys(amountSell).forEach(v => myObj[v] = 0);
+        Object.keys(amountBuy).forEach(v => myObj[v] = 0);
+        Object.keys(amountSell).forEach(v => myObj[v] = 0);
     });
 
     $('#teamTradeModal').modal('hide');
