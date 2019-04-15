@@ -23,6 +23,11 @@ var readyPlayers = 0;
 var numPlayers = 0;
 var endGameAlert;
 
+
+window.onload = function() {
+  window.controller = new FacilitatorController();
+}
+
 $(document).ready(function(){
    console.log("documentReady called");
 

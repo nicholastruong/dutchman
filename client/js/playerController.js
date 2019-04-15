@@ -32,28 +32,42 @@ var reqObj = new Object();
 var offerObj = new Object();
 
 
+window.onload = function () {
+  window.controller = new PlayerController();
+  $("#provisionerModal").load("provTradeModal.html"); 
+  $("#teamTradingModal").load("teamTradeModal.html");
+  $("#teamTradeModal").modal('hide');
+  $("#provTradeModal").modal('hide');
+}
+
 $(document).ready(function(){
   console.log("documentReady called");
 
-  $('#teamTradeModal')
+  $('#teamTradingModal')
     .on('show.bs.modal', function (e) {
+      console.log("onModal is true from teamTradeModal");
       onModal = true;
     })
     .on('hidden.bs.modal', function (e) {
+      console.log("onModal is false from teamTradeModal");
       onModal = false;
     });
-  $('#provTradeModal')
+  $('#provisionerModal')
     .on('show.bs.modal', function (e) {
+      console.log("onModal is true from provTradeModal");
       onModal = true;
     })
     .on('hidden.bs.modal', function (e) {
+      console.log("onModal is false from provTradeModal");
       onModal = false;
     });
   $('#videoModal')
     .on('show.bs.modal', function (e) {
+      console.log("onModal is true from videoModal");
       onModal = true;
     })
     .on('hidden.bs.modal', function (e) {
+      console.log("onModal is false from videoModal");
       onModal = false;
 
     });
@@ -152,7 +166,8 @@ PlayerController.prototype = {
         customAlert("The trade was accepted!");
         $('#cancelTradeModal').modal('hide');
         console.log(d['tradeResults']);
-      } else {
+      } 
+      else {
         console.log("trade cancelled.");
         $('#cancelTradeModal').modal('hide');
         bootbox.hideAll();
@@ -164,6 +179,7 @@ PlayerController.prototype = {
 
     socket.on('server send giveTradeOffer', function(d){
       $('#teamTradeModal').modal('hide');
+      console.log(d);
       
       var reqObj = d['requested_resources'];
       var offerObj = d['offered_resources'];
@@ -191,13 +207,20 @@ PlayerController.prototype = {
 */
 
       let alertMsg = d['proposer'] + " wants to trade with you! Would you like to give:<br>" 
-        + request 
+        + offer 
         + "<br>in exchange for:<br>" 
-        + offer;
-      customConfirm(alertMsg, function(r){
+        + request;
+      customConfirm(alertMsg, function(r) {
         if (checkTrade(reqObj)){
           socket.emit('player send tradeResponse', {accepted: r, trade: d});
-        } else {
+          if (r && offerObj["turbo"] > 0) {
+            $("#turboRow").attr("hidden", false);
+          }
+          if (r && offerObj["caves"] > 0) {
+            $("#caveRow").attr("hidden", false);
+          }
+        } 
+        else {
           customAlert("Trade could not be completed due to insufficient funds.")
           socket.emit('player send tradeResponse', {accepted: false, trade: d});
         }
@@ -234,8 +257,16 @@ PlayerController.prototype = {
     let scope = this;
     socket = this.socket;
 
-    var forecastButton = document.getElementById("forecastButton");
-    forecastButton.addEventListener('click', function() {
+    document.getElementById("provTradeButton").onclick = function () { 
+      provClicked = true;
+      provTradeManager() 
+    };
+    document.getElementById("teamTradeButton").onclick = function () { 
+      teamClicked = true;
+      teamTradeManager() 
+    };
+
+    document.getElementById("forecastButton").onclick = function() {
       if (forecastAvailable) {
         $('#forecastModal').modal('show');
       }
@@ -251,7 +282,7 @@ PlayerController.prototype = {
           $('#forecastModal').modal('show');
         });
       }
-    });
+    };
 
     var readyButton = document.getElementById("ready");
     readyButton.addEventListener('click', function(){
@@ -358,37 +389,28 @@ function watchVideo(video) {
 
   if (video == "turbos") {
     customConfirm("Are you sure you want to stay another day?", function() {
-      $("#tortillaflatsButton").attr("disabled", true);
-      $("#turboRow").attr("hidden", false);
-      customAlert("Go see the Expedition Leader regarding the video you selected!");
-      this.resources["turbo"] += 3;
-      socket.emit('server send updateResources', {resources: this.resources});
-
-      enableMove = false;
-      stay2Day = stay1Day;
-      stay1Day = true;
-      $("#videoExplaination").text("You can watch the remaining video, but you will have to stay in Apache Junction until day 3.");
-      if ($("#goldmineButton").attr("disabled")) {
-        $("#videoExplaination").text("You have watched both of the videos already.");
-      }
+      watchVideoResult("#tortillaflatsButton", "#goldmineButton", "#turboRow", "turbo", 3);
     });
   }
   if (video == "caves") {
     customConfirm("Are you sure you want to stay another day?", function() {
-      $("#goldmineButton").attr("disabled", true);
-      $("#caveRow").attr("hidden", false);
-      customAlert("Go see the Expedition Leader regarding the video you selected!");
-      this.resources["caves"] += 12;
-      socket.emit('server send updateResources', {resources: this.resources});
-
-      enableMove = false;
-      stay2Day = stay1Day;
-      stay1Day = true;
-      $("#videoExplaination").text("You can watch the remaining video, but you will have to stay in Apache Junction until day 3.");
-      if ($("#tortillaflatsButton").attr("disabled")) {
-        $("#videoExplaination").text("You have watched both of the videos already.");
-      }
+      watchVideoResult("#goldmineButton", "#tortillaflatsButton", "#caveRow", "caves", 12)
     });
+  }
+}
+
+function watchVideoResult(resourceButton, otherButton, resourceRow, resource, amount) {
+  $(resourceButton).attr("disabled", true);
+  $(resourceRow).attr("hidden", false);
+  customAlert("Go see the Expedition Leader regarding the new resource you received");
+  this.resources[resource] += amount;
+  socket.emit('server send updateResources', {resources: this.resources});
+  enableMove = false;
+  stay2Day = stay1Day;
+  stay1Day = true;
+  $("#videoExplaination").text("You can watch the remaining video, but you will have to stay in Apache Junction until day 3.");
+  if ($(otherButton).attr("disabled")) {
+    $("#videoExplaination").text("You have watched both of the videos already.");
   }
 }
 

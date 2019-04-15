@@ -17,12 +17,13 @@ var constMapOfValues = {
 var buyTotal = 0;
 var sellTotal = 0;
 var showCave = false;
+var showTurbo = false;
 var provClicked = false;
 var teamClicked = false;
 
 function sellTableBuilder(tableType) {
     var buttonClickParam = "";
-    if (tableType ==2) {
+    if (tableType ==2) { // type 1 is provisioner trading, type 2 is team trading
         buttonClickParam = "offerTable";
     } 
     else { 
@@ -44,11 +45,9 @@ function sellTableBuilder(tableType) {
 
     sellTotal = 0;
     var myObj = this.resources;
+    // console.log(myObj);
     for ( let r in myObj) {
-        if ( r =="turbo" || r == "caves") { // no trading caves and turbos for now
-        
-        } 
-        else {
+        if ((r != "turbo" || myObj["turbo"] > 0) && (r != "caves" || myObj["caves"] > 0)) {
             table += `
                     <tr>
                         <th scope="row">`
@@ -98,7 +97,7 @@ function sellTableBuilder(tableType) {
 
 function buyTableBuilder(tableType) {
     var buttonClickParam = "";
-    if (tableType ==2) {
+    if (tableType ==2) { // type 1 is provisioner trading, type 2 is team trading
         buttonClickParam = "requestTable";
     } 
     else { 
@@ -119,10 +118,7 @@ function buyTableBuilder(tableType) {
             <tbody>`
             
     for (let r in constMapOfValues) {
-        if ( r =="turbo" || r == "caves") { // hiding caves and turbos for now
-        
-        } 
-        else if (tableType != 1 || r != "gold") {
+        if (r != "turbo" && r != "caves" && (tableType != 1 || r != "gold")) {
             table += `<tr>
             <th scope="row">
             `
