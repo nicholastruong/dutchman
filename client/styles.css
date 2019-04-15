@@ -105,6 +105,14 @@ h2 {
 	font-family: EdmundsFont;
 }
 
+#tradeWarning, #teamTradeWarning {
+	padding-bottom: 20px;
+}
+
+select {
+	width: 100px;
+}
+
 #tradeContainer {
 	padding-top: 5px;
 	text-align: center;
