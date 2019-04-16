@@ -38,45 +38,6 @@ h2 {
 	padding: 10px;
 }
 
-#team_name {
-	width: 100%;
-	height: 4vw;
-	text-align: center;
-	margin-top: 5vh;
-	background-color: rgba(155, 97, 43, 1);
-	padding-top: 0.5vh;
-	font-size:3.5vw; 
-	font-family:EdmundsFont;
-}
-
-#resourceblock {
-	width: 100%;
-	height: 28vw;
-	background-color: rgba(155, 97, 43, 1);
-	text-align: left;
-	color: black;
-	font-size: 1.25vw;
-	margin-top: 2vh;
-}
-
-#resourcetitle {
-	text-align: center;
-	color: black;
-	font-size: 3vw;
-	padding-top: 5px;
-	padding-bottom: 3px;
-	font-family: EdmundsFont;
-}
-
-.leftColButton {
-	background-color: #492300;
-	border: none;
-	width: 100%; 
-	margin-top: 10px;
-	font-family:EdmundsFont; 
-	font-size: 1.5vw;
-}
-
 
 @font-face {
 	font-family: EdmundsFont;
@@ -212,9 +173,119 @@ html {
 }
 
 
+/*LEFT COLUMN AND RESOURCE DISPLAY*/
+#team_name {
+	width: 100%;
+	height: 4vw;
+	text-align: center;
+	margin-top: 5vh;
+	background-color: rgba(155, 97, 43, 1);
+	padding-top: 0.5vh;
+	font-size:3.5vw; 
+	font-family:EdmundsFont;
+}
+
+#resourceblock {
+	width: 100%;
+	height: 28vw;
+	background-color: rgba(155, 97, 43, 1);
+	text-align: left;
+	color: black;
+	font-size: 1.25vw;
+	margin-top: 2vh;
+}
+
+#resourcetitle {
+	text-align: center;
+	color: black;
+	font-size: 3vw;
+	padding-top: 5px;
+	padding-bottom: 3px;
+	font-family: EdmundsFont;
+}
+
+.leftColButton {
+	background-color: #492300;
+	border: none;
+	width: 100%; 
+	margin-top: 10px;
+	font-family:EdmundsFont; 
+	font-size: 1.5vw;
+}
+
+.resourcetag {
+	/*font-size: 1.2vw;
+	height: 2.5vw */
+}
+
+.resourcetext {
+	visibility: hidden;
+	width: 200px;
+  	background-color: #492300;
+  	color: #fff;
+  	border-radius: 6px;
+  	padding: 5px 0;
+
+  	/* Position the tooltip */
+  	position: absolute;
+  	z-index: 1;
+}
+
+.resourcetag:hover .resourcetext {
+	visibility: visible;
+}
+
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  color: white;
+}
+
+
+
+th {
+  font-size: 1.5vw;
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 3px;
+}
+
+td {
+  font-size: 1vw;
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 3px;
+}
+
+table:nth-child(even) {
+	background-color: #492300;
+}
+
+#copyright {
+	margin-top: 1vw;
+	margin-left: 5px;
+	font-size: 0.75vw;
+	color: white;
+	text-align: center;
+}
+
+
+/*RIGHT COLUMN AND WEATHER DISPLAY*/
 #right {
 	/*height: 100%;*/
 	/*position: relative;*/
+}
+
+.rightcol {
+	width: 80%;
+	margin-left: 20%;
+	margin-top: 5vh;
+	padding-top: 2vh;
+	padding-bottom: 2vh;
+	padding-left: 1.5vh;
+	background-color: #492300;
 }
 
 .weather {
@@ -319,76 +390,9 @@ html {
 	background: #eee; 
 }*/
 
-
-
-.resourcetag {
-	/*font-size: 1.2vw;
-	height: 2.5vw */
-}
-
-.resourcetext {
-	visibility: hidden;
-	width: 200px;
-  	background-color: #492300;
-  	color: #fff;
-  	border-radius: 6px;
-  	padding: 5px 0;
-
-  	/* Position the tooltip */
-  	position: absolute;
-  	z-index: 1;
-}
-
-.resourcetag:hover .resourcetext {
-	visibility: visible;
-}
-
-.rightcol {
-	width: 80%;
-	margin-left: 20%;
-	margin-top: 5vh;
-	padding-top: 2vh;
-	padding-bottom: 2vh;
-	padding-left: 1.5vh;
-	background-color: #492300;
-}
-
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-  color: white;
-}
-
-
-
-th {
-  font-size: 1.5vw;
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 3px;
-}
-
-td {
-  font-size: 1vw;
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 3px;
-}
-
-table:nth-child(even) {
-	background-color: #492300;
-}
-
-#copyright {
-	margin-top: 1vw;
-	margin-left: 5px;
-	font-size: 0.75vw;
-	color: white;
-	text-align: center;
-}
  
 
+/*CUSTOM ALERTS/CONFIRMS WITH BOOTBOX.JS*/
 .bootbox .modal-content {
 	width: 35vw;
 }
@@ -411,6 +415,7 @@ table:nth-child(even) {
 	/*font-family:EdmundsFont; */
 	font-size: 1.5vw;
 }
+
 
 .card{
 	height: 270px;
@@ -444,6 +449,8 @@ input:focus{
 	background-color: rgba(73,35,0,0.75);
 }
 
+
+/*LOGIN PAGE STUFF*/
 .login_btn{
 	color: black;
 	background-color: #edce70;

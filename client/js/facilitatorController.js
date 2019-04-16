@@ -327,12 +327,7 @@ function updateWeather(weatherData) {
   $('#highweatherimg').attr("src", "assets/weather/" + weather[weatherData['high']][1] + ".png");
 
   $('#canyonstatus').text("Canyon is " + weatherData['canyon']);
-  if (weatherData['canyon'] == "flooded") {
-   makeMuddy(true);
-  }
-  else {
-   makeMuddy(false);
-  }
+  floodCanyon(weatherData['canyon'] == "flooded");
 }
 
 function updateResources(teamname, resources) {

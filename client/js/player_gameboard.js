@@ -1,45 +1,47 @@
-$(document).ready(function(){
+$(document).ready( function() {
    boardWidth = (950 / 1680 * window.innerWidth);
    boardHeight = (941 / 1680 * window.innerWidth);
 
-   console.log(window.innerWidth);
-
-   var config = {
-      type: Phaser.AUTO,
-      width: boardWidth,
-      height: boardHeight - 1,
-      parent: 'board',
-      backgroundColor: 0xedce70,
-      scale: {
-         mode: Phaser.Scale.FIT,
-         autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
-      },
-      physics: {
-         default: 'arcade',
-         arcade: { debug: false }
-      },
-      scene: {
-         preload: preload,
-         create: create,
-         update: update
-      },
-   };
-   game = new Phaser.Game(config);
+   configAndStart();
 });
+
+function configAndStart() {
+  var config = {
+    type: Phaser.AUTO,
+    width: boardWidth,
+    height: boardHeight - 1,
+    parent: 'board',
+    backgroundColor: 0xedce70,
+    scale: {
+       mode: Phaser.Scale.FIT,
+       autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
+    },
+    physics: {
+       default: 'arcade',
+       arcade: { debug: false }
+    },
+    scene: {
+       preload: preload,
+       create: create,
+       update: update
+    },
+  };
+
+  game = new Phaser.Game(config);
+}
 
 
 // list of global variables
 var game;
 var boardWidth, boardHeight;
 var car;
-var connections;
-var curr_space, prev_space;
-var shape_graphics = [];
+var curr_space, prev_space; // tracks the index of the current space the player is in and the previous space
+var shape_graphics = []; // list of all the shapes representing all the gameboard spaces
 
-var onModal;
-var enableMove;
-var hasMadeMove;
-var flooded;
+var onModal; // bool flag to disable the board when an alert or a modal is open
+var enableMove; // bool flag to disable gameboard movement when required by the controller
+var hasMadeMove; // bool flag to track when a team has already moved
+var flooded; // bool flag to track whether Toms Canyon is flooded
 
 var destx = boardWidth / 2; 
 var desty = boardHeight / 2;
@@ -98,11 +100,12 @@ function create() {
 }
 
 
+// adds a click listener to each gameboard space
 function attachClickListener(physics, graphic, index) {
    
    graphic.on('pointerdown', function(pointer) {
       if (!onModal) {
-        if (curr_space == index) {
+        if (curr_space == index) { // if team clicks on current space, shows an alert with team names of all colocated teams
           customAlert(getColocatedPlayers());
         }
         else {
@@ -134,6 +137,8 @@ function attachClickListener(physics, graphic, index) {
    graphic.on('pointerout', function () { graphic.clear(); });
 }
 
+
+// highlights standard gameboard spaces when the facilitator hovers over them
 function attachPolygonListeners(scene, graphic, polygon, index) {
   graphic.on('pointerover', function () {
     if (!onModal && enableMove && (!flooded || ((curr_space != 21 || index != 22) && (curr_space != 22 || index != 21)))) {
@@ -143,6 +148,8 @@ function attachPolygonListeners(scene, graphic, polygon, index) {
   });
 }
 
+// special function needed to highlight the spaces just outside the corner trading posts
+// the combination of polygon coordinates and curved arcs required creating a cubic bezier spline
 function attachCornerListeners(scene, graphic, square, circle, index) {
    graphic.on('pointerover', function () {
       if (!onModal && enableMove) {
@@ -176,6 +183,7 @@ function attachCornerListeners(scene, graphic, square, circle, index) {
    });
 }
 
+// highlights the circle trading posts at each corner of the gameboard
 function attachCircleListeners(graphic, circle, index) {
    graphic.on('pointerover', function () {
       if (!onModal && enableMove) {
@@ -193,9 +201,10 @@ function update() {
    }
 }
 
-function checkMove(i) { // checks if space i is a valid move
-   if (hasMadeMove) {
-      if (i == prev_space) {
+// checks if space i is a valid move
+function checkMove(i) {
+   if (hasMadeMove) { // if the player has already moved to a new space
+      if (i == prev_space) { // if the selected space is the team's previous space
          customAlert("You are undoing your move");
          curr_space = prev_space;
          hasMadeMove = false;
@@ -209,7 +218,7 @@ function checkMove(i) { // checks if space i is a valid move
    }
 
    if (connections[curr_space].includes(i) || (hasTurbos && checkExtendedConnections(i))) {
-      if (hasTurbos && lowCountry_path.includes(i)) {
+      if (hasTurbos && lowCountry_path.includes(i)) { // can't use turbos on the low country path
          customAlert("You cannot use the Low Country Path if you have Turbos installed!");
          return false;
       }
@@ -223,11 +232,11 @@ function checkMove(i) { // checks if space i is a valid move
    return false;
 }
 
+// checks if space i is a valid move when the team has an active Turbo
 function checkExtendedConnections(i) {
    // console.log(connections[curr_space]);
    for (j = 0; j < connections[curr_space].length; j++) {
-      // console.log(connections[curr_space][j] + ": " + connections[connections[curr_space][j]]);         
-      if (connections[connections[curr_space][j]].includes(i)) {
+      if (connections[connections[curr_space][j]].includes(i)) { // checks all the connections of the connections of the current space
          return true;
       }
    }
@@ -236,25 +245,29 @@ function checkExtendedConnections(i) {
 }
 
 
+// outputs the list of co-located players
 function getColocatedPlayers() {
   if (colocated_players.length == 0) {
-    return "There are no other players colocated with you.";
+    return "There are no other teams colocated with you.";
   }
   console.log(colocated_players);
 
-  var players = "The following players are in this space:<br><br>";
+  var players = "The following teams are in this space:<br><br>";
   for (player in colocated_players) {
     players += colocated_players[player]['playerName'] + ", ";
   }
   return players.substring(0, players.length - 2);
 }
 
+// changes Tom's Ford Canyon on the board into one or two spaces depending on whether it is flooded
 function floodCanyon(isFlooded) {
    if (shape_graphics.length == 0) {
       return;
    }
 
    flooded = isFlooded;
+   // changes space 12 into space 21 and 22 when the Canyon floods and the team is not already in the canyon
+   // if player is already in the Canyon when flood status changes, the space remains the same until the team leaves
    if ((isFlooded && curr_space != 12) || curr_space == 21 || curr_space == 22) {
       shape_graphics[12].visible = false;
       shape_graphics[21].visible = true;

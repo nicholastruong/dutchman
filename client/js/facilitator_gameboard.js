@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).ready( function() {
    boardWidth = (950 / 1680 * window.innerWidth);
    boardHeight = (941 / 1680 * window.innerWidth);
 
@@ -34,21 +34,19 @@ function configAndStart() {
 // list of global variables
 var game;
 var boardWidth, boardHeight;
-var cars = {};
-var dests = {};
-var locations = {};
-var connections;
-var shape_graphics = [];
+
+var cars = {}; // tracks all of the cars on the gameboard, indexed by team name
+var dests = {}; // tracks the specific gameboard coordinates that every team's car is either traveling to, or is already at
+var locations = {}; // tracks the gameboard space that every team's car is at
+
+var shape_graphics = []; // list of all the shapes representing all the gameboard spaces
 
 var global_physics;
 
 var colors = ["black", "blue", "green", "orange", "pink", "red"];
 var colorSelector = 0;
 
-var onModal;
-
-// var destx = boardWidth / 2; 
-// var desty = boardHeight / 2;
+var onModal; // bool flag to disable the board when an alert or a modal is open
 
 
 
@@ -56,7 +54,6 @@ function preload() {
   console.log("preload called");
   console.log(colors);
   this.load.image("background", "/assets/gameboard.png");
-  // this.load.image("car", "/assets/cars/orange.png");
   for (i = 0; i < colors.length; i++) {
     this.load.image(colors[i], "/assets/cars/" + colors[i] + ".png");
   }
@@ -74,20 +71,20 @@ function create() {
 
    onModal = false;
 
-   for (i = 0; i < spaces.length; i++) {
+   for (i = 0; i < spaces.length; i++) { // defines each gameboard space's shape
       graphic = this.add.graphics();
       attachClickListener(this.physics, graphic, i, locations);
 
-      if (spaces[i].length == 3) {
+      if (spaces[i].length == 3) { // circles for each of the three corner trading posts
          new_circle = new Phaser.Geom.Circle(spaces[i][0], spaces[i][1], spaces[i][2]);
          graphic.setInteractive(new_circle, Phaser.Geom.Circle.Contains);
          attachCircleListeners(graphic, new_circle, i);
       }
-      else {
+      else { // otherwise just a polygon
          new_polygon = new Phaser.Geom.Polygon(spaces[i]);
          graphic.setInteractive(new_polygon, Phaser.Geom.Polygon.Contains);
 
-         if (i == 4 || i == 9 || i == 12) {
+         if (i == 4 || i == 9 || i == 12) { // special type of polygon for spaces outside of corner trading posts
             attachCornerListeners(this, graphic, spaces[i], spaces[i+1], i);
          }
          else {
@@ -99,30 +96,32 @@ function create() {
    }
 
    global_physics = this.physics;
-   makeMuddy(false);
+   floodCanyon(false);
 }
 
 
+// adds a click listener to each gameboard space
+// creates an alert showing the list of team names of all the teams located in the selected space
 function attachClickListener(physics, graphic, index, locations) {
    graphic.on('pointerdown', function(pointer) { // details all of the players in the selected space
       if (!onModal) {
          console.log(locations);
-         var players = "The following players are in this space:<br><br>";
+         var players = "The following teams are in this space:<br><br>";
          var empty = true;
          for (id in locations) {
             if (locations[id] == index 
               || (index == 12 && [21, 22].includes(locations[id])) 
-                || ([21, 22].includes(index) && locations[id] == 12)) { // account for Tom Canyon Ford
+                || ([21, 22].includes(index) && locations[id] == 12)) { // accounts for Tom Canyon Ford
                players += id + ", ";
                empty = false;
             }
          }
 
          if (empty) {
-            customAlert("There are no players in this space")
+            customAlert("There are no teams in this space")
          }
          else {
-            customAlert(players.substring(0, players.length - 2));
+            customAlert(players.substring(0, players.length - 2)); // removes the last space and comma
          }
       }
    });
@@ -131,6 +130,7 @@ function attachClickListener(physics, graphic, index, locations) {
 }
 
 
+// highlights standard gameboard spaces when the facilitator hovers over them
 function attachPolygonListeners(scene, graphic, polygon, index) {
    graphic.on('pointerover', function () {
       if (!onModal) {
@@ -140,6 +140,8 @@ function attachPolygonListeners(scene, graphic, polygon, index) {
    });
 }
 
+// special function needed to highlight the spaces just outside the corner trading posts
+// the combination of polygon coordinates and curved arcs required creating a cubic bezier spline
 function attachCornerListeners(scene, graphic, square, circle, index) {
    graphic.on('pointerover', function () {
       if (!onModal) {
@@ -173,6 +175,7 @@ function attachCornerListeners(scene, graphic, square, circle, index) {
    })
 }
 
+// highlights the circle trading posts at each corner of the gameboard
 function attachCircleListeners(graphic, circle, index) {
    graphic.on('pointerover', function () {
       if (!onModal) {
@@ -183,6 +186,17 @@ function attachCircleListeners(graphic, circle, index) {
 }
 
 
+// adds a new team's icon 
+function addNewBoardIcon(userID) {
+  if (global_physics) {
+    newCar = global_physics.add.image(icon_spot[0][0], icon_spot[0][1], colors[colorSelector++]);
+    colorSelector = (colorSelector) % colors.length;
+    cars[userID] = newCar
+    locations[userID] = 0;
+  }
+}
+
+// checks if a given moving car icon has reached its destination or not
 function update() {
   for (var id in cars) {
     if (dests[id] != null) {
@@ -194,18 +208,7 @@ function update() {
   };
 }
 
-
-function addNewBoardIcon(userID) {
-
-  if (global_physics) {
-    newCar = global_physics.add.image(icon_spot[0][0], icon_spot[0][1], colors[colorSelector++]);
-    colorSelector = (colorSelector) % colors.length;
-    cars[userID] = newCar
-    locations[userID] = 0;
-  }
-  
-}
-
+// called by the controller to move a specific team's icon to a new space
 function updateDestinations(userID, location) {
   if (location != undefined && locations[userID] != undefined) {
     locations[userID] = location;
@@ -215,13 +218,14 @@ function updateDestinations(userID, location) {
 }
 
 
-function makeMuddy(isMuddy) {
-   if (isMuddy) {
+// changes Tom's Ford Canyon on the board into one or two spaces depending on whether it is flooded
+function floodCanyon(isFlooded) {
+   if (isFlooded) {
       shape_graphics[12].visible = false;
       shape_graphics[21].visible = true;
       shape_graphics[22].visible = true;
    }
-   if (!isMuddy) {
+   if (!isFlooded) {
       shape_graphics[12].visible = true;
       shape_graphics[21].visible = false;
       shape_graphics[22].visible = false;
@@ -229,6 +233,7 @@ function makeMuddy(isMuddy) {
 }
 
 
+// called when the game ends, this function removes all team icons and recreates the gameboard
 function resetGameBoard() {
   for (var id in cars) {
     cars[id].destroy();

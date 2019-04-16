@@ -1,5 +1,4 @@
-// define connections between board spaces
-connections = [ // should move this to external text file
+connections = [ // define connections between board spaces
 [1], // apache junction
 [0, 2, 14, 15], // space outside apache junction
 [1, 3], 
@@ -24,10 +23,8 @@ connections = [ // should move this to external text file
 [14, 13, 22],
 [13, 11, 21]
 ];
-// console.log(connections);
 
-// define board spaces relative to size of original image
-var spaces = [ // should move this to external text file
+var spaces = [ // define board spaces relative to size of original image
 [26, 587,  19, 595,  18, 774,  25, 782,  212, 783,  219, 774,  218, 596,  209, 586], // apache junction
 
 [35, 508,  35, 586,  209, 586,  218, 596,  218, 770,  302, 770,  302, 508], // space outside apache junction
@@ -63,7 +60,7 @@ var spaces = [ // should move this to external text file
 [540, 550,  580, 560,  632, 585,  656, 592,  720, 635,  734, 637,  756, 644,  774, 658,  773, 530,  540, 532] // Tom Canyon Ford right side
 ];
 
-var icon_spot = [
+var icon_spot = [ // the specfic coordinates in each space that all player icons move to
 [119, 684], // apache junction
 [262, 544], 
 [113, 443], // high country trail
@@ -95,14 +92,8 @@ var trading_posts = [0, 5, 10, 13];
 
 var hasNormalized = false;
 
-// [588, 690], [722, 572]
 
-// [540, 566,  542, 768,  673, 766,  661, 753,  660, 749,  652, 737,  647, 720,  647, 703,  652, 687,  640, 665,  628, 648,  604, 616,  577, 590,  540, 566],
-// [540, 550,  580, 560,  632, 585,  656, 592,  720, 635,  734, 637,  756, 644,  774, 658,  773, 530,  540, 532]
-
-
-
-function normalize(boardwidth, boardheight) {
+function normalize(boardwidth, boardheight) { // used to size all board coordinate values to be relative to the size of the window
    if (!hasNormalized) {
       for (i = 0; i < spaces.length; i++) {
          for (j = 0; j < spaces[i].length; j++) {
