@@ -2,35 +2,43 @@ var PlayerController = function()
 {
   let scope = this;
 
-  console.log(getUrlVars());
   let token = getUrlVars()['token'];
-  //open socket
+
   let socket = scope.socket = io(document.location.hostname + ":3000?token=" + token);
   console.log(socket);
 
   scope._RegisterSocketHandlers();
   scope._RegisterOutgoing();
-
-  //swindow.location.href = "login.html";
 }
 
+/* Hardcoded Weather */
 weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "arctic blast": ["arctic blast", "cold"]};
 
-var weatherForecast;
-var confirmBox;
+/* Boolean Globals */
 var forecastAvailable = false;
 var hasTurbos = false;
-var teamname = "";
 var stay1Day = false;
 var stay2Day = false;
+
+/* Game Globals */
+var weatherForecast;
+var teamname = "";
 var curr_day = 0;
 var resources = new Object();
 var colocated_players = [];
-var alert_queue = [];
-var socket;
 var reqObj = new Object();
 var offerObj = new Object();
 
+/* UI / Connection Globals */
+var confirmBox; /* Either a confirm box or alert msg */
+var alert_queue = [];
+var socket;
+
+/* player_gameboard Global Variables referenced 
+ * onModal
+ * enableMove
+ * hasMadeMove
+ */
 
 window.onload = function () {
   window.controller = new PlayerController();
@@ -52,6 +60,7 @@ $(document).ready(function(){
       console.log("onModal is false from teamTradeModal");
       onModal = false;
     });
+
   $('#provisionerModal')
     .on('show.bs.modal', function (e) {
       console.log("onModal is true from provTradeModal");
@@ -61,6 +70,7 @@ $(document).ready(function(){
       console.log("onModal is false from provTradeModal");
       onModal = false;
     });
+
   $('#videoModal')
     .on('show.bs.modal', function (e) {
       console.log("onModal is true from videoModal");
@@ -69,7 +79,6 @@ $(document).ready(function(){
     .on('hidden.bs.modal', function (e) {
       console.log("onModal is false from videoModal");
       onModal = false;
-
     });
 
   $('#forecastModal')
@@ -93,7 +102,6 @@ PlayerController.prototype = {
     let socket = this.socket;
 
     socket.on('disconnect', function() {
-      console.log("i have disconnected");
       window.location.href = '/';
     });
 
@@ -190,21 +198,12 @@ PlayerController.prototype = {
       for (let resource in reqObj) {
         if ( reqObj[resource] > 0){
           request += "&nbsp&nbsp&nbsp&nbsp" + String(reqObj[resource]) + " " + String(resource) + "\n";
-          //request += String(reqObj[resource]) + " " + String(resource) + ", ";
         }
         if ( offerObj[resource] > 0){
           offer += "&nbsp&nbsp&nbsp&nbsp" + String(offerObj[resource]) + " " + String(resource) + "\n";
-          //offer += String(offerObj[resource]) + " " + String(resource) + ", ";
         }
       }
-      /*
-      let trade = {
-        proposerID : d['proposerID'],
-        targetID : d['targetID'],
-        offered_resources : JSON.stringify(Array.from(offerResource)),
-        requested_resources : JSON.stringify(Array.from(requestResource))
-      }
-*/
+
 
       let alertMsg = d['proposer'] + " wants to trade with you! Would you like to give:<br>" 
         + offer 
@@ -249,8 +248,6 @@ PlayerController.prototype = {
     });
 
   },
-
-
 
   _RegisterOutgoing: function() 
   {

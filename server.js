@@ -10,7 +10,7 @@ const mysql = require("mysql");
 let db_config = {
 	host: 'localhost',
 	user: 'root',
-	password: 'password',
+	password: 'root',
 	database: 'lost_dutchman'
 };
 
