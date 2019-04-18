@@ -8,7 +8,7 @@ module.exports = function(socket, server, game, config){
 
 		var teamName = carePackage['team'];
 		var resources = carePackage['resources'];
-		
+
 		for (playerUserID in players) {
 			if (teamName === players[playerUserID]['username']) {
 				game.setResources(gameID, playerUserID, resources);
