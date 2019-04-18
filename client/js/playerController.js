@@ -5,7 +5,6 @@ var PlayerController = function()
   let token = getUrlVars()['token'];
 
   let socket = scope.socket = io(document.location.hostname + ":3000?token=" + token);
-  console.log(socket);
 
   scope._RegisterSocketHandlers();
   scope._RegisterOutgoing();
@@ -30,8 +29,9 @@ var reqObj = new Object();
 var offerObj = new Object();
 
 /* UI / Connection Globals */
-var confirmBox; /* Either a confirm box or alert msg */
-var alert_queue = [];
+var alertConfirmBox; /* Holds the currently displayed confirm box or alert msg */
+var bigModal; /* Holds the currently displayed big modal */
+var alert_queue = []; /* Holds the queue of things to be displayed */
 var socket;
 
 /* player_gameboard Global Variables referenced 
@@ -53,40 +53,43 @@ $(document).ready(function(){
 
   $('#teamTradingModal')
     .on('show.bs.modal', function (e) {
-      console.log("onModal is true from teamTradeModal");
+      bigModal = $('#teamTradingModal');
+      console.log("teamTradeModal shown");
       onModal = true;
     })
     .on('hidden.bs.modal', function (e) {
-      console.log("onModal is false from teamTradeModal");
+      console.log("teamTradeModal hidden");
       onModal = false;
     });
 
   $('#provisionerModal')
     .on('show.bs.modal', function (e) {
-      console.log("onModal is true from provTradeModal");
-      onModal = true;
+      bigModal = $('#provisionerModal');
+      console.log("provTradeModal shown");
     })
     .on('hidden.bs.modal', function (e) {
-      console.log("onModal is false from provTradeModal");
-      onModal = false;
+      console.log("provTradeModal hidden");
+      bigModal = undefined;
     });
 
   $('#videoModal')
     .on('show.bs.modal', function (e) {
-      console.log("onModal is true from videoModal");
-      onModal = true;
+      bigModal = $('#videoModal');
+      console.log("videoModal shown");
     })
     .on('hidden.bs.modal', function (e) {
-      console.log("onModal is false from videoModal");
-      onModal = false;
+      console.log("videoModal hidden");
+      bigModal = undefined;
     });
 
   $('#forecastModal')
     .on('shown.bs.modal', function (e) {
-       onModal = true;
+      console.log("forecastModal shown");
+      bigModal = $('#forecastModal');
     })
     .on('hidden.bs.modal', function (e) {
-       onModal = false;
+      console.log("forecastModal hidden");
+      bigModal = undefined;
     });
 
 });
@@ -101,6 +104,7 @@ PlayerController.prototype = {
     let scope = this;
     let socket = this.socket;
 
+    /* If the socket is ever disconnected, redirect to the login page */
     socket.on('disconnect', function() {
       window.location.href = '/';
     });
@@ -122,8 +126,6 @@ PlayerController.prototype = {
 
     socket.on('server send updateDay', function(d) {
       console.log("server send updateDay");
-      confirmBox.modal('hide');
-      onModal = false; // janky code to force-hide all displayed modals when the facilitator moves to new day
 
       curr_day = d['day'];
       if (curr_day >= 1) {
@@ -153,6 +155,9 @@ PlayerController.prototype = {
       enableMove = !stay1Day && !stay2Day;
       console.log("enableMove is " + enableMove);
       $('#readybutton').prop('disabled', false);
+
+      /* Remove all confirmations from queue */
+      removeConfirmsFromQueue();
     });
 
     socket.on('server send forecast', function(d) {
@@ -356,7 +361,6 @@ function reallyReady() {
   if (curr_day % 5 == 0 && !forecastAvailable) { $("#forecastButton").attr("disabled", true); }
   $('#readybutton').attr('disabled', true);
   enableMove = false;
-  onModal = false;
 
   if (curr_day > 0 && stay2Day) { 
     stay2Day = false; 
@@ -379,7 +383,6 @@ function reallyReady() {
     socket.emit('server send updateResources', {resources: resources});
   } 
 }
-
 
 function watchVideo(video) {
   $('#videoModal').modal('hide');
@@ -485,7 +488,7 @@ function updateResources(resources) {
 
 
 function customAlert(message) {
-   alertBox = bootbox.dialog({
+   toInsert = bootbox.dialog({
       message: message,
       title: '',
       backdrop: true,
@@ -499,29 +502,26 @@ function customAlert(message) {
       show: false
    });
 
-   alertBox.on('hidden.bs.modal', function () {
-      if (alert_queue.length > 0) {
-        alert_queue.shift().modal('show');
-      }
-      else {
-        onModal = false;
-        // console.log("customAlert - onModal is false");
-      }
+   toInsert.on('hidden.bs.modal', function () {
+      alertConfirmBox = undefined;
+      checkAlertConfirmQueue();
    });
 
-   if (!onModal) {
-      onModal = true;
-      // console.log("customAlert - onModal is true");
-      alertBox.modal('show');
-   }
-   else {
-      alert_queue.push(alertBox);
-   }
+   //TODO: cancel trade window.
+   //push that to the front of the queue
+   toInsert.on('show.bs.modal', function () {
+      console.log("alert closed");
+   });
+
+   alert_queue.push({
+      type: 'ALERT',
+      modal: toInsert
+   });
+   checkAlertConfirmQueue();
 };
 
 function customConfirm(message, callbackFunc, ifTrade) {
-
-   confirmBox = bootbox.confirm({
+   toInsert = bootbox.confirm({
       message: message,
       closeButton: false,
       title: '',
@@ -543,21 +543,46 @@ function customConfirm(message, callbackFunc, ifTrade) {
          else if (ifTrade != undefined && ifTrade){
            callbackFunc(result);
          }
-
-         if (alert_queue.length > 0) {
-            alert_queue.shift().modal('show');
-         }
-         else {
-            onModal = false;
-            // console.log("customConfirm - onModal is false");
-         }
       },
       show: false
    });
 
-   onModal = true;
-   // console.log("customConfirm - onModal is true");
-   confirmBox.modal('show');
+   toInsert.on('show.bs.modal', function() {
+      /* Hide the larger modal */
+      if (bigModal != undefined) {
+        bigModal.modal('hide');
+      }
+   });
+
+   toInsert.on('hide.bs.modal', function() {
+      alertConfirmBox = undefined;
+      checkAlertConfirmQueue();
+   });
+
+   alert_queue.push({
+      type: 'CONFIRM',
+      modal: toInsert
+   });
+   checkAlertConfirmQueue();
+}
+
+function checkAlertConfirmQueue() {
+  if (alertConfirmBox != undefined || alert_queue.length == 0) return;
+  else {
+    alertConfirmBox = alert_queue.shift();
+    alertConfirmBox.modal.modal('show');
+  }
+}
+
+function removeConfirmsFromQueue() {
+  for (var i = alert_queue.length-1; i >= 0; i--) {
+    if (alert_queue[i].type == 'CONFIRM') {
+      delete alert_queue[i];
+    }
+  }
+  if (alertConfirmBox != undefined && alertConfirmBox.type == 'CONFIRM') {
+    alertConfirmBox.modal.modal('hide');
+  }
 }
 
 
