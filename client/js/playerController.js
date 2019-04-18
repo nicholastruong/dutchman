@@ -236,16 +236,11 @@ PlayerController.prototype = {
       console.log("yo the trade was cancelled");
     })
 
-    socket.on('out of resources', function(d){
+    socket.on('player out of resources', function(d){
       console.log('out of resources');
 
-      /*
-        
-        BUG: Can't figure out why this is triggered when resources are still valid. Cannot figure out where this is being triggered from.
-        Tried printing from out_of_resources.js but to no avail.
-
-      */
-      //$('#messages').append($('<li>').text("You're out of resources. Use your beacon!"));
+     
+      $('#messages').append($('<li>').text("You're out of resources. Talk to the facilitator!"));
     });
 
     socket.on('end game', function(d){

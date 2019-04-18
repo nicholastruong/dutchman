@@ -164,15 +164,15 @@ FacilitatorController.prototype = {
       endGame();
     });
 
-    socket.on('out of resources', function(d) {
+    socket.on('update server player out of resources', function(d) {
       var date = new Date();
       var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";
-      for (player in d){
-        console.log(player);
-        $('#messages').append($('<li>').text(time + player + " is out of resources"));
 
+      d.forEach(function(player){
+        $('#messages').append($('<li>').text(time + player + " is out of resources"));
         scrollToBottom();
-      }
+      });
+
     });
 
     socket.on('update player resource', function(d) {

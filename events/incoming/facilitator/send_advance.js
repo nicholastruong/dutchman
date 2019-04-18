@@ -25,14 +25,14 @@ module.exports = function(socket, server, game, config){
 			
 			//notifies player and facilitator that they are out of resources
 			if(!hasEnoughResources) {
-				console.log(players[playerUserID]['username'] +  ' out of resources');
-
-				server.trigger['out of resources'](playerUserID);
+				server.trigger['player out of resources'](playerUserID);
 				playersOutOfResources.push(players[playerUserID]['username']);
 			}
 			
 		}
-		server.trigger['update server player out of resources'](gameID, playersOutOfResources);
+		if (playersOutOfResources.length !== 0) {
+			server.trigger['update server player out of resources'](gameID, playersOutOfResources);
+		}
 
 		//send all updated player status to facilitator
 		server.trigger['server update player states'](gameID, false);

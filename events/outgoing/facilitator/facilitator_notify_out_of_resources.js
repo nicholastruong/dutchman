@@ -8,8 +8,7 @@ module.exports = function(server, game) {
 			//array of players in the game
 			let currentGame = game['games'][gameID];
 			let facilitatorID = currentGame.facilitatorID;
-
-			server.emit(facilitatorID, "out of resources", playersOutOfResources, null);
+			server.emit(facilitatorID, "update server player out of resources", playersOutOfResources, null);
 		}
 	};
 	
