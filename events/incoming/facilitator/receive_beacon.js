@@ -8,13 +8,14 @@ module.exports = function(socket, server, game, config){
 
 		var teamName = carePackage['team'];
 		var resources = carePackage['resources'];
+		
 		for (playerUserID in players) {
 			if (teamName === players[playerUserID]['username']) {
-				for (r in players[playerUserID]['resources']){
-					//players
-				}
+				game.setResources(gameID, playerUserID, resources);
+				server.trigger['update resources'](gameID, playerUserID);
 			}	
 		}
+		
 		
 	});
 }

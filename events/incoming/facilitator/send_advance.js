@@ -27,11 +27,6 @@ module.exports = function(socket, server, game, config){
 			if(!hasEnoughResources) {
 				console.log(playerUserID +  ' out of resources');
 
-				var beaconResources = calculateNewResources(players[playerUserID]['resources']);
-				
-				game.setResources(gameID, playerUserID, beaconResources);
-				server.trigger['update resources'](gameID, playerUserID);
-				
 				server.trigger['out of resources'](playerUserID);
 				playersOutOfResources.push(playerUserID);
 			}
@@ -44,13 +39,6 @@ module.exports = function(socket, server, game, config){
 		server.trigger['update server weather'](gameID, currentGame['facilitatorID']);
 		if(currentGame['day'] === 21) {
 			server.trigger['end game'](gameID);
-		}
-
-		function calculateNewResources(oldResources) {
-			for (r in oldResources) {
-				oldResources[r] += 5;
- 			}
- 			return oldResources;
 		}
 		
 		
