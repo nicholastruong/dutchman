@@ -110,8 +110,8 @@ PlayerController.prototype = {
     });
 
     socket.on('facilitator broadcast', function(msg) {
-      var d = new Date();
-      var time = d.getHours() + ":" + d.getMinutes() + " ";
+      var date = new Date();
+      var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";
       $('#messages').append($('<li>').text(time + msg));
       scrollToBottom();
     });
