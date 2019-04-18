@@ -94,7 +94,7 @@ FacilitatorController.prototype = {
       playerNames[d['userID']] = name;
 
       var date = new Date();
-      var time = date.getHours() + ":" + date.getMinutes() + " : ";
+      var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";
 
       $('#messages').append($('<li>').text(time + name + " has connected."));
       scrollToBottom();
@@ -110,7 +110,7 @@ FacilitatorController.prototype = {
     socket.on('player ready', function(d){
       // console.log(d);
       var date = new Date();
-      var time = date.getHours() + ":" + date.getMinutes() + " : ";
+      var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";
 
       if ($("#day").text() == "Planning Period") {
         $('#messages').append($('<li>').text(time + "Team " + d['username'] + " is ready to begin the game"));
@@ -153,8 +153,7 @@ FacilitatorController.prototype = {
       console.log("updated player status");
 
       var date = new Date();
-      var time = date.getHours() + ":" + date.getMinutes() + " : ";
-
+      var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";
 
       //if first time loading table:
       if (d['isFirstTime']) {
@@ -180,7 +179,7 @@ FacilitatorController.prototype = {
       endGame();
     });
 
-    socket.on('out of resources', function(d) {
+    socket.on('update server player out of resources', function(d) {
       var date = new Date();
       var time = date.getHours() + ":" + date.getMinutes() + " : ";
       console.log(d);
@@ -193,6 +192,7 @@ FacilitatorController.prototype = {
         // scrollToBottom();
 
       }
+
     });
 
     socket.on('update player resource', function(d) {
@@ -208,7 +208,7 @@ FacilitatorController.prototype = {
 
     $('form').submit(function(e){
       var date = new Date();
-      var time = date.getHours() + ":" + date.getMinutes() + " : ";
+      var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";
 
       e.preventDefault(); // prevents page reloading
       socket.emit('facilitator send broadcast', $('#m').val());
@@ -483,7 +483,7 @@ function scrollToBottom() {
 
 function endGame() {
   var date = new Date();
-  var time = date.getHours() + ":" + date.getMinutes() + " : ";
+  var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";
   $('#messages').append($('<li>').text(time + "Game has ended"));
   scrollToBottom();
 
