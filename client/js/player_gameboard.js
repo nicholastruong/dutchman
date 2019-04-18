@@ -104,6 +104,7 @@ function create() {
 function attachClickListener(physics, graphic, index) {
    
    graphic.on('pointerdown', function(pointer) {
+      calculateOnModal();
       if (!onModal) {
         if (curr_space == index) { // if team clicks on current space, shows an alert with team names of all colocated teams
           customAlert(getColocatedPlayers());
@@ -141,6 +142,7 @@ function attachClickListener(physics, graphic, index) {
 // highlights standard gameboard spaces when the facilitator hovers over them
 function attachPolygonListeners(scene, graphic, polygon, index) {
   graphic.on('pointerover', function () {
+    calculateOnModal();
     if (!onModal && enableMove && (!flooded || ((curr_space != 21 || index != 22) && (curr_space != 22 || index != 21)))) {
       graphic.fillStyle(0xffffff, 0.5);
       graphic.fillPoints(polygon.points, true);  
@@ -152,6 +154,7 @@ function attachPolygonListeners(scene, graphic, polygon, index) {
 // the combination of polygon coordinates and curved arcs required creating a cubic bezier spline
 function attachCornerListeners(scene, graphic, square, circle, index) {
    graphic.on('pointerover', function () {
+    calculateOnModal();
       if (!onModal && enableMove) {
         coeffs = [];
 
@@ -170,7 +173,7 @@ function attachCornerListeners(scene, graphic, square, circle, index) {
            path.lineTo(square[j], square[j+1]);
         }
         path.cubicBezierTo(
-           square[0], square[1],
+           square[0],   square[1],
            circle[0] + circle[2] * coeffs[0], circle[1] + circle[2] * coeffs[1],
            circle[0] + circle[2] * coeffs[2], circle[1] + circle[2] * coeffs[3]
         )
@@ -186,6 +189,7 @@ function attachCornerListeners(scene, graphic, square, circle, index) {
 // highlights the circle trading posts at each corner of the gameboard
 function attachCircleListeners(graphic, circle, index) {
    graphic.on('pointerover', function () {
+      calculateOnModal();
       if (!onModal && enableMove) {
         graphic.fillStyle(0xffffff, 0.5);
         graphic.fillCircleShape(circle);
@@ -281,3 +285,6 @@ function floodCanyon(isFlooded) {
    }
 }
 
+function calculateOnModal() {
+  onModal = !(bigModal == undefined && alertConfirmBox == undefined);
+}
