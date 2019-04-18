@@ -120,8 +120,8 @@ PlayerController.prototype = {
     });
 
     socket.on('facilitator broadcast', function(msg) {
-      var d = new Date();
-      var time = d.getHours() + ":" + d.getMinutes() + " ";
+      var date = new Date();
+      var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";
       $('#messages').append($('<li>').text(time + msg));
       scrollToBottom();
     });
@@ -179,6 +179,11 @@ PlayerController.prototype = {
       if (curr_day != 0 && !forecastAvailable) { // disables the weather forecast button if not enough batteries available
         $("#forecastButton").attr("disabled", resources['batteries'] < 1 || curr_day % 5 != 0);
       }
+      updateResources(d);
+    }); 
+
+    socket.on('update beacon resources', function(d) {
+      resources = d;
       updateResources(d);
     }); 
 
@@ -247,16 +252,11 @@ PlayerController.prototype = {
       manageAlertsAfterCancelledTrade(d['proposerID']);
     })
 
-    socket.on('out of resources', function(d){
+    socket.on('player out of resources', function(d){
       console.log('out of resources');
 
-      /*
-        
-        BUG: Can't figure out why this is triggered when resources are still valid. Cannot figure out where this is being triggered from.
-        Tried printing from out_of_resources.js but to no avail.
-
-      */
-      //$('#messages').append($('<li>').text("You're out of resources. Use your beacon!"));
+     
+      $('#messages').append($('<li>').text("You're out of resources. Talk to the facilitator!"));
     });
 
     socket.on('end game', function(d){

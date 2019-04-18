@@ -25,32 +25,20 @@ module.exports = function(socket, server, game, config){
 			
 			//notifies player and facilitator that they are out of resources
 			if(!hasEnoughResources) {
-				console.log(playerUserID +  ' out of resources');
-
-				var beaconResources = calculateNewResources(players[playerUserID]['resources']);
-				
-				game.setResources(gameID, playerUserID, beaconResources);
-				server.trigger['update resources'](gameID, playerUserID);
-				
-				server.trigger['out of resources'](playerUserID);
-				playersOutOfResources.push(playerUserID);
+				server.trigger['player out of resources'](playerUserID);
+				playersOutOfResources.push(players[playerUserID]['username']);
 			}
 			
 		}
-		server.trigger['update server player out of resources'](gameID, playersOutOfResources);
+		if (playersOutOfResources.length !== 0) {
+			server.trigger['update server player out of resources'](gameID, playersOutOfResources);
+		}
 
 		//send all updated player status to facilitator
 		server.trigger['server update player states'](gameID, false);
 		server.trigger['update server weather'](gameID, currentGame['facilitatorID']);
 		if(currentGame['day'] === 21) {
 			server.trigger['end game'](gameID);
-		}
-
-		function calculateNewResources(oldResources) {
-			for (r in oldResources) {
-				oldResources[r] += 5;
- 			}
- 			return oldResources;
 		}
 		
 		

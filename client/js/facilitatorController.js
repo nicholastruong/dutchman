@@ -23,6 +23,7 @@ var FacilitatorController = function()
     //window.location.href = '/';
   }
 
+  console.log('socket is ' + socket);
 
   scope._RegisterSocketHandlers();
   scope._RegisterOutgoing();
@@ -34,7 +35,7 @@ var playerNames = {};
 var readyPlayers = 0;
 var numPlayers = 0;
 var endGameAlert;
-
+var socket;
 
 window.onload = function() {
   window.controller = new FacilitatorController();
@@ -78,7 +79,7 @@ FacilitatorController.prototype = {
       playerNames[d['userID']] = name;
 
       var date = new Date();
-      var time = date.getHours() + ":" + date.getMinutes() + " : ";
+      var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";
 
       $('#messages').append($('<li>').text(time + name + " has connected."));
       scrollToBottom();
@@ -94,7 +95,7 @@ FacilitatorController.prototype = {
     socket.on('player ready', function(d){
       // console.log(d);
       var date = new Date();
-      var time = date.getHours() + ":" + date.getMinutes() + " : ";
+      var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";
 
       if ($("#day").text() == "Planning Period") {
         $('#messages').append($('<li>').text(time + "Team " + d['username'] + " is ready to begin the game"));
@@ -137,8 +138,7 @@ FacilitatorController.prototype = {
       console.log("updated player status");
 
       var date = new Date();
-      var time = date.getHours() + ":" + date.getMinutes() + " : ";
-
+      var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";
 
       //if first time loading table:
       if (d['isFirstTime']) {
@@ -164,15 +164,15 @@ FacilitatorController.prototype = {
       endGame();
     });
 
-    socket.on('out of resources', function(d) {
+    socket.on('update server player out of resources', function(d) {
       var date = new Date();
-      var time = date.getHours() + ":" + date.getMinutes() + " : ";
-      for (player in d){
-        $('#messages').append($('<li>').text(time + player + " is out of resources"));
-        $('#messages').append($('<li>').text("Adding more resources to " + player + "'s inventory"));
+      var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";
 
+      d.forEach(function(player){
+        $('#messages').append($('<li>').text(time + player + " is out of resources"));
         scrollToBottom();
-      }
+      });
+
     });
 
     socket.on('update player resource', function(d) {
@@ -188,7 +188,7 @@ FacilitatorController.prototype = {
 
     $('form').submit(function(e){
       var date = new Date();
-      var time = date.getHours() + ":" + date.getMinutes() + " : ";
+      var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";
 
       e.preventDefault(); // prevents page reloading
       socket.emit('facilitator send broadcast', $('#m').val());
@@ -235,8 +235,12 @@ FacilitatorController.prototype = {
       show: false
     });
   }
+
+
   
 };
+
+
 
 function getUrlVars() {
     var vars = {};
@@ -318,6 +322,7 @@ function generateTeamTable(name, resources){
 }
 
 function addTeamResources(name, resources){
+
   Object.keys(addResourceObject).forEach(v => myObj[v] = 0);
 
   if ( document.getElementById("teamResourceTitle") != null){
@@ -362,6 +367,18 @@ function addTeamResources(name, resources){
   $('#addResourceModal').modal('show');
 }
 
+function addResources(){
+  let socket = window.controller.socket;
+  var name = document.getElementById("teamResourceTitle").innerText;
+  name = name.slice(5);
+  var carePackage = {
+    team : name,
+    resources : this.addResourceObject
+  }
+  socket.emit('beacon', carePackage);
+  $('#addResourceModal').modal('hide');
+};
+
 function subtractItem(resources){
   document.getElementById("addResource-" + resources).textContent--;
   this.addResourceObject[resources]--;
@@ -371,13 +388,6 @@ function addItem(resources){
   this.addResourceObject[resources]++;
 }
 
-function addResources(){
-  var name = document.getElementById("teamResourceTitle").innerText;
-  name = name.slice(5);
-  console.log(this.addResourceObject);
-  console.log(name);
-  $('#addResourceModal').modal('hide');
-}
 
 function customAlert(message) {
    alertBox = bootbox.dialog({
@@ -450,7 +460,7 @@ function updateResources(teamname, resources) {
 
 function endGame() {
   var date = new Date();
-  var time = date.getHours() + ":" + date.getMinutes() + " : ";
+  var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";
   $('#messages').append($('<li>').text(time + "Game has ended"));
   scrollToBottom();
   // $("#readybutton").attr('disabled', true);

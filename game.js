@@ -223,54 +223,61 @@
  				currentWeather = currentForecast['high'];
  			}
 
- 			//if in mine, use either one cave or shelter
+ 			//if already reached mine, don't expend resources in apache junction
+ 			if (!(currentLocation === 0 && game.players[userID]['reachedGoldMine'])) {
+ 				//if in mine, use either one cave or shelter
+	 			if(currentLocation === 20) {
+	 				resources['gold'] += 1;
+	 				game.players[userID]['reachedGoldMine'] = true;
+	 				if(resources['caves'] > 0) {
+	 					resources['caves'] -= 1;
+	 				}
+	 				else {
+	 					resources['tents'] -= 1;
+	 				}
+	 			}
+
+	 			if (currentWeather === "arctic blast") {
+	 				resources['fuel'] -= 2;
+	 				resources['supplies'] -= 4;
+	 			}
+	 			else if (currentWeather === "sunny") {
+	 				resources['fuel'] -= 1;
+	 				resources['supplies'] -= 1;
+	 			}
+	 			//If the weather is rainy and wet, a team that is in the mud will expend 1 fuel and 2 supplies. A team that is on hard ground will only use 1 fuel and 1 supply. 
+	 			else {
+	 				resources['fuel'] -= 1;
+	 				if(lowCountryPath.has(currentLocation)) {
+	 					resources['supplies'] -= 2;
+	 				}
+	 				else {
+	 					resources['supplies'] -= 1;
+	 				}
+	 			}
+
+
+	 			//if any supply, fuel, cave, or tent is less than 0, call the beacon!
+	 			if(resources['fuel'] <= 0 || resources['supplies'] <= 0 || (resources['caves'] <= 0 && resources['tents'] <= 0 && minePath.has(currentLocation))) {
+	 				if(resources['fuel'] < 0) {
+	 					resources['fuel'] = 0;
+	 				}
+	 				if(resources['supplies'] < 0) {
+	 					resources['supplies'] = 0;
+	 				}
+	 				if(resources['caves'] < 0 && resources['tents'] < 0) {
+	 					resources['caves'] = 0;
+	 					resources['tents'] = 0;
+	 				}
+
+	 				return false;
+	 			}
+	 		}
+
+	 		return true;
+
+
  			
- 			if(currentLocation === 20) {
- 				resources['gold'] += 1;
- 				if(resources['caves'] > 0) {
- 					resources['caves'] -= 1;
- 				}
- 				else {
- 					resources['tents'] -= 1;
- 				}
- 			}
-
- 			if (currentWeather === "arctic blast") {
- 				resources['fuel'] -= 2;
- 				resources['supplies'] -= 4;
- 			}
- 			else if (currentWeather === "sunny") {
- 				resources['fuel'] -= 1;
- 				resources['supplies'] -= 1;
- 			}
- 			//If the weather is rainy and wet, a team that is in the mud will expend 1 fuel and 2 supplies. A team that is on hard ground will only use 1 fuel and 1 supply. 
- 			else {
- 				resources['fuel'] -= 1;
- 				if(lowCountryPath.has(currentLocation)) {
- 					resources['supplies'] -= 2;
- 				}
- 				else {
- 					resources['supplies'] -= 1;
- 				}
- 			}
-
-
- 			//if any supply, fuel, cave, or tent is less than 0, call the beacon!
- 			if(resources['fuel'] < 0 || resources['supplies'] < 0 || (resources['caves'] < 0 && resources['tents'] < 0 && minePath.has(currentLocation))) {
- 				if(resources['fuel'] < 0) {
- 					resources['fuel'] = 0;
- 				}
- 				if(resources['supplies'] < 0) {
- 					resources['supplies'] = 0;
- 				}
- 				if(resources['caves'] < 0 && resources['tents'] < 0) {
- 					resources['caves'] = 0;
- 					resources['tents'] = 0;
- 				}
-
- 				return false;
- 			}
- 			return true;
  		},
 
  		// When a user requests a trade, create an entry in the game object
@@ -353,6 +360,7 @@
 	 			game.players[userID] = {
  					currentLocation: 0,
  					username: socket.user.username,
+ 					reachedGoldMine: false,
  					resources : {
  						supplies: grub_stakes.supplies[grubID],
  						fuel: grub_stakes.fuel[grubID],
