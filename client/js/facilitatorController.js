@@ -33,18 +33,20 @@ weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "a
 var playerNames = {};
 var readyPlayers = 0;
 var numPlayers = 0;
-var endGameAlert;
 
 
 window.onload = function() {
   window.controller = new FacilitatorController();
   $("#addResourcesModal").load("addResourceModal.html");
   $("#addResourcesModal").modal('hide');
+
+  $("#endGamesModal").load("endGameModal.html");
+  $("#endGamesModal").modal('hide');
 }
 
 $(document).ready(function(){
-   console.log("documentReady called");
-   $('#addResourcesModal')
+  console.log("documentReady called");
+  $('#addResourcesModal')
     .on('show.bs.modal', function (e) {
       console.log("onModal is true from addResourcesModal");
       onModal = true;
@@ -54,7 +56,18 @@ $(document).ready(function(){
       onModal = false;
     });
 
+  $('#endGamesModal')
+    .on('show.bs.modal', function (e) {
+      console.log("onModal is true from endGameModal");
+      onModal = true;
+    })
+    .on('hidden.bs.modal', function (e) {
+      console.log("onModal is false from endGameModal");
+      onModal = false;
+    });
+
 });
+
 
 FacilitatorController.prototype = {
   /**
@@ -216,27 +229,28 @@ FacilitatorController.prototype = {
         " - Press the 'Start Next Day' to advance the game for all the teams when they are ready.");
     });
 
-    endGameAlert = bootbox.dialog({
-      message: "You have reached the end of the game!",
-      title: '',
-      backdrop: true,
-      onEscape: true,
-      buttons: {
-         ok: {
-            label: "Okay",
-            className: 'alertButton',
-            callback: function(){
-               endGameAlert.modal("hide");
-               socket.emit('reset game'); // called on endgame
-               resetGame();
-            }
-         },
-      },
-      show: false
-    });
+    // endGameAlert = bootbox.dialog({
+    //   message: "You have reached the end of the game!",
+    //   title: '',
+    //   backdrop: true,
+    //   onEscape: true,
+    //   buttons: {
+    //      ok: {
+    //         label: "Okay",
+    //         className: 'alertButton',
+    //         callback: function(){
+    //            endGameAlert.modal("hide");
+    //            socket.emit('reset game'); // called on endgame
+    //            resetGame();
+    //         }
+    //      },
+    //   },
+    //   show: false
+    // });
   }
   
 };
+
 
 function getUrlVars() {
     var vars = {};
@@ -320,6 +334,7 @@ function generateTeamTable(name, resources){
    tbunits.innerHTML = resources['turbo'];
 }
 
+
 function addTeamResources(name, resources){
   Object.keys(addResourceObject).forEach(v => myObj[v] = 0);
 
@@ -382,6 +397,7 @@ function addResources(){
   $('#addResourceModal').modal('hide');
 }
 
+
 function customAlert(message) {
    alertBox = bootbox.dialog({
       message: message,
@@ -409,6 +425,7 @@ function customAlert(message) {
    console.log("onModal is true");
    alertBox.modal('show');
 };
+
 
 function updateWeather(weatherData) {
   $('#lowweathertext').text(weatherData['low']); 
@@ -443,12 +460,10 @@ function updateResources(teamname, resources) {
     gold.innerHTML = resources['gold'];
 }
 
-  function scrollToBottom() {
-     var message = document.getElementById('messages');
-     message.scrollTop = message.scrollHeight;
-  }
-
-
+function scrollToBottom() {
+   var message = document.getElementById('messages');
+   message.scrollTop = message.scrollHeight;
+}
 
 
 function endGame() {
@@ -456,12 +471,9 @@ function endGame() {
   var time = date.getHours() + ":" + date.getMinutes() + " : ";
   $('#messages').append($('<li>').text(time + "Game has ended"));
   scrollToBottom();
-  // $("#readybutton").attr('disabled', true);
-  // endgame popup/modal
 
   // show endGameAlert
-  onModal = true;
-  endGameAlert.modal('show');
+  // endGameAlert.modal('show');
 }
 
 function resetGame() {
