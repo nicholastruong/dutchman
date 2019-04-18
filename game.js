@@ -232,12 +232,13 @@
 	 				if(resources['caves'] > 0) {
 	 					resources['caves'] -= 1;
 	 				}
-	 				else {
+	 				else if (resources['tents'] > 0) {
 	 					resources['tents'] -= 1;
 	 				}
 	 			}
 
-	 			if (resources['fuel'] > 0 && resources['supplies'] > 0) {
+	 			// only subtract resources if player is not out of resources
+	 			if (resources['fuel'] > 0 && resources['supplies'] > 0 && (resources['tents'] > 0 || resources['caves'] > 0)) {
 	 				if (currentWeather === "arctic blast") {
 		 				resources['fuel'] -= 2;
 		 				resources['supplies'] -= 4;
@@ -257,13 +258,6 @@
 		 				}
 		 			}
 	 			}
-
-	 			// for (r in resources) {
-	 			// 	if (resources[r] < 0) {
-	 			// 		resources[r] = 0;
-	 			// 	} 
-	 			// }
-
 
 	 			//if any supply, fuel, cave, or tent is less than 0, call the beacon!
 	 			if(resources['fuel'] <= 0 || resources['supplies'] <= 0 || (resources['caves'] <= 0 && resources['tents'] <= 0 && minePath.has(currentLocation))) {
