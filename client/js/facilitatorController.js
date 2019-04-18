@@ -23,6 +23,7 @@ var FacilitatorController = function()
     //window.location.href = '/';
   }
 
+  console.log('socket is ' + socket);
 
   scope._RegisterSocketHandlers();
   scope._RegisterOutgoing();
@@ -34,6 +35,8 @@ var playerNames = {};
 var readyPlayers = 0;
 var numPlayers = 0;
 
+var endGameAlert;
+var socket;
 
 window.onload = function() {
   window.controller = new FacilitatorController();
@@ -248,6 +251,8 @@ FacilitatorController.prototype = {
     //   show: false
     // });
   }
+
+
   
 };
 
@@ -336,6 +341,7 @@ function generateTeamTable(name, resources){
 
 
 function addTeamResources(name, resources){
+
   Object.keys(addResourceObject).forEach(v => myObj[v] = 0);
 
   if ( document.getElementById("teamResourceTitle") != null){
@@ -380,6 +386,18 @@ function addTeamResources(name, resources){
   $('#addResourceModal').modal('show');
 }
 
+function addResources(){
+  let socket = window.controller.socket;
+  var name = document.getElementById("teamResourceTitle").innerText;
+  name = name.slice(5);
+  var carePackage = {
+    team : name,
+    resources : this.addResourceObject
+  }
+  socket.emit('beacon', carePackage);
+  $('#addResourceModal').modal('hide');
+};
+
 function subtractItem(resources){
   document.getElementById("addResource-" + resources).textContent--;
   this.addResourceObject[resources]--;
@@ -389,13 +407,6 @@ function addItem(resources){
   this.addResourceObject[resources]++;
 }
 
-function addResources(){
-  var name = document.getElementById("teamResourceTitle").innerText;
-  name = name.slice(5);
-  console.log(this.addResourceObject);
-  console.log(name);
-  $('#addResourceModal').modal('hide');
-}
 
 
 function customAlert(message) {
