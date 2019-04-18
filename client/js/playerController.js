@@ -127,8 +127,6 @@ PlayerController.prototype = {
 
     socket.on('server send updateDay', function(d) {
       console.log("server send updateDay");
-//      if (confirmBox != undefined) confirmBox.modal('hide');
-      //TODO: do things @MELANIE
 
       curr_day = d['day'];
       if (curr_day >= 1) {
@@ -158,6 +156,9 @@ PlayerController.prototype = {
       enableMove = !stay1Day && !stay2Day;
       console.log("enableMove is " + enableMove);
       $('#readybutton').prop('disabled', false);
+
+      /* Remove all confirmations from queue */
+      removeConfirmsFromQueue();
     });
 
     socket.on('server send forecast', function(d) {
@@ -387,7 +388,6 @@ function reallyReady() {
   } 
 }
 
-
 function watchVideo(video) {
   $('#videoModal').modal('hide');
 
@@ -509,15 +509,6 @@ function customAlert(message) {
    toInsert.on('hidden.bs.modal', function () {
       alertConfirmBox = undefined;
       checkAlertConfirmQueue();
-
-      /*
-      if (alert_queue.length > 0) {
-        alert_queue.shift().modal('show');
-      }
-      else {
-        onModal = false;
-        // console.log("customAlert - onModal is false");
-      }*/
    });
 
    //TODO: cancel trade window.
@@ -531,16 +522,6 @@ function customAlert(message) {
       modal: toInsert
    });
    checkAlertConfirmQueue();
-
-   /*
-   if (!onModal) {
-      onModal = true;
-      // console.log("customAlert - onModal is true");
-      alertBox.modal('show');
-   }
-   else {
-      alert_queue.push(alertBox);
-   }*/
 };
 
 function customConfirm(message, callbackFunc, ifTrade) {
@@ -566,18 +547,6 @@ function customConfirm(message, callbackFunc, ifTrade) {
          else if (ifTrade != undefined && ifTrade){
            callbackFunc(result);
          }
-
-         alertConfirmBox = undefined;
-         checkAlertConfirmQueue();
-
-          /*
-         if (alert_queue.length > 0) {
-            alert_queue.shift().modal('show');
-         }
-         else {
-            onModal = false;
-            // console.log("customConfirm - onModal is false");
-         }*/
       },
       show: false
    });
@@ -589,21 +558,34 @@ function customConfirm(message, callbackFunc, ifTrade) {
       }
    });
 
+   toInsert.on('hide.bs.modal', function() {
+      alertConfirmBox = undefined;
+      checkAlertConfirmQueue();
+   });
+
    alert_queue.push({
       type: 'CONFIRM',
       modal: toInsert
    });
    checkAlertConfirmQueue();
-   // console.log("customConfirm - onModal is true");
-//   confirmBox.modal('show');
 }
 
 function checkAlertConfirmQueue() {
   if (alertConfirmBox != undefined || alert_queue.length == 0) return;
   else {
-    alertConfirmBox = alert_queue.shift().modal;
-    console.log(alertConfirmBox);
-    alertConfirmBox.modal('show');
+    alertConfirmBox = alert_queue.shift();
+    alertConfirmBox.modal.modal('show');
+  }
+}
+
+function removeConfirmsFromQueue() {
+  for (var i = alert_queue.length-1; i >= 0; i--) {
+    if (alert_queue[i].type == 'CONFIRM') {
+      delete alert_queue[i];
+    }
+  }
+  if (alertConfirmBox != undefined && alertConfirmBox.type == 'CONFIRM') {
+    alertConfirmBox.modal.modal('hide');
   }
 }
 
