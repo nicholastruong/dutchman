@@ -352,8 +352,9 @@ function addTeamResources(name, resources){
             table += "','";
             table+= String(r);
             table+=`')">-</button></td>`
-            addResourceObject[resources] = resources[r];
+            this.addResourceObject[String(r)] = resources[r];
     }
+    console.log(this.addResourceObject);
 
     table += `</tbody>`
 
@@ -363,15 +364,18 @@ function addTeamResources(name, resources){
 
 function subtractItem(resources){
   document.getElementById("addResource-" + resources).textContent--;
-  addResourceObject[resources]--;
+  this.addResourceObject[resources]--;
 }
 function addItem(resources){
   document.getElementById("addResource-" + resources).textContent++;
-  addResourceObject[resources]++;
+  this.addResourceObject[resources]++;
 }
 
 function addResources(){
+  var name = document.getElementById("teamResourceTitle").innerText;
+  name = name.slice(5);
   console.log(this.addResourceObject);
+  console.log(name);
   $('#addResourceModal').modal('hide');
 }
 
