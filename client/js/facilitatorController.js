@@ -183,11 +183,15 @@ FacilitatorController.prototype = {
     socket.on('out of resources', function(d) {
       var date = new Date();
       var time = date.getHours() + ":" + date.getMinutes() + " : ";
-      for (player in d){
-        $('#messages').append($('<li>').text(time + player + " is out of resources"));
-        $('#messages').append($('<li>').text("Adding more resources to " + player + "'s inventory"));
+      console.log(d);
 
-        scrollToBottom();
+      for (player in d){
+        customAlert("Team " + playerNames[d[player]] + " is out of resources and is stuck!")
+        // $('#messages').append($('<li>').text(time + player + " is out of resources"));
+        // $('#messages').append($('<li>').text("Adding more resources to " + player + "'s inventory"));
+
+        // scrollToBottom();
+
       }
     });
 

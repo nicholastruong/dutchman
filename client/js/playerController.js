@@ -16,6 +16,7 @@ weather = {"sunny": ["sunny and cool", "sunny"], "rainy": ["rainy", "rainy"], "a
 /* Boolean Globals */
 var forecastAvailable = false;
 var hasTurbos = false;
+var gotToGoldMine = false;
 var stay1Day = false;
 var stay2Day = false;
 var out_of_resources = false;
@@ -144,7 +145,7 @@ PlayerController.prototype = {
         forecastAvailable = false; 
       }
 
-      if (d['resourcesExpended'] != undefined && curr_day != 1) { 
+      if (d['resourcesExpended'] != undefined && curr_day != 1 && !out_of_resources) { 
         updateAlert(d['weather'], d['resourcesExpended'], curr_day); 
       }
 
@@ -152,6 +153,10 @@ PlayerController.prototype = {
         updateWeather(d['weather']);
       }
 
+      if (curr_space == 20) {
+        gotToGoldMine = true;
+      }
+      
       hasMadeMove = false;
       enableMove = !stay1Day && !stay2Day;
       console.log("enableMove is " + enableMove);
@@ -171,6 +176,13 @@ PlayerController.prototype = {
         $("#forecastButton").attr("disabled", resources['batteries'] < 1 || curr_day % 5 != 0);
       }
       updateResources(d);
+
+      if (out_of_resources) { 
+        out_of_resources = false; 
+        enableMove = true;
+
+        customAlert("You received additional resources from the Facilitator! Count yourself lucky...");
+      }
     }); 
 
 
@@ -426,6 +438,12 @@ function scrollToBottom() {
 
 function updateAlert(weatherData, changedResources, day) {
   var alert = "";
+  if (curr_space == 0 && gotToGoldMine) {
+    alert += "You made it back to Apache Junction! Now you can relax.";
+    customAlert(alert);
+    return;
+  }
+
   if (weatherData[0] == "arctic blast") {
     alert += "Because of the cold weather, you used more resources than normal...<br><br>";
   }
