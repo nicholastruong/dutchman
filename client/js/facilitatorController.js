@@ -233,12 +233,11 @@ FacilitatorController.prototype = {
     var instructionButton = document.getElementById("instructionblock");
     instructionButton.addEventListener('click', function(){
       // alert("Instructions for facilitator");
-      endGameAlert(socket);
 
-      // customAlert("Instructions for Facilitator</p> - Click any game space to find out which teams" + 
-      //   " are currently located there.</p> - Send messages to all the teams by using the dialog in" + 
-      //   " the bottom right.</p> - View the resources of all the teams in the window on the left.</p>" +
-      //   " - Press the 'Start Next Day' to advance the game for all the teams when they are ready.");
+      customAlert("Instructions for Facilitator</p> - Click any game space to find out which teams" + 
+        " are currently located there.</p> - Send messages to all the teams by using the dialog in" + 
+        " the bottom right.</p> - View the resources of all the teams in the window on the left.</p>" +
+        " - Press the 'Start Next Day' to advance the game for all the teams when they are ready.");
     });
 
     // endGameAlert = bootbox.dialog({

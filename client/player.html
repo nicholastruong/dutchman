@@ -95,7 +95,7 @@
 
         <!--TEAM TRADE MODAL-->
         
-          <button class="btn btn-primary leftColButton" id="teamTradeButton" onclick = "teamTradeManager()" style="">Team Trade</button>
+        <button class="btn btn-primary leftColButton" id="teamTradeButton" onclick = "teamTradeManager()" style="">Team Trade</button>
         <div id = "teamTradingModal"></div>
 
         <div class="modal" id="cancelTradeModal" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
@@ -107,7 +107,7 @@
                 <p>Trade has been sent to team, and awaiting response. <br> Do you want to cancel trade?</p>
               </div>
               <div class="modal-footer">
-                <button type="button" id="cancelTradeButton" class="btn btn-primary" onclick="cancelTrade()"">Cancel Trade</button>
+                <button type="button" id="cancelTradeButton" class="btn btn-primary" onclick="cancelTrade()">Cancel Trade</button>
               </div>
             </div>
           </div>
@@ -118,6 +118,7 @@
         
         <button class="btn btn-primary leftColButton" onclick="provTradeManager()" id="provTradeButton" style="">Provisioner Trade</button>
         <div id = "provisionerModal"></div>
+
 
         <!-- <button class="btn btn-primary leftColButton" id ="videoTurboButton" style="">Watch Video</button> -->
         <a href="/videoModal.html" data-target="#videoModal" data-toggle="modal">
@@ -133,6 +134,7 @@
         
         <!-- <a data-target="#forecastModal" data-toggle="modal" id="forecastButton"> -->
         <button class="btn btn-primary leftColButton" id="forecastButton" disabled="true">Weather Forecast</button>
+        <div id = "theForecastModal"></div>
         <span class="resourcetext" style="margin-left:80px; margin-top: 10px; padding-left: 5px; background-color: rgba(155, 97, 43, 1);">
           Use batteries to see the weather forecast for the next five days.
         </span>
@@ -160,6 +162,7 @@
           </h2>
         </div>
 
+
         <button id="instructionblock" class="rightcol">
           <h2 id="instructionbutton"> Instructions </h2>
         </button>
@@ -174,128 +177,5 @@
   </div>
 </body>
 
-
-
-<!--WEATHER FORECAST MODAL-->
-
-<div class="modal modal-yellow" id="forecastModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" role="document" style="margin-top: 5%;">
-    <div class="modal-content">
-      <div class="modal-header">
-         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-         <span aria-hidden="true">&times;</span>
-         </button>
-         <div id="tradeTitle">Weather Forecast</div>
-      </div>
-
-      <div id="forecastContainer" class="container">
-         <div class="modal-body">
-            <div class="row">
-               <div id="forecast_cols" class="col-xs-12 col-md-offset-1">
-                  <div id="resourcetitle"></div>
-                  <table class="table">
-                     <thead>
-                        <tr>
-                           <th scope="col"></th>
-                           <th scope="col" id="low_forecast0"></th>
-                           <th scope="col" id="low_forecast1"></th>
-                           <th scope="col" id="low_forecast2"></th>
-                           <th scope="col" id="low_forecast3"></th>
-                           <th scope="col" id="low_forecast4"></th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        <tr>
-                           <th style="width: 12%; font-size: 1.25vw;">Low Country & Plateau</th>
-                           <td style="width: 17%;">
-                              <span>
-                                 <img id="low_forecast_img0" class="forecast_img">
-                                 <p id="low_forecast_txt0" class="forecast_text"></p>
-                              </span>
-                           </td>
-                           <td style="width: 17%;">
-                              <span>
-                                 <img id="low_forecast_img1" class="forecast_img">
-                                 <p id="low_forecast_txt1" class="forecast_text"></p>
-                              </span>
-                           </td>
-                           <td style="width: 17%;">
-                              <span>
-                                 <img id="low_forecast_img2" class="forecast_img">
-                                 <p id="low_forecast_txt2" class="forecast_text"></p>
-                              </span>
-                           </td>
-                           <td style="width: 17%;">
-                              <span>
-                                 <img id="low_forecast_img3" class="forecast_img">
-                                 <p id="low_forecast_txt3" class="forecast_text"></p>
-                              </span>
-                           </td>
-                           <td style="width: 17%;">
-                              <span>
-                                 <img id="low_forecast_img4" class="forecast_img">
-                                 <p id="low_forecast_txt4" class="forecast_text"></p>
-                              </span>
-                           </td>
-                        </tr>
-                     </tbody>
-                  </table>
-               </div>
-               <div id="forecast_cols" class="col-xs-12 col-md-offset-1">
-                  <div id="resourcetitle"></div>
-                  <table class="table">
-                     <thead>
-                        <tr>
-                           <th scope="col"></th>
-                           <th scope="col" id="high_forecast0"></th>
-                           <th scope="col" id="high_forecast1"></th>
-                           <th scope="col" id="high_forecast2"></th>
-                           <th scope="col" id="high_forecast3"></th>
-                           <th scope="col" id="high_forecast4"></th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        <tr>
-                           <th style="width: 12%; font-size: 1.25vw">High Country & Mine</th>
-                           <td style="width: 17%;">
-                              <span>
-                                 <img id="high_forecast_img0" class="forecast_img">
-                                 <p id="high_forecast_txt0" class="forecast_text"></p>
-                              </span>
-                           </td>
-                           <td style="width: 17%;">
-                              <span>
-                                 <img id="high_forecast_img1" class="forecast_img">
-                                 <p id="high_forecast_txt1" class="forecast_text"></p>
-                              </span>
-                           </td>
-                           <td style="width: 17%;">
-                              <span>
-                                 <img id="high_forecast_img2" class="forecast_img">
-                                 <p id="high_forecast_txt2" class="forecast_text"></p>
-                              </span>
-                           </td>
-                           <td style="width: 17%;">
-                              <span>
-                                 <img id="high_forecast_img3" class="forecast_img">
-                                 <p id="high_forecast_txt3" class="forecast_text"></p>
-                              </span>
-                           </td>
-                           <td style="width: 17%;">
-                              <span>
-                                 <img id="high_forecast_img4" class="forecast_img">
-                                 <p id="high_forecast_txt4" class="forecast_text"></p>
-                              </span>
-                           </td>
-                        </tr>
-                     </tbody>
-                  </table>
-               </div>
-            </div>
-         </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 </html>

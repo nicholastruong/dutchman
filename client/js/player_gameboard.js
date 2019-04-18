@@ -229,6 +229,10 @@ function checkMove(i) {
          customAlert("You cannot use the Low Country Path if you have Turbos installed!");
          return false;
       }
+      if (i == 20 && (resources['tents'] <= 0 && resources['caves'] <= 0)) {
+        customAlert("You cannot enter the Dutchman Goldmine without some kind of shelter.");
+        return false;
+      }
       prev_space = curr_space;
       curr_space = i;
       hasMadeMove = true;

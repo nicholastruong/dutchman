@@ -6,8 +6,8 @@ var amountSell = new Object();
 var constMapOfValues = {
     "supplies": 20, 
     "fuel": 10, 
-    "batteries": 10,
-    "tents": 10, 
+    "tents": 10,
+    "batteries": 10, 
     "tires": 30,
     "cash": 1,
     "caves": 0,

@@ -48,6 +48,9 @@ window.onload = function () {
   $("#teamTradingModal").load("teamTradeModal.html");
   $("#teamTradeModal").modal('hide');
   $("#provTradeModal").modal('hide');
+
+  $("#theForecastModal").load("forecastModal.html");
+  $("#theForecastModal").modal('hide');
 }
 
 $(document).ready(function(){
@@ -84,7 +87,7 @@ $(document).ready(function(){
       bigModal = undefined;
     });
 
-  $('#forecastModal')
+  $('#theForecastModal')
     .on('shown.bs.modal', function (e) {
       console.log("forecastModal shown");
       bigModal = $('#forecastModal');
@@ -158,9 +161,10 @@ PlayerController.prototype = {
       if (curr_day == 1) {
         customAlert("The game has started!");
       }
-      if (d['resourcesExpended'] != undefined && curr_day != 1 && !out_of_resources) { 
-        updateAlert(d['weather'], d['resourcesExpended'], curr_day); 
-      }
+      // if (d['resourcesExpended'] != undefined && curr_day != 1 && !out_of_resources) { 
+      //   console.log(d['resourcesExpended']);
+      //   updateAlert(d['weather'], d['resourcesExpended'], curr_day); 
+      // }
 
       if (d['weather'] != undefined) {
         updateWeather(d['weather']);
@@ -298,7 +302,8 @@ PlayerController.prototype = {
 
     document.getElementById("forecastButton").onclick = function() {
       if (forecastAvailable) {
-        $('#forecastModal').modal('show');
+        customAlert("Go see the Facilitator for the weather forecast details.");
+        // $('#forecastModal').modal('show'); // change to this to show the actual weather forecast
       }
       else {
         customConfirm("Do you want to use one of your batteries to get the weather forecast?", function() {
@@ -309,7 +314,8 @@ PlayerController.prototype = {
           socket.emit('server send updateResources', {resources: this.resources});
          
           forecastAvailable = true;
-          $('#forecastModal').modal('show');
+          customAlert("Go see the Facilitator for the weather forecast details.");
+          // $('#forecastModal').modal('show'); // change to this to show the actual weather forecast
         });
       }
     };
@@ -332,7 +338,12 @@ PlayerController.prototype = {
             }
          }
          if (curr_space == 20) {
-            customConfirm("Are you sure you want to stay in the Lost Dutchman Goldmine?", reallyReady);
+           if (resources['caves'] <= 0 && resources['tents'] <= 0) {
+             customAlert("You cannot stay any more nights in the Dutchman Goldmine without some kind of shelter.")
+           }
+           else {
+             customConfirm("Are you sure you want to stay in the Lost Dutchman Goldmine?", reallyReady);
+           }
          }
          if (curr_space != 0 && curr_space != 20) {
             customConfirm("Are you sure you want to stay in the same space?", reallyReady);
