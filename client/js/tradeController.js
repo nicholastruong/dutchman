@@ -328,9 +328,12 @@ function initiateTeamTrade() {
         });
 
         $('#teamTradeModal').modal('hide');
-        $('#cancelTradeModal').modal('show');
-        $('#cancelTradeButton').attr("disabled", true);
-
+        alert_queue.unshift({
+            modal: $('#cancelTradeModal'),
+            type: 'CONFIRM'
+        });
+        checkAlertConfirmQueue();
+     
         var tableContainerBuy = document.getElementById("requestTable");
         tableContainerBuy.innerHTML= buyTableBuilder(2); 
         var tableContainerSell = document.getElementById("offerTable");
