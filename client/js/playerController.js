@@ -161,10 +161,10 @@ PlayerController.prototype = {
       if (curr_day == 1) {
         customAlert("The game has started!");
       }
-      // if (d['resourcesExpended'] != undefined && curr_day != 1 && !out_of_resources) { 
-      //   console.log(d['resourcesExpended']);
-      //   updateAlert(d['weather'], d['resourcesExpended'], curr_day); 
-      // }
+      if (d['resourcesExpended'] != undefined && curr_day != 1 && !out_of_resources) { 
+        console.log(d['resourcesExpended']);
+        updateAlert(d['weather'], d['resourcesExpended'], curr_day); 
+      }
 
       if (d['weather'] != undefined) {
         updateWeather(d['weather']);
