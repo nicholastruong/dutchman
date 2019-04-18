@@ -370,8 +370,14 @@ function addItem(resources){
   addResourceObject[resources]++;
 }
 
-function addResources(){
+function addResources(teamname){
   console.log(this.addResourceObject);
+  var carePackage = {
+    team : teamname,
+    resources : this.addResourceObject
+  }
+  socket.emit('beacon', carePackage);
+
   $('#addResourceModal').modal('hide');
 }
 
