@@ -37,7 +37,6 @@ var playerNames = {};
 var readyPlayers = 0;
 var numPlayers = 0;
 
-var endGameAlert;
 var socket;
 
 window.onload = function() {
@@ -145,6 +144,9 @@ FacilitatorController.prototype = {
          $("#canyonstatus").attr("hidden", false);
          $("#readybutton").text("Start Next Day");
        }
+       if (d['day'] == 20) {
+         $("#readybutton").text("End Game");
+       }
 
        if (d['weather'] != undefined) {
          updateWeather(d['weather']);
@@ -178,7 +180,7 @@ FacilitatorController.prototype = {
     });
 
     socket.on('end game', function(d){
-      endGame();
+      endGameAlert(socket);
     });
 
     socket.on('update server player out of resources', function(d) {
@@ -231,11 +233,12 @@ FacilitatorController.prototype = {
     var instructionButton = document.getElementById("instructionblock");
     instructionButton.addEventListener('click', function(){
       // alert("Instructions for facilitator");
+      endGameAlert(socket);
 
-      customAlert("Instructions for Facilitator</p> - Click any game space to find out which teams" + 
-        " are currently located there.</p> - Send messages to all the teams by using the dialog in" + 
-        " the bottom right.</p> - View the resources of all the teams in the window on the left.</p>" +
-        " - Press the 'Start Next Day' to advance the game for all the teams when they are ready.");
+      // customAlert("Instructions for Facilitator</p> - Click any game space to find out which teams" + 
+      //   " are currently located there.</p> - Send messages to all the teams by using the dialog in" + 
+      //   " the bottom right.</p> - View the resources of all the teams in the window on the left.</p>" +
+      //   " - Press the 'Start Next Day' to advance the game for all the teams when they are ready.");
     });
 
     // endGameAlert = bootbox.dialog({
@@ -487,18 +490,67 @@ function scrollToBottom() {
 }
 
 
-function endGame() {
+function endGameAlert(socket) {
   var date = new Date();
   var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";
   $('#messages').append($('<li>').text(time + "Game has ended"));
   scrollToBottom();
 
-  // show endGameAlert
-  // endGameAlert.modal('show');
+  // create endGameModal
+  console.log(constMapOfValues);
+  var table = `<thead>
+              <tr>
+                <th class = "colorCol" scope="col">Team Name</th>
+                <th scope="col">Gold</th>
+                <th scope="col">Cash</th>
+                <th scope="col">Made it back?</th>
+              </tr>
+            </thead>
+            <tbody>`
+
+    for (player in playerNames) {
+      let name = playerNames[player]
+      table += `<tr><th scope="row">`
+      table += name
+      table += `<th class = "colorCol" scope="col">`
+      table += $("#gold" + name).text() + " gold"
+      table += `</th><th class = "colorCol" scope="col">`
+      table += "$" + String(getTotalValue(name))
+      table += `</th><th class = "colorCol" scope="col">`
+      if (locations[name] == 0) {
+        table += "Yes"
+      }
+      else {
+        table += "No"
+      }
+      table += `</th>`
+    }
+
+  table += `</tbody>`
+  document.getElementById("endGameStatsTable").innerHTML = table;
+
+  $("#resetGameButton").click( function() {
+    $('#endGameModal').modal('hide');
+    resetGame(socket)
+  });
+
+  // show endGameModal
+  $('#endGameModal').modal('show');
 }
 
-function resetGame() {
-  onModal = false;
+function getTotalValue(player) {
+  let sum = 0
+  for (r in constMapOfValues) {
+    sum += constMapOfValues[r] * $("#" + r + player).text();
+  }
+  console.log("sum of " + player + " is " + sum);
+  return sum;
+}
+
+function resetGame(socket) {
+  socket.emit('reset game'); // called on endgame
+
+  // onModal = false;
   $("#messages").empty();
   $(".weather").attr("hidden", true);
   $("#canyonstatus").attr("hidden", true);
@@ -506,6 +558,9 @@ function resetGame() {
   $("#day").text("Planning Period");
   $("#resourceblock").empty();
   $("#board").empty();
+
+  playerNames = [];
+  numPlayers = 0;
 
   resetGameBoard();
 }

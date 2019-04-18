@@ -137,7 +137,7 @@ PlayerController.prototype = {
     });
 
     socket.on('server send updateDay', function(d) {
-      console.log("server send updateDay");
+      console.log("server send updateDay, prev_space was " + prev_space);
 
       curr_day = d['day'];
       if (curr_day >= 1) {
@@ -198,7 +198,7 @@ PlayerController.prototype = {
       out_of_resources = false;
       enableMove = true;
 
-      customAlert("You received additional resources from the Facilitator! Count yourself lucky...");
+      customAlert("Your resources were modified by the Facilitator! Count yourself lucky...");
     }); 
 
 
