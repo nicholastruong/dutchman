@@ -1,3 +1,15 @@
+var addResourceObject = {
+  "supplies": 0,
+  "fuel": 0,
+  "tents": 0,
+  "batteries": 0,
+  "tires": 0,
+  "cash": 0,
+  "caves": 0,
+  "turbo": 0,
+  "gold": 0
+}
+
 var FacilitatorController = function() 
 {
   let scope = this;
@@ -26,10 +38,21 @@ var endGameAlert;
 
 window.onload = function() {
   window.controller = new FacilitatorController();
+  $("#addResourcesModal").load("addResourceModal.html");
+  $("#addResourceModal").modal('hide');
 }
 
 $(document).ready(function(){
    console.log("documentReady called");
+   $('#addResourceModal')
+    .on('show.bs.modal', function (e) {
+      console.log("onModal is true from addResourceModal");
+      onModal = true;
+    })
+    .on('hidden.bs.modal', function (e) {
+      console.log("onModal is false from addResourceModal");
+      onModal = false;
+    });
 
 });
 
@@ -233,6 +256,11 @@ function generateTeamTable(name, resources){
    var cell1 = row.insertCell(0);
    cell1.innerHTML = name;
    cell1.setAttribute("style","font-size:1.75vw; font-weight: bold; background-color: #492300;");
+   var cell2 = row.insertCell(1);
+   cell2.innerHTML = `<button type="button" class="refresher btn btn-light">+</button>`;
+   cell2.onclick = function(){
+     addTeamResources(name, resources);
+   }
    var srow = table.insertRow(1);
    var slabel = srow.insertCell(0);
    slabel.innerHTML = "Supplies";
@@ -287,8 +315,68 @@ function generateTeamTable(name, resources){
    var tbunits = tbrow.insertCell(1);
    tbunits.setAttribute("id", "turbo" + name);
    tbunits.innerHTML = resources['turbo'];
+}
 
-   
+function addTeamResources(name, resources){
+  Object.keys(addResourceObject).forEach(v => myObj[v] = 0);
+
+  if ( document.getElementById("teamResourceTitle") != null){
+    document.getElementById("teamResourceTitle").innerHTML = "Team " + name;
+  }
+
+  var table = `<thead>
+              <tr>
+                <th scope="col">Resources</th>
+                <th class = "colorCol" scope="col">Amount</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>`
+            
+    for (let r in resources) {
+            table += `<tr>
+            <th scope="row">
+            `
+            table += String(r);// resourceName
+            table += `</th><td class = "colorCol" id = "addResource-` + String(r) + `">`
+            table += String(resources[r]);//amount
+            table += `</td>`
+            table += `<td><button type="button" class="btn btn-light" onClick = "addItem('`;
+            table += String(r);
+            table += "','";
+            table += String(r);
+            table +=`')">+</button></td>
+            <td><button type="button" class="btn btn-light" onClick = "subtractItem('`;
+            table += String(r);
+            table += "','";
+            table+= String(r);
+            table+=`')">-</button></td>`
+            this.addResourceObject[String(r)] = resources[r];
+    }
+    console.log(this.addResourceObject);
+
+    table += `</tbody>`
+
+    document.getElementById("addResourceTable").innerHTML = table;
+  $('#addResourceModal').modal('show');
+}
+
+function subtractItem(resources){
+  document.getElementById("addResource-" + resources).textContent--;
+  this.addResourceObject[resources]--;
+}
+function addItem(resources){
+  document.getElementById("addResource-" + resources).textContent++;
+  this.addResourceObject[resources]++;
+}
+
+function addResources(){
+  var name = document.getElementById("teamResourceTitle").innerText;
+  name = name.slice(5);
+  console.log(this.addResourceObject);
+  console.log(name);
+  $('#addResourceModal').modal('hide');
 }
 
 function customAlert(message) {
