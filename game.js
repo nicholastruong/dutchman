@@ -227,7 +227,7 @@
  			if (!(currentLocation === 0 && game.players[userID]['reachedGoldMine'])) {
  				//if in mine, use either one cave or shelter
 	 			if(currentLocation === 20) {
-	 				resources['gold'] += 1;
+	 				// resources['gold'] += 1;
 	 				game.players[userID]['reachedGoldMine'] = true;
 	 				if(resources['caves'] > 0) {
 	 					resources['caves'] -= 1;
@@ -237,24 +237,32 @@
 	 				}
 	 			}
 
-	 			if (currentWeather === "arctic blast") {
-	 				resources['fuel'] -= 2;
-	 				resources['supplies'] -= 4;
+	 			if (resources['fuel'] > 0 && resources['supplies'] > 0) {
+	 				if (currentWeather === "arctic blast") {
+		 				resources['fuel'] -= 2;
+		 				resources['supplies'] -= 4;
+		 			}
+		 			else if (currentWeather === "sunny") {
+		 				resources['fuel'] -= 1;
+		 				resources['supplies'] -= 1;
+		 			}
+		 			//If the weather is rainy and wet, a team that is in the mud will expend 1 fuel and 2 supplies. A team that is on hard ground will only use 1 fuel and 1 supply. 
+		 			else {
+		 				resources['fuel'] -= 1;
+		 				if(lowCountryPath.has(currentLocation)) {
+		 					resources['supplies'] -= 2;
+		 				}
+		 				else {
+		 					resources['supplies'] -= 1;
+		 				}
+		 			}
 	 			}
-	 			else if (currentWeather === "sunny") {
-	 				resources['fuel'] -= 1;
-	 				resources['supplies'] -= 1;
-	 			}
-	 			//If the weather is rainy and wet, a team that is in the mud will expend 1 fuel and 2 supplies. A team that is on hard ground will only use 1 fuel and 1 supply. 
-	 			else {
-	 				resources['fuel'] -= 1;
-	 				if(lowCountryPath.has(currentLocation)) {
-	 					resources['supplies'] -= 2;
-	 				}
-	 				else {
-	 					resources['supplies'] -= 1;
-	 				}
-	 			}
+
+	 			// for (r in resources) {
+	 			// 	if (resources[r] < 0) {
+	 			// 		resources[r] = 0;
+	 			// 	} 
+	 			// }
 
 
 	 			//if any supply, fuel, cave, or tent is less than 0, call the beacon!
@@ -271,6 +279,9 @@
 	 				}
 
 	 				return false;
+	 			}
+	 			if (currentLocation == 20) {
+	 				resources['gold'] += 1;
 	 			}
 	 		}
 

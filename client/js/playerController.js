@@ -145,6 +145,9 @@ PlayerController.prototype = {
         forecastAvailable = false; 
       }
 
+      if (curr_day == 1) {
+        customAlert("The game has started!");
+      }
       if (d['resourcesExpended'] != undefined && curr_day != 1 && !out_of_resources) { 
         updateAlert(d['weather'], d['resourcesExpended'], curr_day); 
       }
@@ -176,18 +179,16 @@ PlayerController.prototype = {
         $("#forecastButton").attr("disabled", resources['batteries'] < 1 || curr_day % 5 != 0);
       }
       updateResources(d);
-
-      if (out_of_resources) { 
-        out_of_resources = false; 
-        enableMove = true;
-
-        customAlert("You received additional resources from the Facilitator! Count yourself lucky...");
-      }
     }); 
 
     socket.on('update beacon resources', function(d) {
       resources = d;
       updateResources(d);
+
+      out_of_resources = false;
+      enableMove = true;
+
+      customAlert("You received additional resources from the Facilitator! Count yourself lucky...");
     }); 
 
 

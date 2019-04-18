@@ -185,7 +185,7 @@ FacilitatorController.prototype = {
       console.log(d);
 
       for (player in d){
-        customAlert("Team " + playerNames[d[player]] + " is out of resources and is stuck!")
+        customAlert("Team " + d[player] + " is out of resources and is stuck!")
         // $('#messages').append($('<li>').text(time + player + " is out of resources"));
         // $('#messages').append($('<li>').text("Adding more resources to " + player + "'s inventory"));
 
@@ -255,8 +255,6 @@ FacilitatorController.prototype = {
     //   show: false
     // });
   }
-
-
   
 };
 
@@ -355,7 +353,7 @@ function addTeamResources(name, resources){
   var table = `<thead>
               <tr>
                 <th scope="col">Resources</th>
-                <th class = "colorCol" scope="col">Amount</th>
+                <th class = "colorCol" scope="col">Amount to Add</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
               </tr>
