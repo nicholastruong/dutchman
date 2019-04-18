@@ -39,18 +39,18 @@ var endGameAlert;
 window.onload = function() {
   window.controller = new FacilitatorController();
   $("#addResourcesModal").load("addResourceModal.html");
-  $("#addResourceModal").modal('hide');
+  $("#addResourcesModal").modal('hide');
 }
 
 $(document).ready(function(){
    console.log("documentReady called");
-   $('#addResourceModal')
+   $('#addResourcesModal')
     .on('show.bs.modal', function (e) {
-      console.log("onModal is true from addResourceModal");
+      console.log("onModal is true from addResourcesModal");
       onModal = true;
     })
     .on('hidden.bs.modal', function (e) {
-      console.log("onModal is false from addResourceModal");
+      console.log("onModal is false from addResourcesModal");
       onModal = false;
     });
 
@@ -256,11 +256,14 @@ function generateTeamTable(name, resources){
    var cell1 = row.insertCell(0);
    cell1.innerHTML = name;
    cell1.setAttribute("style","font-size:1.75vw; font-weight: bold; background-color: #492300;");
+  
    var cell2 = row.insertCell(1);
-   cell2.innerHTML = `<button type="button" class="refresher btn btn-light">+</button>`;
+   cell2.innerHTML = `<button id="rescue_button" type="button" class="refresher btn btn-light">Help Team</button>`;
+   cell2.setAttribute("style","text-align:center;");
    cell2.onclick = function(){
      addTeamResources(name, resources);
    }
+  
    var srow = table.insertRow(1);
    var slabel = srow.insertCell(0);
    slabel.innerHTML = "Supplies";
@@ -357,7 +360,7 @@ function addTeamResources(name, resources){
 
     table += `</tbody>`
 
-    document.getElementById("addResourceTable").innerHTML = table;
+  document.getElementById("addResourceTable").innerHTML = table;
   $('#addResourceModal').modal('show');
 }
 

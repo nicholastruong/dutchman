@@ -233,6 +233,8 @@ PlayerController.prototype = {
 
     socket.on('out of resources', function(d){
       console.log('out of resources');
+      enableMove = false;
+      customAlert("You are out of resources!");
 
       /*
         
