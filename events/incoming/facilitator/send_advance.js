@@ -19,9 +19,7 @@ module.exports = function(socket, server, game, config){
 			var hasEnoughResources = server.trigger['server send updateDay'](gameID, playerUserID);
 			server.trigger['update resources'](gameID, playerUserID);
 
-			if (true) { // currentGame['day'] == 5 || currentGame['day'] == 10 || currentGame['day'] == 15) { // sends weather info everday for debugging
-				server.trigger['server send forecast'](gameID, playerUserID);
-			}
+			server.trigger['server send forecast'](gameID, playerUserID);
 			
 			//notifies player and facilitator that they are out of resources
 			if(!hasEnoughResources) {
@@ -48,7 +46,7 @@ module.exports = function(socket, server, game, config){
 
 		function calculateNewResources(oldResources) {
 			for (r in oldResources) {
-				oldResources[r] += 5;
+				oldResources[r] += 0;
  			}
  			return oldResources;
 		}

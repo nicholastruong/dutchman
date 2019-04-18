@@ -19,6 +19,7 @@ var forecastAvailable = false;
 var hasTurbos = false;
 var stay1Day = false;
 var stay2Day = false;
+var out_of_resources = false;
 
 /* Game Globals */
 var weatherForecast;
@@ -234,7 +235,8 @@ PlayerController.prototype = {
     socket.on('out of resources', function(d){
       console.log('out of resources');
       enableMove = false;
-      customAlert("You are out of resources!");
+      out_of_resources = true;
+      customAlert("You are out of resources! You will not be able to advance any further unless the Facilitator helps you.");
 
       /*
         

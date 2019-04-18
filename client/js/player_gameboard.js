@@ -108,6 +108,9 @@ function attachClickListener(physics, graphic, index) {
         if (curr_space == index) { // if team clicks on current space, shows an alert with team names of all colocated teams
           customAlert(getColocatedPlayers());
         }
+        else if (out_of_resources) {
+          customAlert("You are out of resources and will not be able to move unless the Facilitator helps you.");
+        }
         else {
           if (stay1Day && stay2Day) {
             customAlert("You watched both videos so you must stay in Apache Junction for another 2 days.");
