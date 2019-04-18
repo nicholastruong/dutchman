@@ -92,6 +92,16 @@ $(document).ready(function(){
       bigModal = undefined;
     });
 
+  $('#cancelTradeModal')
+    .on('shown.bs.modal', function (e) {
+      if (bigModal != undefined) {
+        bigModal.modal('hide');
+      }
+    })
+    .on('hidden.bs.modal', function(e) {
+      alertConfirmBox = undefined;
+      checkAlertConfirmQueue();
+    });
 });
 
 
@@ -189,7 +199,6 @@ PlayerController.prototype = {
         console.log("trade cancelled.");
         $('#cancelTradeModal').modal('hide');
         bootbox.hideAll();
-        // dialog.modal('hide');
         customAlert("The trade was declined.");
       }
     });
@@ -233,12 +242,14 @@ PlayerController.prototype = {
           customAlert("Trade could not be completed due to insufficient funds.")
           socket.emit('player send tradeResponse', {accepted: false, trade: d});
         }
-      }, true);
+      }, 
+      {
+        proposerID: d['proposerID']
+      });
     });
 
     socket.on('server send tradeCancelled', function(d){
-      customAlert("Trade was cancelled.");
-      console.log("yo the trade was cancelled");
+      manageAlertsAfterCancelledTrade(d['proposerID']);
     })
 
     socket.on('player out of resources', function(d){
@@ -487,7 +498,7 @@ function updateResources(resources) {
 }
 
 
-function customAlert(message) {
+function customAlert(message, addToFront=false) {
    toInsert = bootbox.dialog({
       message: message,
       title: '',
@@ -513,14 +524,21 @@ function customAlert(message) {
       console.log("alert closed");
    });
 
-   alert_queue.push({
+   var queueObj = {
       type: 'ALERT',
       modal: toInsert
-   });
+   };
+
+   if (addToFront) {
+     alert_queue.unshift(queueObj);
+   }
+   else {
+     alert_queue.push(queueObj);
+   }
    checkAlertConfirmQueue();
 };
 
-function customConfirm(message, callbackFunc, ifTrade) {
+function customConfirm(message, callbackFunc, ifTrade=null, addToFront=false) {
    toInsert = bootbox.confirm({
       message: message,
       closeButton: false,
@@ -559,10 +577,16 @@ function customConfirm(message, callbackFunc, ifTrade) {
       checkAlertConfirmQueue();
    });
 
-   alert_queue.push({
+   queueObj = {
       type: 'CONFIRM',
       modal: toInsert
-   });
+   };
+
+   if (ifTrade != undefined) {
+    queueObj.tradeProposerID = ifTrade.proposerID;
+   }
+
+   alert_queue.push(queueObj);
    checkAlertConfirmQueue();
 }
 
@@ -570,6 +594,7 @@ function checkAlertConfirmQueue() {
   if (alertConfirmBox != undefined || alert_queue.length == 0) return;
   else {
     alertConfirmBox = alert_queue.shift();
+    console.log(alertConfirmBox);
     alertConfirmBox.modal.modal('show');
   }
 }
@@ -585,6 +610,21 @@ function removeConfirmsFromQueue() {
   }
 }
 
+function manageAlertsAfterCancelledTrade(proposerID) {
+   if (alertConfirmBox != undefined) {
+      if (alertConfirmBox.tradeProposerID != undefined && alertConfirmBox.tradeProposerID == proposerID) {
+        customAlert("The trade was cancelled.", true);
+        alertConfirmBox.modal.modal('hide');
+        return;
+      }
+   } 
+   for (var i = alert_queue.length-1; i >= 0; i--) {
+      if (alert_queue[i].tradeProposerID != undefined && alert_queue[i].tradeProposerID == proposerID) {
+        delete alert_queue[i];
+        return;
+      }
+   }
+}
 
 function endGame() {
   $('#messages').append($('<li>').text("Game has ended!"));

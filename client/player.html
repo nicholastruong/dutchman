@@ -98,7 +98,7 @@
           <button class="btn btn-primary leftColButton" id="teamTradeButton" onclick = "teamTradeManager()" style="">Team Trade</button>
         <div id = "teamTradingModal"></div>
 
-        <div class="modal" id="cancelTradeModal" tabindex="-1" role="dialog">
+        <div class="modal" id="cancelTradeModal" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -107,7 +107,7 @@
                 <p>Trade has been sent to team, and awaiting response. <br> Do you want to cancel trade?</p>
               </div>
               <div class="modal-footer">
-                <button type="button" id="cancelTradeButton" class="btn btn-primary" onclick="cancelTrade()">Cancel Trade</button>
+                <button type="button" id="cancelTradeButton" class="btn btn-primary" onclick="cancelTrade()"">Cancel Trade</button>
               </div>
             </div>
           </div>
