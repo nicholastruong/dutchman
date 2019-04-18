@@ -10,6 +10,8 @@ var addResourceObject = {
   "gold": 0
 }
 
+var resourceMap = {};
+
 var FacilitatorController = function() 
 {
   let scope = this;
@@ -263,7 +265,7 @@ function generateTeamTable(name, resources){
    var cell2 = row.insertCell(1);
    cell2.innerHTML = `<button type="button" class="refresher btn btn-light">+</button>`;
    cell2.onclick = function(){
-     addTeamResources(name, resources);
+     addTeamResources(name);
    }
    var srow = table.insertRow(1);
    var slabel = srow.insertCell(0);
@@ -321,8 +323,8 @@ function generateTeamTable(name, resources){
    tbunits.innerHTML = resources['turbo'];
 }
 
-function addTeamResources(name, resources){
-
+function addTeamResources(name){
+  resources = resourceMap[name];
   Object.keys(addResourceObject).forEach(v => myObj[v] = 0);
 
   if ( document.getElementById("teamResourceTitle") != null){
@@ -371,6 +373,9 @@ function addResources(){
   let socket = window.controller.socket;
   var name = document.getElementById("teamResourceTitle").innerText;
   name = name.slice(5);
+
+  console.log(this.addResourceObject);
+
   var carePackage = {
     team : name,
     resources : this.addResourceObject
@@ -429,6 +434,9 @@ function updateWeather(weatherData) {
 }
 
 function updateResources(teamname, resources) {
+
+     resourceMap[teamname] = resources;
+
     //console.log("update " + teamname + " resources " + resources['supplies'] + resources['fuel']);
     var supplies = document.getElementById('supplies' + teamname);
     supplies.innerHTML = resources['supplies'];
