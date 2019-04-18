@@ -172,6 +172,11 @@ PlayerController.prototype = {
       updateResources(d);
     }); 
 
+    socket.on('update beacon resources', function(d) {
+      resources = d;
+      updateResources(d);
+    }); 
+
 
     socket.on('server send giveTradeResults', function(d){
       console.log(d['tradeResults']);

@@ -12,7 +12,7 @@ module.exports = function(socket, server, game, config){
 		for (playerUserID in players) {
 			if (teamName === players[playerUserID]['username']) {
 				game.setResources(gameID, playerUserID, resources);
-				server.trigger['update resources'](gameID, playerUserID);
+				server.trigger['update beacon resources'](gameID, playerUserID);
 			}	
 		}
 		
