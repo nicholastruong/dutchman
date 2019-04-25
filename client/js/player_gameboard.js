@@ -258,6 +258,8 @@ function checkExtendedConnections(i) {
 
 // outputs the list of co-located players
 function getColocatedPlayers() {
+  // console.log(colocated_players);
+
   if (colocated_players.length == 0) {
     return "There are no other teams colocated with you.";
   }
@@ -265,10 +267,11 @@ function getColocatedPlayers() {
 
   var players = "The following teams are in this space:<br><br>";
   for (player in colocated_players) {
-    players += colocated_players[player]['playerName'] + ", ";
+    players += colocated_players[player]['username'] + ", ";
   }
   return players.substring(0, players.length - 2);
 }
+
 
 // changes Tom's Ford Canyon on the board into one or two spaces depending on whether it is flooded
 function floodCanyon(isFlooded) {

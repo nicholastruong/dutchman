@@ -155,6 +155,7 @@ FacilitatorController.prototype = {
 
     socket.on('updated player status', function(d) {
       console.log("updated player status");
+      // console.log(d);
 
       var date = new Date();
       var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + " : ";

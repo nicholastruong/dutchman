@@ -211,6 +211,7 @@ function update() {
 // called by the controller to move a specific team's icon to a new space
 function updateDestinations(userID, location) {
   if (location != undefined && locations[userID] != undefined) {
+    console.log("moving team " + userID + " to space " + location);
     locations[userID] = location;
     dests[userID] = icon_spot[location];
     global_physics.moveTo(cars[userID], dests[userID][0], dests[userID][1], 200);
